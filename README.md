@@ -1,6 +1,8 @@
 Weasel
 ===========
 
+![Logo](misc/weasel.png)
+
 This respository implements a basic chess engine.
 
 It provides:
