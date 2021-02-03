@@ -1,14 +1,28 @@
 package main
 
 import (
-	"fmt"
-
-	"github.com/WeaselChess/Weasel/board"
+	"github.com/WeaselChess/Weasel/uci"
 )
 
-func main() {
-	for i := 0; i < len(board.Sq64ToSq120); i++ {
-		fmt.Println(board.Sq64ToSq120[i])
-	}
+//EngineInfo is the info for our engine
+const EngineInfo = uci.EngineInfo{
+	Name:    "Weasel",
+	Version: "v0.0.1-beta",
+	Author:  "WeaselChess Club",
+}
 
+func init() {
+	println("                                                  ")
+	println("██╗    ██╗███████╗ █████╗ ███████╗███████╗██╗     ")
+	println("██║    ██║██╔════╝██╔══██╗██╔════╝██╔════╝██║     ")
+	println("██║ █╗ ██║█████╗  ███████║███████╗█████╗  ██║     ")
+	println("██║███╗██║██╔══╝  ██╔══██║╚════██║██╔══╝  ██║     ")
+	println("╚███╔███╔╝███████╗██║  ██║███████║███████╗███████╗")
+	println(" ╚══╝╚══╝ ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝")
+	println("                                                  ")
+}
+
+func main() {
+	//uci.UCI(EngineInfo)
+	//TODO: Make engine
 }

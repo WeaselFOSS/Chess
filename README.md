@@ -30,7 +30,6 @@ If you're looking to compile from source, you'll need the following:
 
   * [Go](https://golang.org) installed and [configured](https://golang.org/doc/install)
   * A chess frontend application that can communicate over UCI
-  * A little patience :)
 
 Contributing
 ------------
