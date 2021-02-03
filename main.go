@@ -5,7 +5,7 @@ import (
 )
 
 //EngineInfo is the info for our engine
-const EngineInfo = uci.EngineInfo{
+var EngineInfo = uci.EngineInfo{
 	Name:    "Weasel",
 	Version: "v0.0.1-beta",
 	Author:  "WeaselChess Club",
