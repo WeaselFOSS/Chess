@@ -96,6 +96,8 @@ const (
 	E1
 	//F1 coord const
 	F1
+	//G1 coord const
+	G1
 	//H1 coord const
 	H1
 )
@@ -113,6 +115,8 @@ const (
 	E2
 	//F2 coord const
 	F2
+	//G2 coord const
+	G2
 	//H2 coord const
 	H2
 )
@@ -130,6 +134,8 @@ const (
 	E3
 	//F3 coord const
 	F3
+	//G3 coord const
+	G3
 	//H3 coord const
 	H3
 )
@@ -147,6 +153,8 @@ const (
 	E4
 	//F4 coord const
 	F4
+	//G4 coord const
+	G4
 	//H4 coord const
 	H4
 )
@@ -164,6 +172,8 @@ const (
 	E5
 	//F5 coord const
 	F5
+	//G5 coord const
+	G5
 	//H5 coord const
 	H5
 )
@@ -181,6 +191,8 @@ const (
 	E6
 	//F6 coord const
 	F6
+	//G6 coord const
+	G6
 	//H6 coord const
 	H6
 )
@@ -198,6 +210,8 @@ const (
 	E7
 	//F7 coord const
 	F7
+	//G7 coord const
+	G7
 	//H7 coord const
 	H7
 )
@@ -215,6 +229,8 @@ const (
 	E8
 	//F8 coord const
 	F8
+	//G8 coord const
+	G8
 	//H8 coord const
 	H8
 	//NoSquare coord const
