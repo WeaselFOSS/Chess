@@ -12,20 +12,23 @@ type EngineInfo struct {
 	Author  string
 }
 
+//DebugModeOn tells us if we should output debug messages
 var DebugModeOn bool = false
 
 //UCI is our main loop for
 func UCI(engineInfo EngineInfo) {
 	for {
-		var command string
+		var cmd string
 
-		fmt.Scanln(&command)
+		fmt.Scanln(&cmd)
 
-		switch command {
+		command := strings.Split(cmd, " ")
+
+		switch command[0] {
 		case "uci":
 			identify(engineInfo)
 		case "debug":
-			if getCommandArguments(command)[0] == "on" {
+			if command[1] == "on" {
 				DebugModeOn = true
 			} else {
 				DebugModeOn = false
@@ -35,6 +38,15 @@ func UCI(engineInfo EngineInfo) {
 		case "register":
 		case "ucinewgame":
 		case "position":
+			if command[1] == "startpos" {
+				if len(command) > 2 {
+					boardInitWithMove(strings.Join(command[2:], " ")) //moves e1e2
+				} else {
+					boardInit()
+				}
+			} else if command[1] == "fen" {
+				loadFEN(strings.Join(command[2:], " "))
+			}
 		case "go":
 		case "stop":
 		case "ponderhit":
@@ -43,10 +55,6 @@ func UCI(engineInfo EngineInfo) {
 		case "divide":
 		}
 	}
-}
-
-func getCommandArguments(command string) []string {
-	return strings.SplitAfter(command, " ")
 }
 
 func identify(engineInfo EngineInfo) {

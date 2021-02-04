@@ -2,6 +2,7 @@ Weasel
 ===========
 
 ![Logo](misc/weasel.png)
+Art graciously provided by [Alex](https://www.deviantart.com/redhead-alex)
 
 This respository implements a basic chess engine.
 
