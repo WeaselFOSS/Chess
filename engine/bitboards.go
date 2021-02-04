@@ -1,4 +1,4 @@
-package board
+package engine
 
 import "fmt"
 
@@ -7,6 +7,17 @@ var bitTables = [64]int{
 	51, 21, 43, 45, 10, 18, 47, 1, 54, 9, 57, 0, 35, 62, 31, 40, 4, 49, 5, 52,
 	26, 60, 6, 23, 44, 46, 27, 56, 16, 7, 39, 48, 24, 59, 14, 12, 55, 38, 28,
 	58, 20, 37, 17, 36, 8}
+
+var setMask [64]uint64
+var clearMask [64]uint64
+
+func initBitMasks() {
+	for i := 0; i < 64; i++ {
+		setMask[i] |= uint64(1) << uint64(i)
+		clearMask[i] = ^setMask[i]
+
+	}
+}
 
 //PrintBitBoard Will print a visual representation of a bitboard to screen
 func PrintBitBoard(bitboard uint64) {
@@ -42,4 +53,12 @@ func CountBits(board uint64) int {
 		board &= board - 1
 	}
 	return r
+}
+
+func ClearBit(bitboard *uint64, square int) {
+	*bitboard &= clearMask[square]
+}
+
+func SetBit(bitboard *uint64, square int) {
+	*bitboard |= setMask[square]
 }

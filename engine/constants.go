@@ -1,4 +1,4 @@
-package board
+package engine
 
 //SquareNumber Number of squares in the board representastion
 const SquareNumber = 120

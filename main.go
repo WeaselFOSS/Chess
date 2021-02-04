@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/WeaselChess/Weasel/engine"
 	"github.com/WeaselChess/Weasel/uci"
 )
 
@@ -25,4 +26,11 @@ func init() {
 func main() {
 	//uci.UCI(EngineInfo)
 	//TODO: Make engine
+	var playBitBoard uint64 = 0
+
+	engine.SetBit(&playBitBoard, 61)
+	engine.PrintBitBoard(playBitBoard)
+
+	engine.ClearBit(&playBitBoard, 61)
+	engine.PrintBitBoard(playBitBoard)
 }

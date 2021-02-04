@@ -1,4 +1,4 @@
-package board
+package engine
 
 //BoardStruct the boards struct
 type BoardStruct struct {
@@ -38,13 +38,7 @@ var Sq120ToSq64 [SquareNumber]int
 //Sq64ToSq120 64 Square board to 64 square board index
 var Sq64ToSq120 [64]int
 
-//SetMask set mask
-var SetMask [64]uint64
-
-//ClearMask clear mask
-var ClearMask [64]uint64
-
-func init() {
+func initBoard() {
 	initSq120To64()
 	initBitMasks()
 }
@@ -69,23 +63,7 @@ func initSq120To64() {
 	}
 }
 
-func initBitMasks() {
-	for i := 0; i < 64; i++ {
-		SetMask[i] |= uint64(1) << uint64(i)
-		ClearMask[i] = ^SetMask[i]
-
-	}
-}
-
 //FileRankToSquare takes a file and rank and returns a square number
 func FileRankToSquare(f int, r int) int {
 	return 21 + f + r*10
-}
-
-func ClearBit(bitboard *uint64, square int) {
-	*bitboard &= ClearMask[square]
-}
-
-func SetBit(bitboard *uint64, square int) {
-	*bitboard |= SetMask[square]
 }
