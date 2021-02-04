@@ -32,7 +32,7 @@ func (pos *BoardStruct) GeneratePosKey() error {
 	//Pieces
 	for sq := 0; sq < SquareNumber; sq++ {
 		piece = pos.Pieces[sq]
-		if piece != NoSquare && piece != Empty {
+		if piece != NoSquare && piece != Empty && piece != OffBoard {
 			if !(piece >= WP && piece <= BK) {
 				return errors.New("Piece value out of bounds")
 			}

@@ -40,12 +40,12 @@ func UCI(engineInfo EngineInfo) {
 		case "position":
 			if command[1] == "startpos" {
 				if len(command) > 2 {
-					boardInitWithMove(strings.Join(command[2:], " ")) //moves e1e2
+					//boardInitWithMove(strings.Join(command[2:], " ")) //moves e1e2
 				} else {
-					boardInit()
+					//boardInit()
 				}
 			} else if command[1] == "fen" {
-				loadFEN(strings.Join(command[2:], " "))
+				//loadFEN(strings.Join(command[2:], " "))
 			}
 		case "go":
 		case "stop":

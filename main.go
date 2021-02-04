@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/WeaselChess/Weasel/engine"
 	"github.com/WeaselChess/Weasel/uci"
 )
@@ -33,4 +35,11 @@ func main() {
 
 	engine.ClearBit(&playBitBoard, 61)
 	engine.PrintBitBoard(playBitBoard)
+
+	var pos engine.BoardStruct
+	err := pos.LoadFEN(engine.StartPosFEN)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(pos)
 }

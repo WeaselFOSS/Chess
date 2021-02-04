@@ -3,6 +3,9 @@ package engine
 //SquareNumber Number of squares in the board representastion
 const SquareNumber = 120
 
+//StartPosFEN The fen string for a starting position
+const StartPosFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+
 const (
 	//Empty empty square
 	Empty = iota
@@ -235,6 +238,8 @@ const (
 	H8
 	//NoSquare coord const
 	NoSquare
+	//OffBoard coord const
+	OffBoard
 )
 
 const (
