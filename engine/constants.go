@@ -11,10 +11,10 @@ const (
 	Empty = iota
 	//WP White Pawn
 	WP
-	//WB White Bishop
-	WB
 	//WN White Knight
 	WN
+	//WB White Bishop
+	WB
 	//WR White Rook
 	WR
 	//WQ White Queen
@@ -23,10 +23,10 @@ const (
 	WK
 	//BP Black Pawn
 	BP
-	//BB Black Bishop
-	BB
 	//Black Knights
 	BN
+	//BB Black Bishop
+	BB
 	//BR Black Rook
 	BR
 	//BQ Black Queen

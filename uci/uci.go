@@ -60,7 +60,9 @@ func UCI(engineInfo EngineInfo) {
 		case "stop":
 		case "ponderhit":
 		case "quit":
+			os.Exit(0)
 		case "print":
+			pos.Print()
 		case "divide":
 		}
 	}

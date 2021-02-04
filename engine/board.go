@@ -1,6 +1,9 @@
 package engine
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 //BoardStruct the boards struct
 type BoardStruct struct {
@@ -33,6 +36,18 @@ type UndoStruct struct {
 	FiftyMove int
 	PosKey    uint64
 }
+
+//PieceChar Piece const to cahr
+var PieceChar = [13]rune{'.', 'P', 'N', 'B', 'R', 'Q', 'K', 'p', 'n', 'b', 'r', 'q', 'k'}
+
+//SideChar Side const to char
+var SideChar = [3]rune{'w', 'b', '-'}
+
+//RankChar Rank cosnt to char
+var RankChar = [8]rune{'1', '2', '3', '4', '5', '6', '7', '8'}
+
+//FileChar File const to char
+var FileChar = [8]rune{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'}
 
 //Sq120ToSq64 120 Square board to 64 square board index
 var Sq120ToSq64 [SquareNumber]int
@@ -201,7 +216,7 @@ func (pos *BoardStruct) LoadFEN(fen string) error {
 	}
 
 	fen = fen[2:]
-Loop:
+
 	for i := 0; i < 4; i++ {
 		if fen[0] == ' ' {
 			break
@@ -220,7 +235,7 @@ Loop:
 			pos.CastelPerm |= Bqcastel
 			break
 		default:
-			break Loop
+			break
 		}
 		fen = fen[1:]
 	}
@@ -247,4 +262,54 @@ Loop:
 	}
 
 	return pos.GeneratePosKey()
+}
+
+func (pos *BoardStruct) castelPermToChar() (rune, rune, rune, rune) {
+	var WK rune = '-'
+	var WQ rune = '-'
+	var BK rune = '-'
+	var BQ rune = '-'
+
+	if pos.CastelPerm&Wkcastel != 0 {
+		WK = 'K'
+	}
+
+	if pos.CastelPerm&Wqcastel != 0 {
+		WQ = 'Q'
+	}
+
+	if pos.CastelPerm&Bkcastel != 0 {
+		BK = 'k'
+	}
+
+	if pos.CastelPerm&Bqcastel != 0 {
+		BQ = 'q'
+	}
+
+	return WK, WQ, BK, BQ
+}
+
+//Print a representation of the current board state to the console
+func (pos *BoardStruct) Print() {
+	fmt.Print("\nBoard State:\n\n")
+	for rank := Rank8; rank >= Rank1; rank-- {
+		fmt.Printf("%d", rank+1)
+		for file := FileA; file <= FileH; file++ {
+			sq := FileRankToSquare(file, rank)
+			piece := pos.Pieces[sq]
+			fmt.Printf("%3c", PieceChar[piece])
+		}
+		fmt.Print("\n")
+	}
+
+	fmt.Print(" ")
+	for file := FileA; file <= FileH; file++ {
+		fmt.Printf("%3c", 'A'+file)
+	}
+	fmt.Print("\n")
+	fmt.Printf("Side: %c\n", SideChar[pos.Side])
+	fmt.Printf("EnPassant: %d\n", pos.EnPassant) //TODO: Create Decimal to algebraic notation function
+	WK, WQ, BK, BQ := pos.castelPermToChar()
+	fmt.Printf("Castel Perms: %c%c%c%c\n", WK, WQ, BK, BQ)
+	fmt.Printf("Position Hash: %X\n", pos.PosKey)
 }
