@@ -1,8 +1,12 @@
 package uci
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"strings"
+
+	"github.com/WeaselChess/Weasel/engine"
 )
 
 //EngineInfo holds the info for our engine
@@ -15,14 +19,13 @@ type EngineInfo struct {
 //DebugModeOn tells us if we should output debug messages
 var DebugModeOn bool = false
 
+var pos engine.BoardStruct
+
 //UCI is our main loop for
 func UCI(engineInfo EngineInfo) {
-	for {
-		var cmd string
-
-		fmt.Scanln(&cmd)
-
-		command := strings.Split(cmd, " ")
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		command := strings.Split(scanner.Text(), " ")
 
 		switch command[0] {
 		case "uci":
@@ -42,10 +45,16 @@ func UCI(engineInfo EngineInfo) {
 				if len(command) > 2 {
 					//boardInitWithMove(strings.Join(command[2:], " ")) //moves e1e2
 				} else {
-					//boardInit()
+					err := pos.LoadFEN(engine.StartPosFEN)
+					if err != nil {
+						panic(err)
+					}
 				}
 			} else if command[1] == "fen" {
-				//loadFEN(strings.Join(command[2:], " "))
+				err := pos.LoadFEN(strings.Join(command[2:], " "))
+				if err != nil {
+					panic(err)
+				}
 			}
 		case "go":
 		case "stop":
@@ -58,10 +67,10 @@ func UCI(engineInfo EngineInfo) {
 }
 
 func identify(engineInfo EngineInfo) {
-	println("id name " + engineInfo.Name + engineInfo.Version)
-	println("id author " + engineInfo.Author)
+	fmt.Println("id name " + engineInfo.Name + engineInfo.Version)
+	fmt.Println("id author " + engineInfo.Author)
 
 	//TODO: Add supported options
 
-	println("uciok")
+	fmt.Println("uciok")
 }
