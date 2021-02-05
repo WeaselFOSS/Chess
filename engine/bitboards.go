@@ -19,14 +19,14 @@ func initBitMasks() {
 	}
 }
 
-//PrintBitBoard Will print a visual representation of a bitboard to screen
-func PrintBitBoard(bitboard uint64) {
+//printBitBoard Will print a visual representation of a bitboard to screen
+func printBitBoard(bitboard uint64) {
 	fmt.Print("\n")
 
-	for rank := Rank8; rank >= Rank1; rank-- {
-		for file := FileA; file <= FileH; file++ {
-			sq := FileRankToSquare(file, rank)
-			sq64 := Sq120ToSq64[sq]
+	for rank := rank8; rank >= rank1; rank-- {
+		for file := fileA; file <= fileH; file++ {
+			sq := fileRankToSquare(file, rank)
+			sq64 := sq120ToSq64[sq]
 
 			if ((uint64(1) << sq64) & bitboard) != 0 {
 				fmt.Print(" X ")
@@ -39,15 +39,16 @@ func PrintBitBoard(bitboard uint64) {
 	fmt.Print("\n\n")
 }
 
-func PopBit(bitboard *uint64) int {
+//popBit Pop first 1 bit off and return its index
+func popBit(bitboard *uint64) int {
 	var board uint64 = *bitboard ^ (*bitboard - 1)
 	var fold uint32 = uint32((board & 0xffffffff) ^ (board >> 32))
 	*bitboard &= (*bitboard - 1)
 	return bitTables[(fold*0x783a9b23)>>26]
 }
 
-//CountBits Count the number of 1 bits in a bitboard
-func CountBits(board uint64) int {
+//countBits Count the number of 1 bits in a bitboard
+func countBits(board uint64) int {
 	var r int
 	for r = 0; board > 0; r++ {
 		board &= board - 1
@@ -55,10 +56,10 @@ func CountBits(board uint64) int {
 	return r
 }
 
-func ClearBit(bitboard *uint64, square int) {
+func clearBit(bitboard *uint64, square int) {
 	*bitboard &= clearMask[square]
 }
 
-func SetBit(bitboard *uint64, square int) {
+func setBit(bitboard *uint64, square int) {
 	*bitboard |= setMask[square]
 }

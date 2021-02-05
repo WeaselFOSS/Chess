@@ -1,254 +1,254 @@
 package engine
 
-//SquareNumber Number of squares in the board representastion
-const SquareNumber = 120
+//squareNumber Number of squares in the board representastion
+const squareNumber = 120
 
 //StartPosFEN The fen string for a starting position
 const StartPosFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 const (
-	//Empty empty square
-	Empty = iota
-	//WP White Pawn
-	WP
-	//WN White Knight
-	WN
-	//WB White Bishop
-	WB
-	//WR White Rook
-	WR
-	//WQ White Queen
-	WQ
-	//WK White King
-	WK
-	//BP Black Pawn
-	BP
-	//Black Knights
-	BN
-	//BB Black Bishop
-	BB
-	//BR Black Rook
-	BR
-	//BQ Black Queen
-	BQ
-	//BK Black King
-	BK
+	//empty empty square
+	empty = iota
+	//wP white Pawn
+	wP
+	//wN white Knight
+	wN
+	//wB white Bishop
+	wB
+	//wR white Rook
+	wR
+	//wQ white Queen
+	wQ
+	//wK white King
+	wK
+	//bP black Pawn
+	bP
+	//black Knights
+	bN
+	//bb black bishop
+	bB
+	//bR black Rook
+	bR
+	//bQ black Queen
+	bQ
+	//bK black King
+	bK
 )
 
 const (
-	//FileA const
-	FileA = iota
-	//FileB const
-	FileB
-	//FileC const
-	FileC
-	//FileD const
-	FileD
-	//FileE const
-	FileE
-	//FileF const
-	FileF
+	//fileA const
+	fileA = iota
+	//fileB const
+	fileB
+	//filec const
+	fileC
+	//fileD const
+	fileD
+	//fileE const
+	fileE
+	//fileF const
+	fileF
 	//FileG const
-	FileG
+	fileG
 	//FileH const
-	FileH
+	fileH
 	//FileNone const for no file
-	FileNone
+	fileNone
 )
 
 const (
-	//Rank1 const
-	Rank1 = iota
-	//Rank2 const
-	Rank2
-	//Rank3 const
-	Rank3
-	//Rank4 const
-	Rank4
-	//Rank5 const
-	Rank5
-	//Rank6 const
-	Rank6
-	//Rank7 const
-	Rank7
-	//Rank8 const
-	Rank8
-	//RankNone const for no rank
-	RankNone
+	//rank1 const
+	rank1 = iota
+	//rank2 const
+	rank2
+	//rank3 const
+	rank3
+	//rank4 const
+	rank4
+	//rank5 const
+	rank5
+	//rank6 const
+	rank6
+	//rank7 const
+	rank7
+	//rank8 const
+	rank8
+	//rankNone const for no rank
+	rankNone
 )
 
 const (
-	//White side const
-	White = iota
-	//Black side const
-	Black
-	//Both side const
-	Both
+	//white side const
+	white = iota
+	//black side const
+	black
+	//both side const
+	both
 )
 
 const (
-	//A1 coord const
-	A1 = iota + 21
-	//B1 coord const
-	B1
-	//C1 coord const
-	C1
-	//D1 coord const
-	D1
-	//E1 coord const
-	E1
+	//a1 coord const
+	a1 = iota + 21
+	//b1 coord const
+	b1
+	//c1 coord const
+	c1
+	//d1 coord const
+	d1
+	//e1 coord const
+	e1
 	//F1 coord const
 	F1
-	//G1 coord const
-	G1
+	//g1 coord const
+	g1
 	//H1 coord const
 	H1
 )
 
 const (
-	//A2 coord const
-	A2 = iota + 31
-	//B2 coord const
-	B2
-	//C2 coord const
-	C2
-	//D2 coord const
-	D2
-	//E2 coord const
-	E2
-	//F2 coord const
-	F2
-	//G2 coord const
-	G2
-	//H2 coord const
-	H2
+	//a2 coord const
+	a2 = iota + 31
+	//b2 coord const
+	b2
+	//c2 coord const
+	c2
+	//d2 coord const
+	d2
+	//e2 coord const
+	e2
+	//f2 coord const
+	f2
+	//g2 coord const
+	g2
+	//h2 coord const
+	h2
 )
 
 const (
-	//A3 coord const
-	A3 = iota + 41
-	//B3 coord const
-	B3
-	//C3 coord const
-	C3
-	//D3 coord const
-	D3
-	//E3 coord const
-	E3
-	//F3 coord const
-	F3
-	//G3 coord const
-	G3
-	//H3 coord const
-	H3
+	//a3 coord const
+	a3 = iota + 41
+	//b3 coord const
+	b3
+	//c3 coord const
+	c3
+	//d3 coord const
+	d3
+	//e3 coord const
+	e3
+	//f3 coord const
+	f3
+	//g3 coord const
+	g3
+	//h3 coord const
+	h3
 )
 
 const (
-	//A4 coord const
-	A4 = iota + 51
-	//B4 coord const
-	B4
-	//C4 coord const
-	C4
-	//D4 coord const
-	D4
-	//E4 coord const
-	E4
-	//F4 coord const
-	F4
-	//G4 coord const
-	G4
-	//H4 coord const
+	//a4 coord const
+	a4 = iota + 51
+	//b4 coord const
+	b4
+	//c4 coord const
+	c4
+	//d4 coord const
+	d4
+	//e4 coord const
+	e4
+	//f4 coord const
+	f4
+	//g4 coord const
+	g4
+	//h4 coord const
 	H4
 )
 
 const (
-	//A5 coord const
-	A5 = iota + 61
-	//B5 coord const
-	B5
-	//C5 coord const
-	C5
-	//D5 coord const
-	D5
-	//E5 coord const
-	E5
-	//F5 coord const
-	F5
-	//G5 coord const
-	G5
-	//H5 coord const
-	H5
+	//a5 coord const
+	a5 = iota + 61
+	//b5 coord const
+	b5
+	//c5 coord const
+	c5
+	//d5 coord const
+	d5
+	//e5 coord const
+	e5
+	//f5 coord const
+	f5
+	//g5 coord const
+	g5
+	//h5 coord const
+	h5
 )
 
 const (
-	//A6 coord const
-	A6 = iota + 71
-	//B6 coord const
-	B6
-	//C6 coord const
-	C6
-	//D6 coord const
-	D6
-	//E6 coord const
-	E6
-	//F6 coord const
-	F6
-	//G6 coord const
-	G6
-	//H6 coord const
-	H6
+	//a6 coord const
+	a6 = iota + 71
+	//b6 coord const
+	b6
+	//c6 coord const
+	c6
+	//d6 coord const
+	d6
+	//e6 coord const
+	e6
+	//f6 coord const
+	f6
+	//g6 coord const
+	g6
+	//h6 coord const
+	h6
 )
 
 const (
-	//A7 coord const
-	A7 = iota + 81
-	//B7 coord const
-	B7
-	//C7 coord const
-	C7
-	//D7 coord const
-	D7
-	//E7 coord const
-	E7
-	//F7 coord const
-	F7
-	//G7 coord const
-	G7
-	//H7 coord const
-	H7
+	//a7 coord const
+	a7 = iota + 81
+	//b7 coord const
+	b7
+	//c7 coord const
+	c7
+	//d7 coord const
+	d7
+	//e7 coord const
+	e7
+	//f7 coord const
+	f7
+	//g7 coord const
+	g7
+	//h7 coord const
+	h7
 )
 
 const (
-	//A8 coord const
-	A8 = iota + 91
-	//B8 coord const
-	B8
-	//C8 coord const
-	C8
-	//D8 coord const
-	D8
-	//E8 coord const
-	E8
+	//a8 coord const
+	a8 = iota + 91
+	//b8 coord const
+	b8
+	//c8 coord const
+	c8
+	//d8 coord const
+	d8
+	//e8 coord const
+	e8
 	//F8 coord const
 	F8
-	//G8 coord const
-	G8
-	//H8 coord const
-	H8
-	//NoSquare coord const
-	NoSquare
-	//OffBoard coord const
-	OffBoard
+	//g8 coord const
+	g8
+	//h8 coord const
+	h8
+	//noSquare coord const
+	noSquare
+	//offBoard coord const
+	offBoard
 )
 
 const (
-	//Wkcastel White King Castel Perm
-	Wkcastel = 1
-	//Wqcastel White Queen Castel Perm
-	Wqcastel = 2
-	//Bkcastel Black King Castel Perm
-	Bkcastel = 4
-	//Bqcastel Black Queen Castel Perm
-	Bqcastel = 8
+	//wkcastel white King castel Perm
+	wkcastel = 1
+	//wqcastel white Queen castel Perm
+	wqcastel = 2
+	//bkcastel Black King castel Perm
+	bkcastel = 4
+	//bqcastel Black Queen castel Perm
+	bqcastel = 8
 )

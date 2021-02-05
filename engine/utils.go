@@ -1,33 +1,33 @@
 package engine
 
 func (pos *BoardStruct) castelPermToChar() (rune, rune, rune, rune) {
-	var WK rune = '-'
-	var WQ rune = '-'
-	var BK rune = '-'
-	var BQ rune = '-'
+	var wKt rune = '-'
+	var wQt rune = '-'
+	var bKt rune = '-'
+	var bQt rune = '-'
 
-	if pos.CastelPerm&Wkcastel != 0 {
-		WK = 'K'
+	if pos.CastelPerm&wkcastel != 0 {
+		wKt = 'K'
 	}
 
-	if pos.CastelPerm&Wqcastel != 0 {
-		WQ = 'Q'
+	if pos.CastelPerm&wqcastel != 0 {
+		wQt = 'Q'
 	}
 
-	if pos.CastelPerm&Bkcastel != 0 {
-		BK = 'k'
+	if pos.CastelPerm&bkcastel != 0 {
+		bKt = 'k'
 	}
 
-	if pos.CastelPerm&Bqcastel != 0 {
-		BQ = 'q'
+	if pos.CastelPerm&bqcastel != 0 {
+		bQt = 'q'
 	}
 
-	return WK, WQ, BK, BQ
+	return wKt, wQt, bKt, bQt
 }
 
 //IsPieceBig returns true if piece is big
 func isPieceBig(piece int) bool {
-	if piece != Empty && piece != WP && piece != BP {
+	if piece != empty && piece != wP && piece != bP {
 		return true
 	}
 	return false
@@ -35,7 +35,7 @@ func isPieceBig(piece int) bool {
 
 //IsPieceBig returns true if piece is major
 func isPieceMajor(piece int) bool {
-	if piece != Empty && piece != WP && piece != WN && piece != WB && piece != BP && piece != BN && piece != BB {
+	if piece != empty && piece != wP && piece != wN && piece != wB && piece != bP && piece != bN && piece != bB {
 		return true
 	}
 	return false
@@ -43,7 +43,7 @@ func isPieceMajor(piece int) bool {
 
 //IsPieceBig returns true if piece is minor
 func isPieceMinor(piece int) bool {
-	if piece == WN || piece == WB || piece == BN || piece == BB {
+	if piece == wN || piece == wB || piece == bN || piece == bB {
 		return true
 	}
 	return false
@@ -52,15 +52,15 @@ func isPieceMinor(piece int) bool {
 //GetPieceValue returns the value of a piece
 func getPieceValue(piece int) int {
 	switch piece {
-	case WP, BP:
+	case wP, bP:
 		return 100
-	case WN, BN, WB, BB:
+	case wN, bN, wB, bB:
 		return 325
-	case WR, BR:
+	case wR, bR:
 		return 550
-	case WQ, BQ:
+	case wQ, bQ:
 		return 1000
-	case WK, BK:
+	case wK, bK:
 		return 50000
 	}
 	return 0
@@ -68,12 +68,12 @@ func getPieceValue(piece int) int {
 
 //GetPieceColor returns the color of a piece
 func getPieceColor(piece int) int {
-	if piece >= WP && piece <= WK {
-		return White
+	if piece >= wP && piece <= wK {
+		return white
 	}
 
-	if piece >= BP && piece <= BK {
-		return Black
+	if piece >= bP && piece <= bK {
+		return black
 	}
-	return Both
+	return both
 }

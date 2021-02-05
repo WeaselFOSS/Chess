@@ -7,7 +7,7 @@ import (
 
 //BoardStruct the boards struct
 type BoardStruct struct {
-	Pieces      [SquareNumber]int
+	Pieces      [squareNumber]int
 	Pawns       [3]uint64
 	KingSquare  [2]int
 	PieceNum    [13]int
@@ -38,17 +38,17 @@ type UndoStruct struct {
 	PosKey    uint64
 }
 
-//Sq120ToSq64 120 Square board to 64 square board index
-var Sq120ToSq64 [SquareNumber]int
+//sq120ToSq64 120 Square board to 64 square board index
+var sq120ToSq64 [squareNumber]int
 
-//Sq64ToSq120 64 Square board to 64 square board index
-var Sq64ToSq120 [64]int
+//sq64ToSq120 64 Square board to 64 square board index
+var sq64ToSq120 [64]int
 
-//FilesBoard Get a positions file
-var FilesBoard [SquareNumber]int
+//filesBoard Get a positions file
+var filesBoard [squareNumber]int
 
-//RanksBoard Get a positions rank
-var RanksBoard [SquareNumber]int
+//ranksBoard Get a positions rank
+var ranksBoard [squareNumber]int
 
 var pieceChar = [13]rune{'.', 'P', 'N', 'B', 'R', 'Q', 'K', 'p', 'n', 'b', 'r', 'q', 'k'}
 var sideChar = [3]rune{'w', 'b', '-'}
@@ -60,53 +60,53 @@ func initBoard() {
 }
 
 func initSq120To64() {
-	for i := 0; i < SquareNumber; i++ {
-		Sq120ToSq64[i] = 65
+	for i := 0; i < squareNumber; i++ {
+		sq120ToSq64[i] = 65
 	}
 
 	for i := 0; i < 64; i++ {
-		Sq64ToSq120[i] = 120
+		sq64ToSq120[i] = 120
 	}
 
 	sq64 := 0
-	for rank := Rank1; rank <= Rank8; rank++ {
-		for file := FileA; file <= FileH; file++ {
-			sq := FileRankToSquare(file, rank)
-			Sq64ToSq120[sq64] = sq
-			Sq120ToSq64[sq] = sq64
+	for rank := rank1; rank <= rank8; rank++ {
+		for file := fileA; file <= fileH; file++ {
+			sq := fileRankToSquare(file, rank)
+			sq64ToSq120[sq64] = sq
+			sq120ToSq64[sq] = sq64
 			sq64++
 		}
 	}
 }
 
 func initFileRanks() {
-	for i := 0; i < SquareNumber; i++ {
-		FilesBoard[i] = OffBoard
-		RanksBoard[i] = OffBoard
+	for i := 0; i < squareNumber; i++ {
+		filesBoard[i] = offBoard
+		ranksBoard[i] = offBoard
 	}
 
-	for rank := Rank1; rank <= Rank8; rank++ {
-		for file := FileA; file <= FileH; file++ {
-			sq := FileRankToSquare(file, rank)
-			FilesBoard[sq] = file
-			RanksBoard[sq] = rank
+	for rank := rank1; rank <= rank8; rank++ {
+		for file := fileA; file <= fileH; file++ {
+			sq := fileRankToSquare(file, rank)
+			filesBoard[sq] = file
+			ranksBoard[sq] = rank
 		}
 	}
 }
 
-//FileRankToSquare takes a file and rank and returns a square number
-func FileRankToSquare(file int, rank int) int {
+//fileRankToSquare takes a file and rank and returns a square number
+func fileRankToSquare(file int, rank int) int {
 	return 21 + file + rank*10
 }
 
-//ResetBoard Reset the board
-func (pos *BoardStruct) ResetBoard() {
-	for i := 0; i < SquareNumber; i++ {
-		pos.Pieces[i] = OffBoard
+//resetBoard Reset the board
+func (pos *BoardStruct) resetBoard() {
+	for i := 0; i < squareNumber; i++ {
+		pos.Pieces[i] = offBoard
 	}
 
 	for i := 0; i < 64; i++ {
-		pos.Pieces[Sq64ToSq120[i]] = Empty
+		pos.Pieces[sq64ToSq120[i]] = empty
 	}
 
 	for i := 0; i < 2; i++ {
@@ -120,11 +120,11 @@ func (pos *BoardStruct) ResetBoard() {
 		pos.PieceNum[i] = 0
 	}
 
-	pos.KingSquare[White] = NoSquare
-	pos.KingSquare[Black] = NoSquare
+	pos.KingSquare[white] = noSquare
+	pos.KingSquare[black] = noSquare
 
-	pos.Side = Both
-	pos.EnPassant = NoSquare
+	pos.Side = both
+	pos.EnPassant = noSquare
 	pos.FiftyMove = 0
 
 	pos.Ply = 0
@@ -140,63 +140,63 @@ func (pos *BoardStruct) LoadFEN(fen string) error {
 		return errors.New("FEN String is empty")
 	}
 
-	rank := Rank8
-	file := FileA
+	rank := rank8
+	file := fileA
 	piece := 0
 	count := 0
 
-	pos.ResetBoard()
+	pos.resetBoard()
 
-	for (rank >= Rank1) && len(fen) > 0 {
+	for (rank >= rank1) && len(fen) > 0 {
 		count = 1
 
 		switch fen[0] {
 		case 'p':
-			piece = BP
+			piece = bP
 			break
 		case 'n':
-			piece = BN
+			piece = bN
 			break
 		case 'b':
-			piece = BB
+			piece = bB
 			break
 		case 'r':
-			piece = BR
+			piece = bR
 			break
 		case 'q':
-			piece = BQ
+			piece = bQ
 			break
 		case 'k':
-			piece = BK
+			piece = bK
 			break
 
 		case 'P':
-			piece = WP
+			piece = wP
 			break
 		case 'N':
-			piece = WN
+			piece = wN
 			break
 		case 'B':
-			piece = WB
+			piece = wB
 			break
 		case 'R':
-			piece = WR
+			piece = wR
 			break
 		case 'Q':
-			piece = WQ
+			piece = wQ
 			break
 		case 'K':
-			piece = WK
+			piece = wK
 			break
 
 		case '1', '2', '3', '4', '5', '6', '7', '8':
-			piece = Empty
+			piece = empty
 			count = int(fen[0] - '0')
 			break
 
 		case '/', ' ':
 			rank--
-			file = FileA
+			file = fileA
 			fen = fen[1:]
 			continue
 
@@ -206,8 +206,8 @@ func (pos *BoardStruct) LoadFEN(fen string) error {
 
 		for i := 0; i < count; i++ {
 			sq64 := rank*8 + file
-			sq120 := Sq64ToSq120[sq64]
-			if piece != Empty {
+			sq120 := sq64ToSq120[sq64]
+			if piece != empty {
 				pos.Pieces[sq120] = piece
 			}
 			file++
@@ -220,9 +220,9 @@ func (pos *BoardStruct) LoadFEN(fen string) error {
 	}
 
 	if fen[0] == 'w' {
-		pos.Side = White
+		pos.Side = white
 	} else {
-		pos.Side = Black
+		pos.Side = black
 	}
 
 	if len(fen) < 3 {
@@ -237,16 +237,16 @@ func (pos *BoardStruct) LoadFEN(fen string) error {
 		}
 		switch fen[0] {
 		case 'K':
-			pos.CastelPerm |= Wkcastel
+			pos.CastelPerm |= wkcastel
 			break
 		case 'Q':
-			pos.CastelPerm |= Wqcastel
+			pos.CastelPerm |= wqcastel
 			break
 		case 'k':
-			pos.CastelPerm |= Bkcastel
+			pos.CastelPerm |= bkcastel
 			break
 		case 'q':
-			pos.CastelPerm |= Bqcastel
+			pos.CastelPerm |= bqcastel
 			break
 		default:
 			break
@@ -264,30 +264,30 @@ func (pos *BoardStruct) LoadFEN(fen string) error {
 		file = int(fen[0] - 'a')
 		rank = int(fen[1] - '1')
 
-		if file < FileA || file > FileH {
+		if file < fileA || file > fileH {
 			return errors.New("Bad FEN EnPas File")
 		}
 
-		if rank < Rank1 || rank > Rank8 {
+		if rank < rank1 || rank > rank8 {
 			return errors.New("Bad FEN EnPas Rank")
 		}
 
-		pos.EnPassant = FileRankToSquare(file, rank)
+		pos.EnPassant = fileRankToSquare(file, rank)
 	}
 	//TODO: Add supprot for fifty move rule and current ply
-	pos.UpdateMaterialLists()
+	pos.updateMaterialLists()
 	var err error
-	pos.PosKey, err = pos.GeneratePosKey()
+	pos.PosKey, err = pos.generatePosKey()
 	return err
 }
 
 //Print a representation of the current board state to the console
 func (pos *BoardStruct) Print() {
 	fmt.Print("\nBoard State:\n\n")
-	for rank := Rank8; rank >= Rank1; rank-- {
+	for rank := rank8; rank >= rank1; rank-- {
 		fmt.Printf("%d", rank+1)
-		for file := FileA; file <= FileH; file++ {
-			sq := FileRankToSquare(file, rank)
+		for file := fileA; file <= fileH; file++ {
+			sq := fileRankToSquare(file, rank)
 			piece := pos.Pieces[sq]
 			fmt.Printf("%3c", pieceChar[piece])
 		}
@@ -295,7 +295,7 @@ func (pos *BoardStruct) Print() {
 	}
 
 	fmt.Print(" ")
-	for file := FileA; file <= FileH; file++ {
+	for file := fileA; file <= fileH; file++ {
 		fmt.Printf("%3c", 'A'+file)
 	}
 	fmt.Print("\n")
@@ -306,11 +306,11 @@ func (pos *BoardStruct) Print() {
 	fmt.Printf("Position Hash: %X\n", pos.PosKey)
 }
 
-//UpdateMaterialLists Update the material lists for the baord
-func (pos *BoardStruct) UpdateMaterialLists() {
-	for i := 0; i < SquareNumber; i++ {
+//updateMaterialLists Update the material lists for the baord
+func (pos *BoardStruct) updateMaterialLists() {
+	for i := 0; i < squareNumber; i++ {
 		piece := pos.Pieces[i]
-		if piece != OffBoard && piece != Empty {
+		if piece != offBoard && piece != empty {
 			color := getPieceColor(piece)
 			if isPieceBig(piece) {
 				pos.BigPieces[color]++
@@ -328,13 +328,13 @@ func (pos *BoardStruct) UpdateMaterialLists() {
 			pos.PieceList[piece][pos.PieceNum[piece]] = i
 			pos.PieceNum[piece]++
 
-			if piece == WK || piece == BK {
+			if piece == wK || piece == bK {
 				pos.KingSquare[color] = i
 			}
 
-			if piece == WP || piece == BP {
-				SetBit(&pos.Pawns[color], Sq120ToSq64[i])
-				SetBit(&pos.Pawns[Both], Sq120ToSq64[i])
+			if piece == wP || piece == bP {
+				setBit(&pos.Pawns[color], sq120ToSq64[i])
+				setBit(&pos.Pawns[both], sq120ToSq64[i])
 			}
 		}
 	}
