@@ -19,5 +19,6 @@ func (pos *BoardStruct) addEnPasMove(move int, list *MoveListsStruct) {
 }
 
 func (pos *BoardStruct) generateAllMoves(list *MoveListsStruct) {
+	list.Count = 0
 
 }

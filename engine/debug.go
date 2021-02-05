@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-var DEBUG bool = false
+var DEBUG bool = true //Default set to true while debugging, should be false normally
 
 //CheckBoard VERY expensive only use for debugging
 func (pos *BoardStruct) CheckBoard() error {
@@ -140,4 +140,24 @@ func (pos *BoardStruct) CheckBoard() error {
 	}
 
 	return nil
+}
+
+func squareOnBoard(sq int) bool {
+	return filesBoard[sq] != offBoard
+}
+
+func sideValid(side int) bool {
+	return (side == white || side == black)
+}
+
+func fileRankValid(fr int) bool {
+	return (fr >= 0 && fr <= 7)
+}
+
+func pieceValidEmpty(piece int) bool {
+	return (piece >= empty && piece <= bK)
+}
+
+func pieceValid(piece int) bool {
+	return (piece >= wP && piece <= bK)
 }
