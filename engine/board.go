@@ -304,6 +304,8 @@ func (pos *BoardStruct) Print() {
 	WK, WQ, BK, BQ := pos.castelPermToChar()
 	fmt.Printf("Castel Perms: %c%c%c%c\n", WK, WQ, BK, BQ)
 	fmt.Printf("Position Hash: %X\n", pos.PosKey)
+	pos.printSqAttacked(white)
+	pos.printSqAttacked(black)
 }
 
 //updateMaterialLists Update the material lists for the baord
