@@ -11,9 +11,10 @@ type BoardStruct struct {
 	Pawns       [3]uint64
 	KingSquare  [2]int
 	PieceNum    [13]int
-	BigPieces   [3]int
-	MajorPieces [3]int
-	MinorPieces [3]int
+	BigPieces   [2]int
+	MajorPieces [2]int
+	MinorPieces [2]int
+	Material    [2]int
 
 	CastelPerm int
 	Side       int
@@ -37,26 +38,24 @@ type UndoStruct struct {
 	PosKey    uint64
 }
 
-//PieceChar Piece const to cahr
-var PieceChar = [13]rune{'.', 'P', 'N', 'B', 'R', 'Q', 'K', 'p', 'n', 'b', 'r', 'q', 'k'}
-
-//SideChar Side const to char
-var SideChar = [3]rune{'w', 'b', '-'}
-
-//RankChar Rank cosnt to char
-var RankChar = [8]rune{'1', '2', '3', '4', '5', '6', '7', '8'}
-
-//FileChar File const to char
-var FileChar = [8]rune{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'}
-
 //Sq120ToSq64 120 Square board to 64 square board index
 var Sq120ToSq64 [SquareNumber]int
 
 //Sq64ToSq120 64 Square board to 64 square board index
 var Sq64ToSq120 [64]int
 
+//FilesBoard Get a positions file
+var FilesBoard [SquareNumber]int
+
+//RanksBoard Get a positions rank
+var RanksBoard [SquareNumber]int
+
+var pieceChar = [13]rune{'.', 'P', 'N', 'B', 'R', 'Q', 'K', 'p', 'n', 'b', 'r', 'q', 'k'}
+var sideChar = [3]rune{'w', 'b', '-'}
+
 func initBoard() {
 	initSq120To64()
+	initFileRanks()
 	initBitMasks()
 }
 
@@ -80,6 +79,21 @@ func initSq120To64() {
 	}
 }
 
+func initFileRanks() {
+	for i := 0; i < SquareNumber; i++ {
+		FilesBoard[i] = OffBoard
+		RanksBoard[i] = OffBoard
+	}
+
+	for rank := Rank1; rank <= Rank8; rank++ {
+		for file := FileA; file <= FileH; file++ {
+			sq := FileRankToSquare(file, rank)
+			FilesBoard[sq] = file
+			RanksBoard[sq] = rank
+		}
+	}
+}
+
 //FileRankToSquare takes a file and rank and returns a square number
 func FileRankToSquare(file int, rank int) int {
 	return 21 + file + rank*10
@@ -95,13 +109,13 @@ func (pos *BoardStruct) ResetBoard() {
 		pos.Pieces[Sq64ToSq120[i]] = Empty
 	}
 
-	for i := 0; i < 3; i++ {
+	for i := 0; i < 2; i++ {
 		pos.BigPieces[i] = 0
 		pos.MajorPieces[i] = 0
 		pos.MinorPieces[i] = 0
 		pos.Pawns[i] = uint64(0)
 	}
-
+	pos.Pawns[2] = uint64(0)
 	for i := 0; i < 13; i++ {
 		pos.PieceNum[i] = 0
 	}
@@ -260,33 +274,9 @@ func (pos *BoardStruct) LoadFEN(fen string) error {
 
 		pos.EnPassant = FileRankToSquare(file, rank)
 	}
-
+	//TODO: Add supprot for fifty move rule and current ply
+	pos.UpdateMaterialLists()
 	return pos.GeneratePosKey()
-}
-
-func (pos *BoardStruct) castelPermToChar() (rune, rune, rune, rune) {
-	var WK rune = '-'
-	var WQ rune = '-'
-	var BK rune = '-'
-	var BQ rune = '-'
-
-	if pos.CastelPerm&Wkcastel != 0 {
-		WK = 'K'
-	}
-
-	if pos.CastelPerm&Wqcastel != 0 {
-		WQ = 'Q'
-	}
-
-	if pos.CastelPerm&Bkcastel != 0 {
-		BK = 'k'
-	}
-
-	if pos.CastelPerm&Bqcastel != 0 {
-		BQ = 'q'
-	}
-
-	return WK, WQ, BK, BQ
 }
 
 //Print a representation of the current board state to the console
@@ -297,7 +287,7 @@ func (pos *BoardStruct) Print() {
 		for file := FileA; file <= FileH; file++ {
 			sq := FileRankToSquare(file, rank)
 			piece := pos.Pieces[sq]
-			fmt.Printf("%3c", PieceChar[piece])
+			fmt.Printf("%3c", pieceChar[piece])
 		}
 		fmt.Print("\n")
 	}
@@ -307,9 +297,43 @@ func (pos *BoardStruct) Print() {
 		fmt.Printf("%3c", 'A'+file)
 	}
 	fmt.Print("\n")
-	fmt.Printf("Side: %c\n", SideChar[pos.Side])
+	fmt.Printf("Side: %c\n", sideChar[pos.Side])
 	fmt.Printf("EnPassant: %d\n", pos.EnPassant) //TODO: Create Decimal to algebraic notation function
 	WK, WQ, BK, BQ := pos.castelPermToChar()
 	fmt.Printf("Castel Perms: %c%c%c%c\n", WK, WQ, BK, BQ)
 	fmt.Printf("Position Hash: %X\n", pos.PosKey)
+}
+
+//UpdateMaterialLists Update the material lists for the baord
+func (pos *BoardStruct) UpdateMaterialLists() {
+	for i := 0; i < SquareNumber; i++ {
+		piece := pos.Pieces[i]
+		if piece != OffBoard && piece != Empty {
+			color := getPieceColor(piece)
+			if isPieceBig(piece) {
+				pos.BigPieces[color]++
+			}
+
+			if isPieceMajor(piece) {
+				pos.MajorPieces[color]++
+			}
+
+			if isPieceMinor(piece) {
+				pos.MinorPieces[color]++
+			}
+
+			pos.Material[color] += getPieceValue(piece)
+			pos.PieceList[piece][pos.PieceNum[piece]] = i
+			pos.PieceNum[piece]++
+
+			if piece == WK || piece == BK {
+				pos.KingSquare[color] = i
+			}
+
+			if piece == WP || piece == BP {
+				SetBit(&pos.Pawns[color], Sq120ToSq64[i])
+				SetBit(&pos.Pawns[Both], Sq120ToSq64[i])
+			}
+		}
+	}
 }

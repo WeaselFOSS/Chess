@@ -17,7 +17,6 @@ type EngineInfo struct {
 }
 
 //DebugModeOn tells us if we should output debug messages
-var DebugModeOn bool = false
 
 var pos engine.BoardStruct
 
@@ -32,9 +31,9 @@ func UCI(engineInfo EngineInfo) {
 			identify(engineInfo)
 		case "debug":
 			if command[1] == "on" {
-				DebugModeOn = true
+				engine.DEBUG = true
 			} else {
-				DebugModeOn = false
+				engine.DEBUG = false
 			}
 		case "isready":
 		case "setoption":
