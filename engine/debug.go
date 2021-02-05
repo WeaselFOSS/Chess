@@ -130,5 +130,14 @@ func (pos *BoardStruct) CheckBoard() error {
 		return errors.New(fmt.Sprintf("Black king square set to invalid position of %d", pos.KingSquare[Black]))
 	}
 
+	poskey, err := pos.GeneratePosKey()
+	if err != nil {
+		return err
+	}
+
+	if pos.PosKey != poskey {
+		return errors.New(fmt.Sprintf("Position Hash mis match expected %d, got %d", poskey, pos.PosKey))
+	}
+
 	return nil
 }

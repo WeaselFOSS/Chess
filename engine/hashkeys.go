@@ -25,7 +25,7 @@ func initHashKeys() {
 }
 
 //GeneratePosKey generates a unique key for the current position
-func (pos *BoardStruct) GeneratePosKey() error {
+func (pos *BoardStruct) GeneratePosKey() (uint64, error) {
 	var finalKey uint64 = 0
 	var piece int = Empty
 
@@ -34,7 +34,7 @@ func (pos *BoardStruct) GeneratePosKey() error {
 		piece = pos.Pieces[sq]
 		if piece != NoSquare && piece != Empty && piece != OffBoard {
 			if !(piece >= WP && piece <= BK) {
-				return errors.New("Piece value out of bounds")
+				return 0, errors.New("Piece value out of bounds")
 			}
 			finalKey ^= pieceKeys[piece][sq]
 		}
@@ -48,17 +48,16 @@ func (pos *BoardStruct) GeneratePosKey() error {
 	//EnPassant
 	if pos.EnPassant != NoSquare {
 		if !(pos.EnPassant >= 0 && pos.EnPassant < SquareNumber) {
-			return errors.New("EnPassant value out of bounds")
+			return 0, errors.New("EnPassant value out of bounds")
 		}
 		finalKey ^= pieceKeys[Empty][pos.EnPassant]
 	}
 
 	//CastelPerm
 	if !(pos.CastelPerm >= 0 && pos.CastelPerm <= 15) {
-		return errors.New("CastelPerm value out of bounds")
+		return 0, errors.New("CastelPerm value out of bounds")
 	}
 	finalKey ^= castelKeys[pos.CastelPerm]
 
-	pos.PosKey = finalKey
-	return nil
+	return finalKey, nil
 }

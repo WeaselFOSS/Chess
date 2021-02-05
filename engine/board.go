@@ -276,7 +276,9 @@ func (pos *BoardStruct) LoadFEN(fen string) error {
 	}
 	//TODO: Add supprot for fifty move rule and current ply
 	pos.UpdateMaterialLists()
-	return pos.GeneratePosKey()
+	var err error
+	pos.PosKey, err = pos.GeneratePosKey()
+	return err
 }
 
 //Print a representation of the current board state to the console
