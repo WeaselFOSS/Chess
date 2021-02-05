@@ -97,12 +97,12 @@ const (
 	d1
 	//e1 coord const
 	e1
-	//F1 coord const
-	F1
+	//f1 coord const
+	f1
 	//g1 coord const
 	g1
-	//H1 coord const
-	H1
+	//h1 coord const
+	h1
 )
 
 const (
@@ -159,7 +159,7 @@ const (
 	//g4 coord const
 	g4
 	//h4 coord const
-	H4
+	h4
 )
 
 const (
@@ -230,8 +230,8 @@ const (
 	d8
 	//e8 coord const
 	e8
-	//F8 coord const
-	F8
+	//f8 coord const
+	f8
 	//g8 coord const
 	g8
 	//h8 coord const
