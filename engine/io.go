@@ -13,7 +13,7 @@ func SquareToString(sq int) string {
 }
 
 //MoveToString move int to algebraic notation
-func MoveToString(move int) string {
+func moveToString(move int) string {
 	ff := filesBoard[getFrom(move)]
 	rf := ranksBoard[getFrom(move)]
 	ft := filesBoard[getTo(move)]
@@ -32,4 +32,15 @@ func MoveToString(move int) string {
 		return fmt.Sprintf("%c%c%c%c%c", ('a' + ff), ('1' + rf), ('a' + ft), ('1' + rt), pchar)
 	}
 	return fmt.Sprintf("%c%c%c%c", ('a' + ff), ('1' + rf), ('a' + ft), ('1' + rt))
+}
+
+func (list *MoveListStruct) Print() {
+	fmt.Println("MoveList:")
+
+	for i := 0; i < list.Count; i++ {
+		move := list.Moves[i].Move
+		score := list.Moves[i].Score
+		fmt.Printf("Move: %d > %s (score: %d)\n", i+1, moveToString(move), score)
+	}
+	fmt.Printf("MoveList Total of %d Moves\n\n", list.Count)
 }
