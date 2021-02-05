@@ -15,7 +15,6 @@ func initBitMasks() {
 	for i := 0; i < 64; i++ {
 		setMask[i] |= uint64(1) << uint64(i)
 		clearMask[i] = ^setMask[i]
-
 	}
 }
 

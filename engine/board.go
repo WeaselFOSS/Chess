@@ -53,47 +53,6 @@ var ranksBoard [squareNumber]int
 var pieceChar = [13]rune{'.', 'P', 'N', 'B', 'R', 'Q', 'K', 'p', 'n', 'b', 'r', 'q', 'k'}
 var sideChar = [3]rune{'w', 'b', '-'}
 
-func initBoard() {
-	initSq120To64()
-	initFileRanks()
-	initBitMasks()
-}
-
-func initSq120To64() {
-	for i := 0; i < squareNumber; i++ {
-		sq120ToSq64[i] = 65
-	}
-
-	for i := 0; i < 64; i++ {
-		sq64ToSq120[i] = 120
-	}
-
-	sq64 := 0
-	for rank := rank1; rank <= rank8; rank++ {
-		for file := fileA; file <= fileH; file++ {
-			sq := fileRankToSquare(file, rank)
-			sq64ToSq120[sq64] = sq
-			sq120ToSq64[sq] = sq64
-			sq64++
-		}
-	}
-}
-
-func initFileRanks() {
-	for i := 0; i < squareNumber; i++ {
-		filesBoard[i] = offBoard
-		ranksBoard[i] = offBoard
-	}
-
-	for rank := rank1; rank <= rank8; rank++ {
-		for file := fileA; file <= fileH; file++ {
-			sq := fileRankToSquare(file, rank)
-			filesBoard[sq] = file
-			ranksBoard[sq] = rank
-		}
-	}
-}
-
 //fileRankToSquare takes a file and rank and returns a square number
 func fileRankToSquare(file int, rank int) int {
 	return 21 + file + rank*10
@@ -300,12 +259,10 @@ func (pos *BoardStruct) Print() {
 	}
 	fmt.Print("\n")
 	fmt.Printf("Side: %c\n", sideChar[pos.Side])
-	fmt.Printf("EnPassant: %d\n", pos.EnPassant) //TODO: Create Decimal to algebraic notation function
+	fmt.Printf("EnPassant: %s\n", SquareToString(pos.EnPassant))
 	WK, WQ, BK, BQ := pos.castelPermToChar()
 	fmt.Printf("Castel Perms: %c%c%c%c\n", WK, WQ, BK, BQ)
 	fmt.Printf("Position Hash: %X\n", pos.PosKey)
-	pos.printSqAttacked(white)
-	pos.printSqAttacked(black)
 }
 
 //updateMaterialLists Update the material lists for the baord

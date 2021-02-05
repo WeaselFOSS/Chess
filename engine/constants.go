@@ -3,6 +3,9 @@ package engine
 //squareNumber Number of squares in the board representastion
 const squareNumber = 120
 
+//maxPositionMoves the max number of moves we can expect from any given position
+const maxPositionMoves = 256
+
 //StartPosFEN The fen string for a starting position
 const StartPosFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
