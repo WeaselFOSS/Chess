@@ -117,8 +117,8 @@ func (pos *BoardStruct) CheckBoard() error {
 		return errors.New("No side to move is set")
 	}
 
-	if pos.EnPassant != noSquare && (ranksBoard[pos.EnPassant] != rank6 && pos.Side == white) ||
-		(ranksBoard[pos.EnPassant] != rank3 && pos.Side == black) {
+	if pos.EnPassant != noSquare && ((ranksBoard[pos.EnPassant] != rank6 && pos.Side == white) ||
+		(ranksBoard[pos.EnPassant] != rank3 && pos.Side == black)) {
 		return errors.New(fmt.Sprintf("Invalid EnPassant rank of %d", ranksBoard[pos.EnPassant]))
 	}
 

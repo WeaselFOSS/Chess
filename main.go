@@ -31,6 +31,10 @@ func main() {
 	var pos engine.BoardStruct
 	var list engine.MoveListStruct
 	pos.LoadFEN(fen)
-	pos.GenerateAllMoves(&list)
+	pos.Print()
+	err := pos.GenerateAllMoves(&list)
+	if err != nil {
+		panic(err)
+	}
 	list.Print()
 }
