@@ -96,17 +96,17 @@ func (pos *BoardStruct) generateAllPawnMoves(list *MoveListStruct) error {
 			if pos.Pieces[sq-10] == empty {
 				list.addBlackPawnMove(sq, sq-10)
 				//Pawn move 2 forward
-				if ranksBoard[sq] == rank2 && pos.Pieces[sq-20] == empty {
+				if ranksBoard[sq] == rank7 && pos.Pieces[sq-20] == empty {
 					list.addQuietMove(toMove(sq, sq-20, empty, empty, moveFlagPS))
 				}
 			}
 
 			//Pawn Captures
-			if squareOnBoard(sq-9) && getPieceColor(pos.Pieces[sq-9]) == black {
+			if squareOnBoard(sq-9) && getPieceColor(pos.Pieces[sq-9]) == white {
 				list.addBlackPawnCaptureMove(sq, sq-9, pos.Pieces[sq-9])
 			}
 
-			if squareOnBoard(sq-11) && getPieceColor(pos.Pieces[sq-11]) == black {
+			if squareOnBoard(sq-11) && getPieceColor(pos.Pieces[sq-11]) == white {
 				list.addBlackPawnCaptureMove(sq, sq-11, pos.Pieces[sq-11])
 			}
 
