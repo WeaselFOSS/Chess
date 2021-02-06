@@ -45,4 +45,4 @@ License
 
 This project is currently licensed under GPLv3. This means you can use our source for your own project, so long as it remains open source.
 
-Please refer to the [license](/docs/LICENSE) file for more information.
+Please refer to the [license](/LICENSE) file for more information.
