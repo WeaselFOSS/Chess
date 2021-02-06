@@ -1,6 +1,9 @@
 package engine
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 //addEnPasMove add an EnPass move
 func (list *MoveListStruct) addEnPasMove(move int) {
@@ -10,7 +13,13 @@ func (list *MoveListStruct) addEnPasMove(move int) {
 }
 
 //addWhitePawnCaptureMove Add capture move for white pawn
-func (list *MoveListStruct) addWhitePawnCaptureMove(from, to, cap int) {
+func (list *MoveListStruct) addWhitePawnCaptureMove(from, to, cap int) error {
+	if DEBUG {
+		if !squareOnBoard(from) || !squareOnBoard(to) || !pieceValidEmpty(cap) {
+			return errors.New("Invalid perams for addWhitePawnCapture")
+		}
+	}
+
 	if ranksBoard[from] == rank7 {
 		list.addCaptureMove(toMove(from, to, cap, wQ, 0))
 		list.addCaptureMove(toMove(from, to, cap, wR, 0))
@@ -19,10 +28,16 @@ func (list *MoveListStruct) addWhitePawnCaptureMove(from, to, cap int) {
 	} else {
 		list.addCaptureMove(toMove(from, to, cap, empty, 0))
 	}
+	return nil
 }
 
 //addWhitePawnMove Add normal white pawn move
-func (list *MoveListStruct) addWhitePawnMove(from, to int) {
+func (list *MoveListStruct) addWhitePawnMove(from, to int) error {
+	if DEBUG {
+		if !squareOnBoard(from) || !squareOnBoard(to) {
+			return errors.New("Invalid perams for addWhitePawnCapture")
+		}
+	}
 	if ranksBoard[from] == rank7 {
 		list.addCaptureMove(toMove(from, to, empty, wQ, 0))
 		list.addCaptureMove(toMove(from, to, empty, wR, 0))
@@ -31,10 +46,17 @@ func (list *MoveListStruct) addWhitePawnMove(from, to int) {
 	} else {
 		list.addCaptureMove(toMove(from, to, empty, empty, 0))
 	}
+	return nil
 }
 
 //addBlackPawnCaptureMove Add capture move for black pawn
-func (list *MoveListStruct) addBlackPawnCaptureMove(from, to, cap int) {
+func (list *MoveListStruct) addBlackPawnCaptureMove(from, to, cap int) error {
+	if DEBUG {
+		if !squareOnBoard(from) || !squareOnBoard(to) || !pieceValidEmpty(cap) {
+			return errors.New("Invalid perams for addWhitePawnCapture")
+		}
+	}
+
 	if ranksBoard[from] == rank2 {
 		list.addCaptureMove(toMove(from, to, cap, bQ, 0))
 		list.addCaptureMove(toMove(from, to, cap, bR, 0))
@@ -43,10 +65,17 @@ func (list *MoveListStruct) addBlackPawnCaptureMove(from, to, cap int) {
 	} else {
 		list.addCaptureMove(toMove(from, to, cap, empty, 0))
 	}
+
+	return nil
 }
 
 //addBlackPawnMove add normal black pawn move
-func (list *MoveListStruct) addBlackPawnMove(from, to int) {
+func (list *MoveListStruct) addBlackPawnMove(from, to int) error {
+	if DEBUG {
+		if !squareOnBoard(from) || !squareOnBoard(to) {
+			return errors.New("Invalid perams for addWhitePawnCapture")
+		}
+	}
 	if ranksBoard[from] == rank2 {
 		list.addCaptureMove(toMove(from, to, empty, bQ, 0))
 		list.addCaptureMove(toMove(from, to, empty, bR, 0))
@@ -55,10 +84,12 @@ func (list *MoveListStruct) addBlackPawnMove(from, to int) {
 	} else {
 		list.addCaptureMove(toMove(from, to, empty, empty, 0))
 	}
+	return nil
 }
 
 //generateAllPawnMoves Generate all pawn moves
 func (pos *BoardStruct) generateAllPawnMoves(list *MoveListStruct) error {
+	var err error = nil
 	if pos.Side == white {
 		//White pawn moves
 		for pieceNum := 0; pieceNum < pos.PieceNum[wP]; pieceNum++ {
@@ -70,7 +101,10 @@ func (pos *BoardStruct) generateAllPawnMoves(list *MoveListStruct) error {
 
 			//Pawn move forward
 			if pos.Pieces[sq+10] == empty {
-				list.addWhitePawnMove(sq, sq+10)
+				err = list.addWhitePawnMove(sq, sq+10)
+				if err != nil {
+					return err
+				}
 				//Pawn move 2 forward
 				if ranksBoard[sq] == rank2 && pos.Pieces[sq+20] == empty {
 					list.addQuietMove(toMove(sq, sq+20, empty, empty, moveFlagPS))
@@ -79,11 +113,17 @@ func (pos *BoardStruct) generateAllPawnMoves(list *MoveListStruct) error {
 
 			//Pawn Captures
 			if squareOnBoard(sq+9) && getPieceColor(pos.Pieces[sq+9]) == black {
-				list.addWhitePawnCaptureMove(sq, sq+9, pos.Pieces[sq+9])
+				err = list.addWhitePawnCaptureMove(sq, sq+9, pos.Pieces[sq+9])
+				if err != nil {
+					return err
+				}
 			}
 
 			if squareOnBoard(sq+11) && getPieceColor(pos.Pieces[sq+11]) == black {
-				list.addWhitePawnCaptureMove(sq, sq+11, pos.Pieces[sq+11])
+				err = list.addWhitePawnCaptureMove(sq, sq+11, pos.Pieces[sq+11])
+				if err != nil {
+					return err
+				}
 			}
 
 			//Pawn EnPassant Capture
@@ -106,7 +146,10 @@ func (pos *BoardStruct) generateAllPawnMoves(list *MoveListStruct) error {
 
 			//Pawn move forward
 			if pos.Pieces[sq-10] == empty {
-				list.addBlackPawnMove(sq, sq-10)
+				err = list.addBlackPawnMove(sq, sq-10)
+				if err != nil {
+					return err
+				}
 				//Pawn move 2 forward
 				if ranksBoard[sq] == rank7 && pos.Pieces[sq-20] == empty {
 					list.addQuietMove(toMove(sq, sq-20, empty, empty, moveFlagPS))
@@ -115,11 +158,17 @@ func (pos *BoardStruct) generateAllPawnMoves(list *MoveListStruct) error {
 
 			//Pawn Captures
 			if squareOnBoard(sq-9) && getPieceColor(pos.Pieces[sq-9]) == white {
-				list.addBlackPawnCaptureMove(sq, sq-9, pos.Pieces[sq-9])
+				err = list.addBlackPawnCaptureMove(sq, sq-9, pos.Pieces[sq-9])
+				if err != nil {
+					return err
+				}
 			}
 
 			if squareOnBoard(sq-11) && getPieceColor(pos.Pieces[sq-11]) == white {
-				list.addBlackPawnCaptureMove(sq, sq-11, pos.Pieces[sq-11])
+				err = list.addBlackPawnCaptureMove(sq, sq-11, pos.Pieces[sq-11])
+				if err != nil {
+					return err
+				}
 			}
 
 			//Pawn EnPassant Capture
@@ -133,5 +182,5 @@ func (pos *BoardStruct) generateAllPawnMoves(list *MoveListStruct) error {
 		}
 	}
 
-	return nil
+	return err
 }

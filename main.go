@@ -27,7 +27,7 @@ func main() {
 	//uci.UCI(EngineInfo)
 	//TODO: Make engine
 	//TEMP for debugging
-	fen := "rnbqkbnr/p1p1p3/3p3p/1p1p4/2P1Pp2/8/PP1P1PpP/RNBQKB1R b KQkq e3 0 1"
+	fen := "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"
 	var pos engine.BoardStruct
 	var list engine.MoveListStruct
 	pos.LoadFEN(fen)
