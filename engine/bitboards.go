@@ -11,6 +11,7 @@ var bitTables = [64]int{
 var setMask [64]uint64
 var clearMask [64]uint64
 
+//initBitMasks Initialize the bit masks
 func initBitMasks() {
 	for i := 0; i < 64; i++ {
 		setMask[i] |= uint64(1) << uint64(i)
@@ -55,10 +56,12 @@ func countBits(board uint64) int {
 	return r
 }
 
+//clearBit removes given square from bitboard
 func clearBit(bitboard *uint64, square int) {
 	*bitboard &= clearMask[square]
 }
 
+//setBit sets bit to given square
 func setBit(bitboard *uint64, square int) {
 	*bitboard |= setMask[square]
 }

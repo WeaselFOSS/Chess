@@ -34,6 +34,7 @@ func moveToString(move int) string {
 	return fmt.Sprintf("%c%c%c%c", ('a' + ff), ('1' + rf), ('a' + ft), ('1' + rt))
 }
 
+//Print print current board state to console
 func (list *MoveListStruct) Print() {
 	fmt.Println("MoveList:")
 

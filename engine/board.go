@@ -72,6 +72,7 @@ func (pos *BoardStruct) resetBoard() {
 		pos.BigPieces[i] = 0
 		pos.MajorPieces[i] = 0
 		pos.MinorPieces[i] = 0
+		pos.Material[i] = 0
 		pos.Pawns[i] = uint64(0)
 	}
 	pos.Pawns[2] = uint64(0)

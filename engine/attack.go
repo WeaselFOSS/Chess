@@ -2,11 +2,19 @@ package engine
 
 import "fmt"
 
+//knightDir knight directions
 var knightDir = [8]int{-8, -19, -21, -12, 8, 19, 21, 12}
+
+//rookDir Rook directions
 var rookDir = [4]int{-1, -10, 1, 10}
+
+//bishopDir Bishop directions
 var bishopDir = [4]int{-9, -11, 11, 9}
+
+//kingDir King directions
 var kingDir = [8]int{-1, -10, 1, 10, -9, -11, 11, 9}
 
+//isAttacked Returns if square is attacked
 func (pos *BoardStruct) isAttacked(sq, side int) (bool, error) {
 
 	if DEBUG && !squareOnBoard(sq) {

@@ -27,26 +27,26 @@ func (pos *BoardStruct) castelPermToChar() (rune, rune, rune, rune) {
 
 //IsPieceBig returns true if piece is big
 func isPieceBig(piece int) bool {
-	if piece != empty && piece != wP && piece != bP {
-		return true
-	}
-	return false
+	return piece != empty && piece != wP && piece != bP
 }
 
 //IsPieceBig returns true if piece is major
 func isPieceMajor(piece int) bool {
-	if piece != empty && piece != wP && piece != wN && piece != wB && piece != bP && piece != bN && piece != bB {
-		return true
-	}
-	return false
+	return piece != empty && piece != wP && piece != wN && piece != wB &&
+		piece != bP && piece != bN && piece != bB
+
 }
 
 //IsPieceBig returns true if piece is minor
 func isPieceMinor(piece int) bool {
-	if piece == wN || piece == wB || piece == bN || piece == bB {
-		return true
-	}
-	return false
+	return piece == wN || piece == wB || piece == bN || piece == bB
+
+}
+
+//isPieceSlider returns true if piece is slider
+func isPieceSlider(piece int) bool {
+	return piece == wB || piece == wR || piece == wQ ||
+		piece == bB || piece == bR || piece == bQ
 }
 
 //GetPieceValue returns the value of a piece

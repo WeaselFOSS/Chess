@@ -2,6 +2,14 @@ package engine
 
 import "fmt"
 
+//addEnPasMove add an EnPass move
+func (list *MoveListStruct) addEnPasMove(move int) {
+	list.Moves[list.Count].Move = move
+	list.Moves[list.Count].Score = 0
+	list.Count++
+}
+
+//addWhitePawnCaptureMove Add capture move for white pawn
 func (list *MoveListStruct) addWhitePawnCaptureMove(from, to, cap int) {
 	if ranksBoard[from] == rank7 {
 		list.addCaptureMove(toMove(from, to, cap, wQ, 0))
@@ -13,6 +21,7 @@ func (list *MoveListStruct) addWhitePawnCaptureMove(from, to, cap int) {
 	}
 }
 
+//addWhitePawnMove Add normal white pawn move
 func (list *MoveListStruct) addWhitePawnMove(from, to int) {
 	if ranksBoard[from] == rank7 {
 		list.addCaptureMove(toMove(from, to, empty, wQ, 0))
@@ -24,6 +33,7 @@ func (list *MoveListStruct) addWhitePawnMove(from, to int) {
 	}
 }
 
+//addBlackPawnCaptureMove Add capture move for black pawn
 func (list *MoveListStruct) addBlackPawnCaptureMove(from, to, cap int) {
 	if ranksBoard[from] == rank2 {
 		list.addCaptureMove(toMove(from, to, cap, bQ, 0))
@@ -35,6 +45,7 @@ func (list *MoveListStruct) addBlackPawnCaptureMove(from, to, cap int) {
 	}
 }
 
+//addBlackPawnMove add normal black pawn move
 func (list *MoveListStruct) addBlackPawnMove(from, to int) {
 	if ranksBoard[from] == rank2 {
 		list.addCaptureMove(toMove(from, to, empty, bQ, 0))
@@ -46,6 +57,7 @@ func (list *MoveListStruct) addBlackPawnMove(from, to int) {
 	}
 }
 
+//generateAllPawnMoves Generate all pawn moves
 func (pos *BoardStruct) generateAllPawnMoves(list *MoveListStruct) error {
 	if pos.Side == white {
 		//White pawn moves

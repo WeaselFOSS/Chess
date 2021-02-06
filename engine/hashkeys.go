@@ -10,6 +10,7 @@ var pieceKeys [13][120]uint64
 var sideKey uint64
 var castelKeys [16]uint64
 
+//initHashKeys Initialize the hash keys
 func initHashKeys() {
 	rand.Seed(time.Now().UTC().UnixNano())
 
