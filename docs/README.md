@@ -1,7 +1,7 @@
 Weasel
 ===========
 
-![Logo](docs/weasel.png)
+![Logo](weasel.png)
 Art graciously provided by [Alex](https://www.deviantart.com/redhead-alex)
 
 This respository implements a basic chess engine.
@@ -45,4 +45,4 @@ License
 
 This project is currently licensed under GPLv3. This means you can use our source for your own project, so long as it remains open source.
 
-Please refer to the [license](docs/LICENSE) file for more information.
+Please refer to the [license](/LICENSE) file for more information.
