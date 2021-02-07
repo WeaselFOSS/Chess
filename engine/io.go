@@ -1,6 +1,8 @@
 package engine
 
-import "fmt"
+import (
+	"fmt"
+)
 
 //SquareToString square to algebraic notation
 func SquareToString(sq int) string {
@@ -32,6 +34,25 @@ func MoveToString(move int) string {
 		return fmt.Sprintf("%c%c%c%c%c", ('a' + ff), ('1' + rf), ('a' + ft), ('1' + rt), pchar)
 	}
 	return fmt.Sprintf("%c%c%c%c", ('a' + ff), ('1' + rf), ('a' + ft), ('1' + rt))
+}
+
+//StringToMove algebraic notation to move int
+func StringToMove(move string) int {
+	fromFile := int(rune(move[0]) - 'a')
+	fromRank := int(rune(move[1]) - '1')
+	toFile := int(rune(move[2]) - 'a')
+	toRank := int(rune(move[3]) - '1')
+
+	fromSquare := fileRankToSquare(fromFile, fromRank)
+	toSquare := fileRankToSquare(toFile, toRank)
+
+	var promotion int
+
+	if len(move) > 4 {
+		promotion = int(rune(move[4]) - 'a') //TODO: Redo with global piece constants
+	}
+
+	return toMove(fromSquare, toSquare, 0, promotion, 0)
 }
 
 //Print print current board state to console
