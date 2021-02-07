@@ -134,7 +134,7 @@ func (pos *BoardStruct) addPiece(sq, piece int) error {
 			return fmt.Errorf("Square %d not on board", sq)
 		}
 		if !pieceValid(piece) {
-			return fmt.Errorf("Piece value invalid", sq, piece)
+			return fmt.Errorf("Piece value %d invalid", piece)
 		}
 	}
 
