@@ -61,9 +61,7 @@ func UCI(engineInfo EngineInfo) {
 				index := strings.Index(str, "moves")
 				str = str[index+6:]
 				moves := strings.Split(str, " ")
-				fmt.Println(moves)
 				for i := 0; i < len(moves); i++ {
-					fmt.Println("test2")
 					move, err := pos.ParseMove(moves[i])
 					if err != nil {
 						panic(err)
