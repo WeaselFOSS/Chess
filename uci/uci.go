@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 	"unicode"
 
@@ -17,15 +18,19 @@ type EngineInfo struct {
 	Author  string
 }
 
-//DebugModeOn tells us if we should output debug messages
-
+//Current board position
 var pos engine.BoardStruct
 
 //UCI is our main loop for
 func UCI(engineInfo EngineInfo) {
+	var command []string
+
 	scanner := bufio.NewScanner(os.Stdin)
+
+	space := regexp.MustCompile(`\s+`) //Used to delete multiple spaces
+
 	for scanner.Scan() {
-		command := strings.Split(scanner.Text(), " ")
+		command = strings.Split(space.ReplaceAllString(scanner.Text(), " "), " ")
 
 		switch command[0] {
 		case "uci":
@@ -48,7 +53,6 @@ func UCI(engineInfo EngineInfo) {
 					panic(err)
 				}
 				boardSet = true
-
 			} else if command[1] == "fen" {
 				err := pos.LoadFEN(strings.Join(command[2:], " "))
 				if err != nil {
@@ -80,7 +84,6 @@ func UCI(engineInfo EngineInfo) {
 					break
 				}
 			}
-
 		case "go":
 		case "stop":
 		case "ponderhit":
