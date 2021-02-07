@@ -89,11 +89,13 @@ func UCI(engineInfo EngineInfo) {
 		case "print":
 			pos.Print()
 		case "divide":
-			if unicode.IsDigit(rune(command[1][0])) {
-				var depth int = int(rune(command[1][0]) - '0')
-				err := pos.PerftDivide(depth)
-				if err != nil {
-					panic(err)
+			if len(command) > 1 {
+				if unicode.IsDigit(rune(command[1][0])) {
+					var depth int = int(rune(command[1][0]) - '0')
+					err := pos.PerftDivide(depth)
+					if err != nil {
+						panic(err)
+					}
 				}
 			}
 		}
