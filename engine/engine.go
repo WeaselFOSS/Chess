@@ -1,6 +1,7 @@
 package engine
 
-func init() {
+//Initialize conversion arrays for engine operation
+func Initialize() {
 	initSq120To64()
 	initFileRanks()
 	initBitMasks()

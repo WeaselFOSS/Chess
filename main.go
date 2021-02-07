@@ -11,7 +11,9 @@ var EngineInfo = uci.EngineInfo{
 	Author:  "WeaselChess Club",
 }
 
-func init() {
+func main() {
+	go uci.UCI(EngineInfo)
+
 	println("                                                  ")
 	println("██╗    ██╗███████╗ █████╗ ███████╗███████╗██╗     ")
 	println("██║    ██║██╔════╝██╔══██╗██╔════╝██╔════╝██║     ")
@@ -20,8 +22,6 @@ func init() {
 	println("╚███╔███╔╝███████╗██║  ██║███████║███████╗███████╗")
 	println(" ╚══╝╚══╝ ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝")
 	println("                                                  ")
-}
 
-func main() {
-	uci.UCI(EngineInfo)
+	<-make(chan struct{})
 }
