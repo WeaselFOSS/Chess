@@ -31,14 +31,18 @@ func UCI(engineInfo EngineInfo) {
 	space := regexp.MustCompile(`\s+`) //Used to delete multiple spaces
 
 	for scanner.Scan() {
+		index := 0
+
 		command = strings.Split(space.ReplaceAllString(scanner.Text(), " "), " ")
 
-		switch command[0] {
+	top:
+
+		switch command[index] {
 		case "uci":
 			go uciHander(engineInfo)
 		case "debug":
 			go func() {
-				if command[1] == "on" {
+				if command[index+1] == "on" {
 					engine.DEBUG = true
 				} else {
 					engine.DEBUG = false
@@ -57,7 +61,7 @@ func UCI(engineInfo EngineInfo) {
 		case "ucinewgame":
 		case "position":
 			if ready {
-				go positionHandler(command)
+				go positionHandler(command[index:])
 			}
 		case "go":
 		case "stop":
@@ -68,8 +72,11 @@ func UCI(engineInfo EngineInfo) {
 			go pos.Print()
 		case "divide":
 			if ready {
-				go divideHander(command)
+				go divideHander(command[index:])
 			}
+		default:
+			index++
+			goto top
 		}
 	}
 }
