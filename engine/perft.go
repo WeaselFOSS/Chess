@@ -5,6 +5,11 @@ import (
 	"time"
 )
 
+//Perft is a performance test used to test move generation
+//
+//returns leaf node count
+//
+//For more information of Perft: https://www.chessprogramming.org/Perft
 func (pos *BoardStruct) Perft(depth int) (int, error) {
 	leafNodes := 0
 	if DEBUG {
@@ -52,6 +57,11 @@ func (pos *BoardStruct) Perft(depth int) (int, error) {
 	return leafNodes, nil
 }
 
+//PerftDivide divides the result of Perft() to each root node
+//
+//returns leaf node count for a given root node
+//
+//For more information of Perft: https://www.chessprogramming.org/Perft
 func (pos *BoardStruct) PerftDivide(depth int) error {
 	start := time.Now()
 	if DEBUG {

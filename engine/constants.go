@@ -9,7 +9,7 @@ const maxPositionMoves = 256
 //StartPosFEN The fen string for a starting position
 const StartPosFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
-//Const for no move
+//NoMove constant for no move found
 const NoMove = 0
 
 const (

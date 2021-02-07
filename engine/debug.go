@@ -22,7 +22,7 @@ func (pos *BoardStruct) CheckBoard() error {
 		for tPieceNum := 0; tPieceNum < pos.PieceNum[tPiece]; tPieceNum++ {
 			sq120 := pos.PieceList[tPiece][tPieceNum]
 			if pos.Pieces[sq120] != tPiece {
-				return errors.New(fmt.Sprintf("Position piece at index %d is type %d expected %d", sq120, pos.Pieces[sq120], tPieceNum))
+				return fmt.Errorf("Position piece at index %d is type %d expected %d", sq120, pos.Pieces[sq120], tPieceNum)
 			}
 		}
 	}
@@ -58,43 +58,43 @@ func (pos *BoardStruct) CheckBoard() error {
 
 	for tPiece := wP; tPiece < bK; tPiece++ {
 		if tPieceNum[tPiece] != pos.PieceNum[tPiece] {
-			return errors.New(fmt.Sprintf("Piece count mis match for %c Expected %d got %d", pieceChar[tPiece], tPieceNum[tPiece], pos.PieceNum[tPiece]))
+			return fmt.Errorf("Piece count mis match for %c Expected %d got %d", pieceChar[tPiece], tPieceNum[tPiece], pos.PieceNum[tPiece])
 		}
 	}
 
 	pcount := countBits(tPawns[white])
 	if pcount != pos.PieceNum[wP] {
-		return errors.New(fmt.Sprintf("White Pawn BitBoard count mismatch, expected %d got %d", pos.PieceNum[wP], pcount))
+		return fmt.Errorf("White Pawn BitBoard count mismatch, expected %d got %d", pos.PieceNum[wP], pcount)
 	}
 
 	pcount = countBits(tPawns[black])
 	if pcount != pos.PieceNum[bP] {
-		return errors.New(fmt.Sprintf("Black Pawn BitBoard count mismatch, expected %d got %d", pos.PieceNum[bP], pcount))
+		return fmt.Errorf("Black Pawn BitBoard count mismatch, expected %d got %d", pos.PieceNum[bP], pcount)
 	}
 
 	pcount = countBits(tPawns[both])
 	if pcount != pos.PieceNum[bP]+pos.PieceNum[wP] {
-		return errors.New(fmt.Sprintf("Both Pawn BitBoard count mismatch, expected %d got %d", pos.PieceNum[bP]+pos.PieceNum[wP], pcount))
+		return fmt.Errorf("Both Pawn BitBoard count mismatch, expected %d got %d", pos.PieceNum[bP]+pos.PieceNum[wP], pcount)
 	}
 
 	for tPawns[white] != 0 {
 		sq64 := popBit(&tPawns[white])
 		if pos.Pieces[sq64ToSq120[sq64]] != wP {
-			return errors.New(fmt.Sprintf("White Pawn BitBoard position mismatch on position %d", sq64))
+			return fmt.Errorf("White Pawn BitBoard position mismatch on position %d", sq64)
 		}
 	}
 
 	for tPawns[black] != 0 {
 		sq64 := popBit(&tPawns[black])
 		if pos.Pieces[sq64ToSq120[sq64]] != bP {
-			return errors.New(fmt.Sprintf("Black Pawn BitBoard position mismatch on position %d", sq64))
+			return fmt.Errorf("Black Pawn BitBoard position mismatch on position %d", sq64)
 		}
 	}
 
 	for tPawns[both] != 0 {
 		sq64 := popBit(&tPawns[both])
 		if pos.Pieces[sq64ToSq120[sq64]] != bP && pos.Pieces[sq64ToSq120[sq64]] != wP {
-			return errors.New(fmt.Sprintf("Both Pawn BitBoard position mismatch on position %d", sq64))
+			return fmt.Errorf("Both Pawn BitBoard position mismatch on position %d", sq64)
 		}
 	}
 
@@ -120,15 +120,15 @@ func (pos *BoardStruct) CheckBoard() error {
 
 	if pos.EnPassant != noSquare && ((ranksBoard[pos.EnPassant] != rank6 && pos.Side == white) ||
 		(ranksBoard[pos.EnPassant] != rank3 && pos.Side == black)) {
-		return errors.New(fmt.Sprintf("Invalid EnPassant rank of %d", ranksBoard[pos.EnPassant]))
+		return fmt.Errorf("Invalid EnPassant rank of %d", ranksBoard[pos.EnPassant])
 	}
 
 	if pos.Pieces[pos.KingSquare[white]] != wK {
-		return errors.New(fmt.Sprintf("White king square set to invalid position of %d", pos.KingSquare[white]))
+		return fmt.Errorf("White king square set to invalid position of %d", pos.KingSquare[white])
 	}
 
 	if pos.Pieces[pos.KingSquare[black]] != bK {
-		return errors.New(fmt.Sprintf("Black king square set to invalid position of %d", pos.KingSquare[black]))
+		return fmt.Errorf("Black king square set to invalid position of %d", pos.KingSquare[black])
 	}
 
 	poskey, err := pos.generatePosKey()
@@ -137,7 +137,7 @@ func (pos *BoardStruct) CheckBoard() error {
 	}
 
 	if pos.PosKey != poskey {
-		return errors.New(fmt.Sprintf("Position Hash mis match expected %d, got %d", poskey, pos.PosKey))
+		return fmt.Errorf("Position Hash mis match expected %d, got %d", poskey, pos.PosKey)
 	}
 
 	return nil

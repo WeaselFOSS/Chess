@@ -98,6 +98,7 @@ func (pos *BoardStruct) resetBoard() {
 	pos.PosKey = uint64(0)
 }
 
+//LoadFEN loads the engine with a new board position from a FEN string
 func (pos *BoardStruct) LoadFEN(fen string) error {
 	if fen == "" {
 		return errors.New("FEN String is empty")
