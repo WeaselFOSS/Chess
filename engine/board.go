@@ -24,18 +24,18 @@ type BoardStruct struct {
 	HisPly     int
 	PosKey     uint64
 
-	History []UndoStruct
+	History [2048]UndoStruct
 
 	PieceList [13][10]int
 }
 
 //UndoStruct the undo move struct
 type UndoStruct struct {
-	Move      int
-	CastelPem int
-	EnPassant int
-	FiftyMove int
-	PosKey    uint64
+	Move       int
+	CastelPerm int
+	EnPassant  int
+	FiftyMove  int
+	PosKey     uint64
 }
 
 //sq120ToSq64 120 Square board to 64 square board index
@@ -73,9 +73,12 @@ func (pos *BoardStruct) resetBoard() {
 		pos.MajorPieces[i] = 0
 		pos.MinorPieces[i] = 0
 		pos.Material[i] = 0
+	}
+
+	for i := 0; i < 3; i++ {
 		pos.Pawns[i] = uint64(0)
 	}
-	pos.Pawns[2] = uint64(0)
+
 	for i := 0; i < 13; i++ {
 		pos.PieceNum[i] = 0
 	}

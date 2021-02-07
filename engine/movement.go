@@ -1,5 +1,7 @@
 package engine
 
+import "fmt"
+
 //MoveStruct used to store a move
 type MoveStruct struct {
 	Move  int
@@ -10,6 +12,22 @@ type MoveStruct struct {
 type MoveListStruct struct {
 	Moves [maxPositionMoves]MoveStruct
 	Count int
+}
+
+//castlePerm index of castel perm change per square
+var castelPerm = [120]int{
+	15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+	15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+	15, 13, 15, 15, 15, 12, 15, 15, 14, 15,
+	15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+	15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+	15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+	15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+	15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+	15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+	15, 7, 15, 15, 15, 3, 15, 15, 11, 15,
+	15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+	15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
 }
 
 /*
@@ -60,4 +78,131 @@ func getPromoted(move int) int {
 //toMove Puts all move info into a single move int
 func toMove(from, to, capture, promotion, flag int) int {
 	return (from | (to << 7) | (capture << 14) | (promotion << 20) | flag)
+}
+
+//clearPiece clear piece from current square
+func (pos *BoardStruct) clearPiece(sq int) error {
+	if DEBUG {
+		if !squareOnBoard(sq) {
+			return fmt.Errorf("Square %d not on board", sq)
+		}
+		if !pieceValid(pos.Pieces[sq]) {
+			return fmt.Errorf("Piece on square %d is invalid with %d", sq, pos.Pieces[sq])
+		}
+	}
+
+	piece := pos.Pieces[sq]
+	color := getPieceColor(piece)
+
+	pos.hashPiece(piece, sq)
+
+	pos.Pieces[sq] = empty
+	pos.Material[color] -= getPieceValue(piece)
+
+	if isPieceBig(piece) {
+		pos.BigPieces[color]--
+		if isPieceMajor(piece) {
+			pos.MajorPieces[color]--
+		} else {
+			pos.MinorPieces[color]--
+		}
+	} else {
+		clearBit(&pos.Pawns[color], sq120ToSq64[sq])
+		clearBit(&pos.Pawns[both], sq120ToSq64[sq])
+	}
+
+	tPieceNum := -1
+	for i := 0; i < pos.PieceNum[piece]; i++ {
+		if pos.PieceList[piece][i] == sq {
+			tPieceNum = i
+			break
+		}
+	}
+
+	if DEBUG && tPieceNum == -1 {
+		return fmt.Errorf("Could not find piece %d on square %d in piece list", piece, sq)
+	}
+
+	pos.PieceNum[piece]--
+	pos.PieceList[piece][tPieceNum] = pos.PieceList[piece][pos.PieceNum[piece]]
+	return nil
+}
+
+func (pos *BoardStruct) addPiece(sq, piece int) error {
+	if DEBUG {
+		if !squareOnBoard(sq) {
+			return fmt.Errorf("Square %d not on board", sq)
+		}
+		if !pieceValid(piece) {
+			return fmt.Errorf("Piece value invalid", sq, piece)
+		}
+	}
+
+	color := getPieceColor(piece)
+
+	pos.hashPiece(piece, sq)
+	pos.Pieces[sq] = piece
+
+	if isPieceBig(piece) {
+		pos.BigPieces[color]++
+		if isPieceMajor(piece) {
+			pos.MajorPieces[color]++
+		} else {
+			pos.MinorPieces[color]++
+		}
+	} else {
+		setBit(&pos.Pawns[color], sq120ToSq64[sq])
+		setBit(&pos.Pawns[both], sq120ToSq64[sq])
+	}
+
+	pos.Material[color] += getPieceValue(piece)
+	pos.PieceList[piece][pos.PieceNum[piece]] = sq
+	pos.PieceNum[piece]++
+
+	return nil
+}
+
+//movePiece Move a piece
+func (pos *BoardStruct) movePiece(from, to int) error {
+	if DEBUG {
+		if !squareOnBoard(from) {
+			return fmt.Errorf("from value Square %d not on board", from)
+		}
+		if !squareOnBoard(to) {
+			return fmt.Errorf("to value Square %d not on board", to)
+		}
+	}
+
+	piece := pos.Pieces[from]
+	color := getPieceColor(piece)
+	//Value only used in debug mode
+	pieceFound := false
+
+	pos.hashPiece(piece, from)
+	pos.Pieces[from] = empty
+
+	pos.hashPiece(piece, to)
+	pos.Pieces[to] = piece
+
+	if !isPieceBig(piece) {
+		clearBit(&pos.Pawns[color], sq120ToSq64[from])
+		clearBit(&pos.Pawns[both], sq120ToSq64[from])
+
+		setBit(&pos.Pawns[color], sq120ToSq64[to])
+		setBit(&pos.Pawns[both], sq120ToSq64[to])
+	}
+
+	for i := 0; i < pos.PieceNum[piece]; i++ {
+		if pos.PieceList[piece][i] == from {
+			pos.PieceList[piece][i] = to
+			pieceFound = true
+			break
+		}
+	}
+
+	if DEBUG && !pieceFound {
+		return fmt.Errorf("Could not find piece %d in PieceList", piece)
+	}
+
+	return nil
 }

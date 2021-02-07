@@ -36,5 +36,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	pos.MakeMove(list.Moves[0].Move)
 	list.Print()
+	pos.Print()
 }

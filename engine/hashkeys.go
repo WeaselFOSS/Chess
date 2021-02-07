@@ -62,3 +62,23 @@ func (pos *BoardStruct) generatePosKey() (uint64, error) {
 
 	return finalKey, nil
 }
+
+//hashPiece update hash with pieces new square
+func (pos *BoardStruct) hashPiece(piece, sq int) {
+	pos.PosKey ^= (pieceKeys[piece][sq])
+}
+
+//hashCastel update hash with castel perms
+func (pos *BoardStruct) hashCastel() {
+	pos.PosKey ^= (castelKeys[pos.CastelPerm])
+}
+
+//hashSide update hash with new side
+func (pos *BoardStruct) hashSide() {
+	pos.PosKey ^= (sideKey)
+}
+
+//hashEnPas update hash for EnPas square
+func (pos *BoardStruct) hashEnPas() {
+	pos.PosKey ^= (pieceKeys[empty][pos.EnPassant])
+}
