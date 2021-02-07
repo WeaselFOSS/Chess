@@ -41,21 +41,48 @@ func UCI(engineInfo EngineInfo) {
 		case "register":
 		case "ucinewgame":
 		case "position":
+			boardSet := false
 			if command[1] == "startpos" {
-				if len(command) > 2 {
-					//boardInitWithMove(strings.Join(command[2:], " ")) //moves e1e2
-				} else {
-					err := pos.LoadFEN(engine.StartPosFEN)
-					if err != nil {
-						panic(err)
-					}
+				err := pos.LoadFEN(engine.StartPosFEN)
+				if err != nil {
+					panic(err)
 				}
+				boardSet = true
+
 			} else if command[1] == "fen" {
 				err := pos.LoadFEN(strings.Join(command[2:], " "))
 				if err != nil {
 					panic(err)
 				}
+				boardSet = true
 			}
+			str := strings.Join(command[2:], " ")
+			if strings.Contains(str, "moves") && boardSet {
+				index := strings.Index(str, "moves")
+				str = str[index+6:]
+				moves := strings.Split(str, " ")
+				fmt.Println(moves)
+				for i := 0; i < len(moves); i++ {
+					fmt.Println("test2")
+					move, err := pos.ParseMove(moves[i])
+					if err != nil {
+						panic(err)
+					}
+					if move != engine.NoMove {
+						var moveMade bool
+						moveMade, err := pos.MakeMove(move)
+						if err != nil {
+							panic(err)
+						}
+						if moveMade {
+							continue
+						}
+					}
+					fmt.Printf("Non-legal move: %s", moves[i])
+					break
+				}
+			}
+
 		case "go":
 		case "stop":
 		case "ponderhit":

@@ -36,23 +36,66 @@ func MoveToString(move int) string {
 	return fmt.Sprintf("%c%c%c%c", ('a' + ff), ('1' + rf), ('a' + ft), ('1' + rt))
 }
 
-//StringToMove algebraic notation to move int
-func StringToMove(move string) int {
-	fromFile := int(rune(move[0]) - 'a')
-	fromRank := int(rune(move[1]) - '1')
-	toFile := int(rune(move[2]) - 'a')
-	toRank := int(rune(move[3]) - '1')
-
-	fromSquare := fileRankToSquare(fromFile, fromRank)
-	toSquare := fileRankToSquare(toFile, toRank)
-
-	var promotion int
-
-	if len(move) > 4 {
-		promotion = int(rune(move[4]) - 'a') //TODO: Redo with global piece constants
+//ParseMove algebraic notation to move int
+func (pos *BoardStruct) ParseMove(move string) (int, error) {
+	if len(move) < 4 {
+		return NoMove, fmt.Errorf("Move %s out of bounds", move)
 	}
 
-	return toMove(fromSquare, toSquare, 0, promotion, 0)
+	if rune(move[1]) > '8' || rune(move[1]) < '1' {
+		return NoMove, fmt.Errorf("Move %s out of bounds", move)
+	}
+
+	if rune(move[3]) > '8' || rune(move[3]) < '1' {
+		return NoMove, fmt.Errorf("Move %s out of bounds", move)
+	}
+
+	if rune(move[0]) > 'h' || rune(move[0]) < 'a' {
+		return NoMove, fmt.Errorf("Move %s out of bounds", move)
+	}
+
+	if rune(move[2]) > 'h' || rune(move[2]) < 'a' {
+		return NoMove, fmt.Errorf("Move %s out of bounds", move)
+	}
+
+	from := fileRankToSquare(int(rune(move[0])-'a'), int(rune(move[1])-'1'))
+	to := fileRankToSquare(int(rune(move[2])-'a'), int(rune(move[3])-'1'))
+
+	if DEBUG {
+		if !squareOnBoard(from) || !squareOnBoard(to) {
+			return NoMove, fmt.Errorf("Cant parse move %s Square not on board %d to %d", move, from, to)
+		}
+	}
+
+	var list MoveListStruct
+	err := pos.GenerateAllMoves(&list)
+	if err != nil {
+		return NoMove, err
+	}
+
+	var moveInt = 0
+	var promotionPiece = empty
+
+	for i := 0; i < list.Count; i++ {
+		moveInt = list.Moves[i].Move
+		if getFrom(moveInt) == from && getTo(moveInt) == to {
+			promotionPiece = getPromoted(moveInt)
+			if promotionPiece != empty {
+				if (promotionPiece == wQ || promotionPiece == bQ) && move[4] == 'q' {
+					return moveInt, nil
+				} else if (promotionPiece == wR || promotionPiece == bR) && move[4] == 'r' {
+					return moveInt, nil
+				} else if (promotionPiece == wB || promotionPiece == bB) && move[4] == 'b' {
+					return moveInt, nil
+				} else if (promotionPiece == wN || promotionPiece == bN) && move[4] == 'n' {
+					return moveInt, nil
+				}
+				continue
+			}
+			return moveInt, nil
+		}
+	}
+	return NoMove, nil
 }
 
 //Print print current board state to console
