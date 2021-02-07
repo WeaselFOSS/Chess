@@ -35,25 +35,29 @@ func UCI(engineInfo EngineInfo) {
 
 		switch command[0] {
 		case "uci":
-			uciHander(engineInfo)
+			go uciHander(engineInfo)
 		case "debug":
-			if command[1] == "on" {
-				engine.DEBUG = true
-			} else {
-				engine.DEBUG = false
-			}
+			go func() {
+				if command[1] == "on" {
+					engine.DEBUG = true
+				} else {
+					engine.DEBUG = false
+				}
+			}()
 		case "isready":
-			engine.Initialize()
+			go func() {
+				engine.Initialize()
 
-			ready = true
+				ready = true
 
-			fmt.Println("readyok")
+				fmt.Println("readyok")
+			}()
 		case "setoption":
 		case "register":
 		case "ucinewgame":
 		case "position":
 			if ready {
-				positionHandler(command)
+				go positionHandler(command)
 			}
 		case "go":
 		case "stop":
@@ -61,10 +65,10 @@ func UCI(engineInfo EngineInfo) {
 		case "quit":
 			os.Exit(0)
 		case "print":
-			pos.Print()
+			go pos.Print()
 		case "divide":
 			if ready {
-				divideHander(command)
+				go divideHander(command)
 			}
 		}
 	}
