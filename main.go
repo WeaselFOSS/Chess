@@ -24,5 +24,4 @@ func init() {
 
 func main() {
 	uci.UCI(EngineInfo)
-	//TODO: Make engine
 }
