@@ -92,7 +92,7 @@ func (pos *BoardStruct) GenerateAllMoves(list *MoveListStruct) error {
 
 		//White queen side castel
 		if pos.CastelPerm&wqcastel != 0 {
-			if pos.Pieces[d1] == empty && pos.Pieces[c1] == empty {
+			if pos.Pieces[d1] == empty && pos.Pieces[c1] == empty && pos.Pieces[b1] == empty {
 				e1A, err := pos.isAttacked(e1, black)
 				if err != nil {
 					return err
@@ -130,7 +130,7 @@ func (pos *BoardStruct) GenerateAllMoves(list *MoveListStruct) error {
 
 		//Black queen side castel
 		if pos.CastelPerm&bqcastel != 0 {
-			if pos.Pieces[d8] == empty && pos.Pieces[c8] == empty {
+			if pos.Pieces[d8] == empty && pos.Pieces[c8] == empty && pos.Pieces[b8] == empty {
 				e8A, err := pos.isAttacked(e8, white)
 				if err != nil {
 					return err

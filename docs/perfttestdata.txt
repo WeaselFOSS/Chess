@@ -1,0 +1,174 @@
+rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 (starting position)
+
+Depth       1
+Nodes       20
+Captures    0
+En Passant  0
+Castles     0
+Promotions  0
+Checks      0
+Checkmates  0
+
+Depth       2
+Nodes       400
+Captures    0
+En Passant  0
+Castles     0
+Promotions  0
+Checks      0
+Checkmates  0
+
+Depth       3
+Nodes       8,902
+Captures    34
+En Passant  0
+Castles     0
+Promotions  0
+Checks      12
+Checkmates  0
+
+Depth       4
+Nodes       197,281
+Captures    1576
+En Passant  0
+Castles     0
+Promotions  0
+Checks      469
+Checkmates  8
+
+Depth       5
+Nodes       4,865,609
+Captures    82719
+En Passant  258
+Castles     0
+Promotions  0
+Checks      27351
+Checkmates  347
+
+Depth       6
+Nodes       119,060,324
+Captures    2812008
+En Passant  5248
+Castles     0
+Promotions  0
+Checks      809099
+Checkmates  10828
+
+
+r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -
+
+Depth       1
+Nodes       48
+Captures    8
+En Passant  0
+Castles     2
+Promotions  0
+Checks      0
+Checkmates  0
+
+Depth       2
+Nodes       2039
+Captures    351
+En Passant  1
+Castles     91
+Promotions  0
+Checks      3
+Checkmates  0
+
+Depth       3
+Nodes       97862
+Captures    17102
+En Passant  45
+Castles     3162
+Promotions  0
+Checks      993
+Checkmates  1
+
+Depth       4
+Nodes       4085603
+Captures    757163
+En Passant  1929
+Castles     128013
+Promotions  15172
+Checks      25523
+Checkmates  43
+
+Depth       5
+Nodes       193690690
+Captures    35043416
+En Passant  73365
+Castles     4993637
+Promotions  8392
+Checks      3309887
+Checkmates  30171
+
+http://chessprogramming.wikispaces.com/Perft+Results
+
+rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1; perft 6 = 119060324
+
+r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -; perft 5 = 193690690
+
+8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - -; perft 7 = 178633661
+
+r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1; perft 6 = 706045033
+
+1k6/1b6/8/8/7R/8/8/4K2R b K - 0 1; perft 5 = 1063513
+
+
+TalkChess PERFT Tests (by Martin Sedlak)
+
+//--Illegal ep move #1
+
+3k4/3p4/8/K1P4r/8/8/8/8 b - - 0 1; perft 6 = 1134888
+
+//--Illegal ep move #2
+
+8/8/4k3/8/2p5/8/B2P2K1/8 w - - 0 1; perft 6 = 1015133
+
+//--EP Capture Checks Opponent
+
+8/8/1k6/2b5/2pP4/8/5K2/8 b - d3 0 1; perft 6 = 1440467
+
+//--Short Castling Gives Check
+
+5k2/8/8/8/8/8/8/4K2R w K - 0 1; perft 6 = 661072
+
+//--Long Castling Gives Check
+
+3k4/8/8/8/8/8/8/R3K3 w Q - 0 1; perft 6 = 803711
+
+//--Castle Rights
+
+r3k2r/1b4bq/8/8/8/8/7B/R3K2R w KQkq - 0 1; perft 4 = 1274206
+
+//--Castling Prevented
+
+r3k2r/8/3Q4/8/8/5q2/8/R3K2R b KQkq - 0 1; perft 4 = 1720476
+
+//--Promote out of Check
+
+2K2r2/4P3/8/8/8/8/8/3k4 w - - 0 1; perft 6 = 3821001
+
+//--Discovered Check
+
+8/8/1P2K3/8/2n5/1q6/8/5k2 b - - 0 1; perft 5 = 1004658
+
+//--Promote to give check
+
+4k3/1P6/8/8/8/8/K7/8 w - - 0 1; perft 6 = 217342
+
+//--Under Promote to give check
+
+8/P1k5/K7/8/8/8/8/8 w - - 0 1; perft 6 = 92683
+
+//--Self Stalemate
+
+K1k5/8/P7/8/8/8/8/8 w - - 0 1; perft 6 = 2217
+
+//--Stalemate & Checkmate
+
+8/k1P5/8/1K6/8/8/8/8 w - - 0 1; perft 7 = 567584    
+
+//--Stalemate & Checkmate
+
+8/8/2k5/5q2/5n2/8/5K2/8 b - - 0 1; perft 4 = 23527
