@@ -156,7 +156,10 @@ func (pos *BoardStruct) MakeMove(move int) (bool, error) {
 		return false, err
 	}
 	if isKAttacked {
-		//pos.TakeMove()
+		err = pos.takeMove()
+		if err != nil {
+			return false, err
+		}
 		return false, nil
 	}
 
