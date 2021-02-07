@@ -75,6 +75,10 @@ func UCI(engineInfo EngineInfo) {
 				go divideHander(command[index:])
 			}
 		default:
+			if len(command) == index+1 {
+				break
+			}
+
 			index++
 			goto top
 		}
