@@ -1,4 +1,4 @@
-package engine
+package board
 
 import (
 	"fmt"
@@ -53,7 +53,7 @@ func (list *MoveListStruct) addCaptureMove(move int) {
 }
 
 //GenerateAllMoves Generate all moves
-func (pos *BoardStruct) GenerateAllMoves(list *MoveListStruct) error {
+func (pos *PositionStruct) GenerateAllMoves(list *MoveListStruct) error {
 	if DEBUG {
 		err := pos.CheckBoard()
 		if err != nil {

@@ -1,4 +1,4 @@
-package engine
+package board
 
 import (
 	"errors"
@@ -88,7 +88,7 @@ func (list *MoveListStruct) addBlackPawnMove(from, to int) error {
 }
 
 //generateAllPawnMoves Generate all pawn moves
-func (pos *BoardStruct) generateAllPawnMoves(list *MoveListStruct) error {
+func (pos *PositionStruct) generateAllPawnMoves(list *MoveListStruct) error {
 	var err error = nil
 	if pos.Side == white {
 		//White pawn moves

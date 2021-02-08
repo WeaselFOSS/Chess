@@ -8,7 +8,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/WeaselChess/Weasel/engine"
+	"github.com/WeaselChess/Weasel/engine/board"
 )
 
 //EngineInfo holds the info for our engine
@@ -19,7 +19,7 @@ type EngineInfo struct {
 }
 
 //Current board position
-var pos engine.BoardStruct
+var pos board.PositionStruct
 
 //UCI is our main loop for
 func UCI(engineInfo EngineInfo) {
@@ -43,14 +43,14 @@ func UCI(engineInfo EngineInfo) {
 		case "debug":
 			go func() {
 				if command[index+1] == "on" {
-					engine.DEBUG = true
+					board.DEBUG = true
 				} else {
-					engine.DEBUG = false
+					board.DEBUG = false
 				}
 			}()
 		case "isready":
 			go func() {
-				engine.Initialize()
+				board.Initialize()
 
 				ready = true
 
@@ -98,7 +98,7 @@ func positionHandler(command []string) {
 	boardSet := false
 
 	if command[1] == "startpos" {
-		err := pos.LoadFEN(engine.StartPosFEN)
+		err := pos.LoadFEN(board.StartPosFEN)
 		if err != nil {
 			panic(err)
 		}
@@ -126,7 +126,7 @@ func positionHandler(command []string) {
 				panic(err)
 			}
 
-			if move != engine.NoMove {
+			if move != board.NoMove {
 				var moveMade bool
 				moveMade, err := pos.MakeMove(move)
 				if err != nil {

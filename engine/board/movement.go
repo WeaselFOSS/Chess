@@ -1,4 +1,4 @@
-package engine
+package board
 
 import "fmt"
 
@@ -81,7 +81,7 @@ func toMove(from, to, capture, promotion, flag int) int {
 }
 
 //clearPiece clear piece from current square
-func (pos *BoardStruct) clearPiece(sq int) error {
+func (pos *PositionStruct) clearPiece(sq int) error {
 	if DEBUG {
 		if !squareOnBoard(sq) {
 			return fmt.Errorf("Square %d not on board", sq)
@@ -128,7 +128,7 @@ func (pos *BoardStruct) clearPiece(sq int) error {
 	return nil
 }
 
-func (pos *BoardStruct) addPiece(sq, piece int) error {
+func (pos *PositionStruct) addPiece(sq, piece int) error {
 	if DEBUG {
 		if !squareOnBoard(sq) {
 			return fmt.Errorf("Square %d not on board", sq)
@@ -163,7 +163,7 @@ func (pos *BoardStruct) addPiece(sq, piece int) error {
 }
 
 //movePiece Move a piece
-func (pos *BoardStruct) movePiece(from, to int) error {
+func (pos *PositionStruct) movePiece(from, to int) error {
 	if DEBUG {
 		if !squareOnBoard(from) {
 			return fmt.Errorf("from value Square %d not on board", from)

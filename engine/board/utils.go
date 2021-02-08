@@ -1,6 +1,6 @@
-package engine
+package board
 
-func (pos *BoardStruct) castelPermToChar() (rune, rune, rune, rune) {
+func (pos *PositionStruct) castelPermToChar() (rune, rune, rune, rune) {
 	var wKt rune = '-'
 	var wQt rune = '-'
 	var bKt rune = '-'

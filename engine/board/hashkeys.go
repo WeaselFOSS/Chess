@@ -1,4 +1,4 @@
-package engine
+package board
 
 import (
 	"errors"
@@ -26,7 +26,7 @@ func initHashKeys() {
 }
 
 //generatePosKey generates a unique key for the current position
-func (pos *BoardStruct) generatePosKey() (uint64, error) {
+func (pos *PositionStruct) generatePosKey() (uint64, error) {
 	var finalKey uint64 = 0
 	var piece int = empty
 
@@ -64,21 +64,21 @@ func (pos *BoardStruct) generatePosKey() (uint64, error) {
 }
 
 //hashPiece update hash with pieces new square
-func (pos *BoardStruct) hashPiece(piece, sq int) {
+func (pos *PositionStruct) hashPiece(piece, sq int) {
 	pos.PosKey ^= (pieceKeys[piece][sq])
 }
 
 //hashCastel update hash with castel perms
-func (pos *BoardStruct) hashCastel() {
+func (pos *PositionStruct) hashCastel() {
 	pos.PosKey ^= (castelKeys[pos.CastelPerm])
 }
 
 //hashSide update hash with new side
-func (pos *BoardStruct) hashSide() {
+func (pos *PositionStruct) hashSide() {
 	pos.PosKey ^= (sideKey)
 }
 
 //hashEnPas update hash for EnPas square
-func (pos *BoardStruct) hashEnPas() {
+func (pos *PositionStruct) hashEnPas() {
 	pos.PosKey ^= (pieceKeys[empty][pos.EnPassant])
 }

@@ -1,4 +1,4 @@
-package engine
+package board
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 )
 
 //MakeMove Make a move if legal and return legality
-func (pos *BoardStruct) MakeMove(move int) (bool, error) {
+func (pos *PositionStruct) MakeMove(move int) (bool, error) {
 
 	from := getFrom(move)
 	to := getTo(move)

@@ -1,4 +1,4 @@
-package engine
+package board
 
 import (
 	"errors"
@@ -9,7 +9,7 @@ import (
 var DEBUG bool = true //Default set to true while debugging, should be false normally
 
 //CheckBoard VERY expensive only use for debugging
-func (pos *BoardStruct) CheckBoard() error {
+func (pos *PositionStruct) CheckBoard() error {
 
 	var tPawns [3]uint64
 

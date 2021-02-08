@@ -1,9 +1,9 @@
-package engine
+package board
 
 import "fmt"
 
 //TakeMove Take back the last move
-func (pos *BoardStruct) TakeMove() error {
+func (pos *PositionStruct) TakeMove() error {
 
 	pos.HisPly--
 	pos.Ply--

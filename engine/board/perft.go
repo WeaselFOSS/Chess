@@ -1,4 +1,4 @@
-package engine
+package board
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 //returns leaf node count
 //
 //For more information of Perft: https://www.chessprogramming.org/Perft
-func (pos *BoardStruct) Perft(depth int) (int, error) {
+func (pos *PositionStruct) Perft(depth int) (int, error) {
 	leafNodes := 0
 	if DEBUG {
 		err := pos.CheckBoard()
@@ -62,7 +62,7 @@ func (pos *BoardStruct) Perft(depth int) (int, error) {
 //returns leaf node count for a given root node
 //
 //For more information of Perft: https://www.chessprogramming.org/Perft
-func (pos *BoardStruct) PerftDivide(depth int) error {
+func (pos *PositionStruct) PerftDivide(depth int) error {
 	start := time.Now()
 	if DEBUG {
 		err := pos.CheckBoard()

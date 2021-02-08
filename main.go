@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/WeaselChess/Weasel/uci"
+	"github.com/WeaselChess/Weasel/engine/uci"
 )
 
 //EngineInfo is the info for our engine

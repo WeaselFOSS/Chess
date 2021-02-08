@@ -1,12 +1,12 @@
-package engine
+package board
 
 import (
 	"errors"
 	"fmt"
 )
 
-//BoardStruct the boards struct
-type BoardStruct struct {
+//PositionStruct the boards struct
+type PositionStruct struct {
 	Pieces      [squareNumber]int
 	Pawns       [3]uint64
 	KingSquare  [2]int
@@ -59,7 +59,7 @@ func fileRankToSquare(file int, rank int) int {
 }
 
 //resetBoard Reset the board
-func (pos *BoardStruct) resetBoard() {
+func (pos *PositionStruct) resetBoard() {
 	for i := 0; i < squareNumber; i++ {
 		pos.Pieces[i] = offBoard
 	}
@@ -99,7 +99,7 @@ func (pos *BoardStruct) resetBoard() {
 }
 
 //LoadFEN loads the engine with a new board position from a FEN string
-func (pos *BoardStruct) LoadFEN(fen string) error {
+func (pos *PositionStruct) LoadFEN(fen string) error {
 	if fen == "" {
 		return errors.New("FEN String is empty")
 	}
@@ -246,7 +246,7 @@ func (pos *BoardStruct) LoadFEN(fen string) error {
 }
 
 //Print a representation of the current board state to the console
-func (pos *BoardStruct) Print() {
+func (pos *PositionStruct) Print() {
 	fmt.Print("\nBoard State:\n\n")
 	for rank := rank8; rank >= rank1; rank-- {
 		fmt.Printf("%d", rank+1)
@@ -272,7 +272,7 @@ func (pos *BoardStruct) Print() {
 }
 
 //updateMaterialLists Update the material lists for the baord
-func (pos *BoardStruct) updateMaterialLists() {
+func (pos *PositionStruct) updateMaterialLists() {
 	for i := 0; i < squareNumber; i++ {
 		piece := pos.Pieces[i]
 		if piece != offBoard && piece != empty {

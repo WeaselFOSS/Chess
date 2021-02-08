@@ -1,4 +1,4 @@
-package engine
+package board
 
 import (
 	"fmt"
@@ -37,7 +37,7 @@ func MoveToString(move int) string {
 }
 
 //ParseMove algebraic notation to move int
-func (pos *BoardStruct) ParseMove(move string) (int, error) {
+func (pos *PositionStruct) ParseMove(move string) (int, error) {
 	if len(move) < 4 {
 		return NoMove, fmt.Errorf("Move %s out of bounds", move)
 	}

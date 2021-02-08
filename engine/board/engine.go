@@ -1,4 +1,4 @@
-package engine
+package board
 
 //Initialize conversion arrays for engine operation
 func Initialize() {
@@ -46,7 +46,7 @@ func initFileRanks() {
 }
 
 //IsRepition Test if there has been repition
-func (pos *BoardStruct) IsRepition() bool {
+func (pos *PositionStruct) IsRepition() bool {
 	for i := pos.HisPly - pos.FiftyMove; i < pos.HisPly-1; i++ {
 		if pos.PosKey == pos.History[i].PosKey {
 			return true
