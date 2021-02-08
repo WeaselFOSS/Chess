@@ -1,11 +1,12 @@
 package board
 
 //Initialize conversion arrays for engine operation
-func Initialize() {
+func (pos *PositionStruct) Initialize(hashSize int) {
 	initSq120To64()
 	initFileRanks()
 	initBitMasks()
 	initHashKeys()
+	pos.initPVTables(hashSize)
 }
 
 //initSq120To64 Initalize sq120tosq64 and sq64tosq120 arrays
