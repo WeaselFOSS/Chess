@@ -28,7 +28,7 @@ type PositionStruct struct {
 
 	PieceList [13][10]int
 
-	PVTable *PVTableStruct
+	PVTable PVTableStruct
 }
 
 //UndoStruct the undo move struct
