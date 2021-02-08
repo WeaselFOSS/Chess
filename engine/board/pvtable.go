@@ -19,8 +19,8 @@ type PVTableStruct struct {
 var pvEntrys int
 
 //initPVTables Initilize our PV Table slice with a exact amount of memory based on hashSizeMB
-func (pos *PositionStruct) initPVTables(hashSizeMB int) {
+func (table *PVTableStruct) Init(hashSizeMB int) {
 	hashBytes := hashSizeMB * 1000000
 	pvEntrys = hashBytes / enterytBytes
-	pos.PVTable.Entry = make([]PVEnteryStruct, pvEntrys)
+	table.Entry = make([]PVEnteryStruct, pvEntrys)
 }

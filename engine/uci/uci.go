@@ -50,8 +50,10 @@ func UCI(engineInfo EngineInfo) {
 			}()
 		case "isready":
 			go func() {
-				//Init hash tables size with 512 MB's
-				pos.Initialize(512) //TODO: Add option to set hash size in mb
+
+				board.Initialize()
+				//Init hash tables size with 2 MB's
+				pos.PVTable.Init(2) //TODO: Add option to set hash size in mb
 
 				ready = true
 
