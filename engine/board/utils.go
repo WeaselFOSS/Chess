@@ -1,7 +1,5 @@
 package board
 
-import "time"
-
 func (pos *PositionStruct) castelPermToChar() (rune, rune, rune, rune) {
 	var wKt rune = '-'
 	var wQt rune = '-'
@@ -78,9 +76,4 @@ func getPieceColor(piece int) int {
 		return black
 	}
 	return both
-}
-
-//GetTime Returns currect time in millisecounds
-func GetTime() int64 {
-	return time.Now().UnixNano() / int64(time.Millisecond)
 }
