@@ -13,14 +13,13 @@ const enterytBytes = 16
 
 //PVTableStruct Struct to hole the PVTable
 type PVTableStruct struct {
-	Entry []PVEnteryStruct
+	Entry   []PVEnteryStruct
+	Entries int
 }
-
-var pvEntrys int
 
 //initPVTables Initilize our PV Table slice with a exact amount of memory based on hashSizeMB
 func (table *PVTableStruct) Init(hashSizeMB int) {
 	hashBytes := hashSizeMB * 1000000
-	pvEntrys = hashBytes / enterytBytes
-	table.Entry = make([]PVEnteryStruct, pvEntrys)
+	table.Entries = hashBytes / enterytBytes
+	table.Entry = make([]PVEnteryStruct, table.Entries)
 }
