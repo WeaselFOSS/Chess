@@ -206,3 +206,31 @@ func (pos *PositionStruct) movePiece(from, to int) error {
 
 	return nil
 }
+
+func (pos *PositionStruct) MoveExists(move int) (bool, error) {
+	var list MoveListStruct
+	err := pos.GenerateAllMoves(&list)
+	if err != nil {
+		return false, err
+	}
+
+	for i := 0; i < list.Count; i++ {
+		var makeMove bool
+		makeMove, err = pos.MakeMove(list.Moves[i].Move)
+		if err != nil {
+			return false, err
+		}
+
+		if !makeMove {
+			continue
+		}
+		err = pos.TakeMove()
+		if err != nil {
+			return false, err
+		}
+		if list.Moves[i].Move == move {
+			return true, nil
+		}
+	}
+	return false, nil
+}

@@ -29,6 +29,7 @@ type PositionStruct struct {
 	PieceList [13][10]int
 
 	PVTable PVTableStruct
+	PvArray [MaxDepth]int
 }
 
 //UndoStruct the undo move struct
