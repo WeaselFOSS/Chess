@@ -44,3 +44,13 @@ func initFileRanks() {
 		}
 	}
 }
+
+//IsRepition Test if there has been repition
+func (pos *BoardStruct) IsRepition() bool {
+	for i := pos.HisPly - pos.FiftyMove; i < pos.HisPly-1; i++ {
+		if pos.PosKey == pos.History[i].PosKey {
+			return true
+		}
+	}
+	return false
+}
