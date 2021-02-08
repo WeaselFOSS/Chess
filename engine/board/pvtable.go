@@ -59,6 +59,7 @@ func (pos *PositionStruct) ProbePVTable() (int, error) {
 	return NoMove, nil
 }
 
+//GetPvLine return the PVLine if found for the curren position
 func (pos *PositionStruct) GetPvLine(depth int) (int, error) {
 	if DEBUG && depth >= MaxDepth {
 		return NoMove, fmt.Errorf("Depth of %d greater than or equal to MaxDepth of %d", depth, MaxDepth)
