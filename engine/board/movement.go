@@ -40,43 +40,43 @@ var castelPerm = [120]int{
 0001 0000 0000 0000 0000 0000 0000 -> Castle 0x1000000
 */
 
-//moveFlagEP EnPas flag
-var moveFlagEP = 0x40000
+//MoveFlagEP EnPas flag
+var MoveFlagEP = 0x40000
 
-//moveFlagPS Pawn Start flag
-var moveFlagPS = 0x80000
+//MoveFlagPS Pawn Start flag
+var MoveFlagPS = 0x80000
 
-//moveFlagCA Castel flag
-var moveFlagCA = 0x1000000
+//MoveFlagCA Castel flag
+var MoveFlagCA = 0x1000000
 
-//moveFlagCAP Capture flag
-var moveFlagCAP = 0x7C000
+//MoveFlagCAP Capture flag
+var MoveFlagCAP = 0x7C000
 
-//moveFlagPROM Promotion flag
-var moveFlagPROM = 0xF00000
+//MoveFlagPROM Promotion flag
+var MoveFlagPROM = 0xF00000
 
-//getFrom value from move int
-func getFrom(move int) int {
+//GetFrom value from move int
+func GetFrom(move int) int {
 	return move & 0x7F
 }
 
-//getTo get TO value from move int
-func getTo(move int) int {
+//GetTo get TO value from move int
+func GetTo(move int) int {
 	return (move >> 7) & 0x7F
 }
 
-//getCapture get capture value from move int
-func getCapture(move int) int {
+//GetCapture get capture value from move int
+func GetCapture(move int) int {
 	return (move >> 14) & 0xF
 }
 
-//getPromoted Get promote value from move int
-func getPromoted(move int) int {
+//GetPromoted Get promote value from move int
+func GetPromoted(move int) int {
 	return (move >> 20) & 0xf
 }
 
-//toMove Puts all move info into a single move int
-func toMove(from, to, capture, promotion, flag int) int {
+//ToMove Puts all move info into a single move int
+func ToMove(from, to, capture, promotion, flag int) int {
 	return (from | (to << 7) | (capture << 14) | (promotion << 20) | flag)
 }
 

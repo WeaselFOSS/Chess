@@ -6,7 +6,7 @@ func Initialize() {
 	initFileRanks()
 	initBitMasks()
 	initHashKeys()
-
+	InitMvvLva()
 }
 
 //initSq120To64 Initalize sq120tosq64 and sq64tosq120 arrays

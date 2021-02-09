@@ -8,8 +8,8 @@ import (
 //MakeMove Make a move if legal and return legality
 func (pos *PositionStruct) MakeMove(move int) (bool, error) {
 
-	from := getFrom(move)
-	to := getTo(move)
+	from := GetFrom(move)
+	to := GetTo(move)
 	side := pos.Side
 
 	if DEBUG {
@@ -31,7 +31,7 @@ func (pos *PositionStruct) MakeMove(move int) (bool, error) {
 	pos.History[pos.HisPly].PosKey = pos.PosKey
 
 	//EnPas moves
-	if move&moveFlagEP != 0 {
+	if move&MoveFlagEP != 0 {
 		var err error
 		if side == white {
 			err = pos.clearPiece(to - 10)
@@ -41,7 +41,7 @@ func (pos *PositionStruct) MakeMove(move int) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-	} else if move&moveFlagCA != 0 { //castel moves
+	} else if move&MoveFlagCA != 0 { //castel moves
 		var err error
 		switch to {
 		case c1:
@@ -80,7 +80,7 @@ func (pos *PositionStruct) MakeMove(move int) (bool, error) {
 
 	pos.EnPassant = noSquare
 
-	captured := getCapture(move)
+	captured := GetCapture(move)
 	pos.FiftyMove++
 
 	if captured != empty {
@@ -99,7 +99,7 @@ func (pos *PositionStruct) MakeMove(move int) (bool, error) {
 
 	if !isPieceBig(pos.Pieces[from]) {
 		pos.FiftyMove = 0
-		if move&moveFlagEP != 0 {
+		if move&MoveFlagPS != 0 {
 			if side == white {
 				pos.EnPassant = from + 10
 				if ranksBoard[pos.EnPassant] != rank3 {
@@ -120,7 +120,7 @@ func (pos *PositionStruct) MakeMove(move int) (bool, error) {
 		return false, err
 	}
 
-	promotedPiece := getPromoted(move)
+	promotedPiece := GetPromoted(move)
 	if promotedPiece != empty {
 		if !pieceValid(promotedPiece) || !isPieceBig(promotedPiece) {
 			return false, fmt.Errorf("Invalid promotion piece of %d", promotedPiece)

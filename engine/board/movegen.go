@@ -38,17 +38,36 @@ var pieceNumDir = [13]int{
 	0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8,
 }
 
+var victimScore = [13]int{0, 100, 200, 300, 400, 500, 600, 100, 200, 300, 400, 500, 600}
+var mvvLvaScores [13][13]int
+
+//InitMvvLva MvvLva (Most valuable victim least valuable attacker)
+func InitMvvLva() {
+	for attacker := wP; attacker <= bK; attacker++ {
+		for victim := wP; victim <= bK; victim++ {
+			mvvLvaScores[victim][attacker] = victimScore[victim] + 6 - (victimScore[attacker] / 100)
+		}
+	}
+}
+
 //addQuietMove Add a normal non capture mofe
-func (list *MoveListStruct) addQuietMove(move int) {
+func (list *MoveListStruct) addQuietMove(move int, pos *PositionStruct) {
 	list.Moves[list.Count].Move = move
-	list.Moves[list.Count].Score = 0
+
+	if pos.Ply <= 63 && pos.SearchKillers[0][pos.Ply] == move {
+		list.Moves[list.Count].Score = 900000
+	} else if pos.Ply <= 63 && pos.SearchKillers[1][pos.Ply] == move {
+		list.Moves[list.Count].Score = 800000
+	} else {
+		list.Moves[list.Count].Score = pos.SearchHistory[pos.Pieces[GetFrom(move)]][GetTo(move)]
+	}
 	list.Count++
 }
 
 //addCaptureMove add a capture move
-func (list *MoveListStruct) addCaptureMove(move int) {
+func (list *MoveListStruct) addCaptureMove(move int, pos *PositionStruct) {
 	list.Moves[list.Count].Move = move
-	list.Moves[list.Count].Score = 0
+	list.Moves[list.Count].Score = mvvLvaScores[GetCapture(move)][pos.Pieces[GetFrom(move)]] + 1000000
 	list.Count++
 }
 
@@ -85,7 +104,7 @@ func (pos *PositionStruct) GenerateAllMoves(list *MoveListStruct) error {
 				}
 
 				if !e1A && !f1A {
-					list.addQuietMove(toMove(e1, g1, empty, empty, moveFlagCA))
+					list.addQuietMove(ToMove(e1, g1, empty, empty, MoveFlagCA), pos)
 				}
 			}
 		}
@@ -104,7 +123,7 @@ func (pos *PositionStruct) GenerateAllMoves(list *MoveListStruct) error {
 				}
 
 				if !e1A && !d1A {
-					list.addQuietMove(toMove(e1, c1, empty, empty, moveFlagCA))
+					list.addQuietMove(ToMove(e1, c1, empty, empty, MoveFlagCA), pos)
 				}
 			}
 		}
@@ -123,7 +142,7 @@ func (pos *PositionStruct) GenerateAllMoves(list *MoveListStruct) error {
 				}
 
 				if !e8A && !f8A {
-					list.addQuietMove(toMove(e8, g8, empty, empty, moveFlagCA))
+					list.addQuietMove(ToMove(e8, g8, empty, empty, MoveFlagCA), pos)
 				}
 			}
 		}
@@ -142,7 +161,7 @@ func (pos *PositionStruct) GenerateAllMoves(list *MoveListStruct) error {
 				}
 
 				if !e8A && !d8A {
-					list.addQuietMove(toMove(e8, c8, empty, empty, moveFlagCA))
+					list.addQuietMove(ToMove(e8, c8, empty, empty, MoveFlagCA), pos)
 				}
 			}
 		}
@@ -170,11 +189,11 @@ func (pos *PositionStruct) GenerateAllMoves(list *MoveListStruct) error {
 					if pos.Pieces[tSq] != empty {
 						// BLACK ^ 1 == WHITe || WHITE ^ 1 == BLACK
 						if getPieceColor(pos.Pieces[tSq]) == pos.Side^1 {
-							list.addCaptureMove(toMove(sq, tSq, pos.Pieces[tSq], empty, 0))
+							list.addCaptureMove(ToMove(sq, tSq, pos.Pieces[tSq], empty, 0), pos)
 						}
 						break
 					}
-					list.addQuietMove(toMove(sq, tSq, empty, empty, 0))
+					list.addQuietMove(ToMove(sq, tSq, empty, empty, 0), pos)
 					tSq += dir
 				}
 			}
@@ -207,11 +226,11 @@ func (pos *PositionStruct) GenerateAllMoves(list *MoveListStruct) error {
 				if pos.Pieces[tSq] != empty {
 					// BLACK ^ 1 == WHITe || WHITE ^ 1 == BLACK
 					if getPieceColor(pos.Pieces[tSq]) == pos.Side^1 {
-						list.addCaptureMove(toMove(sq, tSq, pos.Pieces[tSq], empty, 0))
+						list.addCaptureMove(ToMove(sq, tSq, pos.Pieces[tSq], empty, 0), pos)
 					}
 					continue
 				}
-				list.addQuietMove(toMove(sq, tSq, empty, empty, 0))
+				list.addQuietMove(ToMove(sq, tSq, empty, empty, 0), pos)
 			}
 		}
 		piece = loopNonSlidePiece[pieceIndex]

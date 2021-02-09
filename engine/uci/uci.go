@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
+	"time"
 	"unicode"
 
 	"github.com/WeaselChess/Weasel/engine/board"
@@ -68,15 +70,21 @@ func UCI(engineInfo EngineInfo) {
 		case "setoption":
 		case "register":
 		case "ucinewgame":
+			pos.PVTable.Clear()
+			err := pos.LoadFEN(board.StartPosFEN)
+			if err != nil {
+				panic(err)
+			}
 		case "position":
 			if ready {
 				go positionHandler(command[index:])
 			}
 		case "go":
 			if ready {
-				go goHandler()
+				go goHandler(command[index:])
 			}
 		case "stop":
+			info.Stopped = true
 		case "ponderhit":
 		case "quit":
 			os.Exit(0)
@@ -171,15 +179,92 @@ func divideHander(command []string) {
 	}
 }
 
-func goHandler() {
+func goHandler(command []string) {
+	var err error
+	depth := -1
+	movesToGo := 30
+	moveTime := -1
+	timeV := -1
+	inc := 0
+	info.TimeSet = false
+	for i := 0; i < len(command); i++ {
+		switch command[i] {
+		case "binc":
+			if pos.Side == 1 {
+				inc, err = strconv.Atoi(command[i+1])
+				if err != nil {
+					fmt.Println("Failed to parse binc time")
+				}
+			}
+		case "winc":
+			if pos.Side == 0 {
+				inc, err = strconv.Atoi(command[i+1])
+				if err != nil {
+					fmt.Println("Failed to parse winc time")
+				}
+			}
+		case "wtime":
+			if pos.Side == 0 {
+				timeV, err = strconv.Atoi(command[i+1])
+				if err != nil {
+					fmt.Println("Failed to parse wtime time")
+				}
+			}
+		case "btime":
+			if pos.Side == 1 {
+				timeV, err = strconv.Atoi(command[i+1])
+				if err != nil {
+					fmt.Println("Failed to parse btime time")
+				}
+			}
+
+		case "movestogo":
+			movesToGo, err = strconv.Atoi(command[i+1])
+			if err != nil {
+				fmt.Println("Failed to parse binc time")
+			}
+
+		case "movetime":
+			moveTime, err = strconv.Atoi(command[i+1])
+			if err != nil {
+				fmt.Println("Failed to parse binc time")
+			}
+		case "depth":
+			depth, err = strconv.Atoi(command[i+1])
+			if err != nil {
+				fmt.Println("Failed to parse binc time")
+			}
+		}
+	}
+
+	if moveTime != -1 {
+		timeV = moveTime
+		movesToGo = 1
+	}
+
+	info.StartTime = time.Now().UnixNano() / int64(time.Millisecond)
+	info.Depth = depth
+
+	if timeV != -1 {
+		info.TimeSet = true
+		timeV /= movesToGo
+		timeV -= 50
+		info.StopTime = info.StartTime + int64(timeV+inc)
+	}
+
+	if depth == -1 {
+		info.Depth = board.MaxDepth
+	}
+
+	fmt.Printf("time: %d start: %d stop: %d depth %d timeset %v\n",
+		timeV, info.StartTime, info.StopTime, info.Depth, info.TimeSet)
+
 	for {
 		if positionSet {
-			info.Depth = 6
 			err := info.SearchPosition(&pos)
 			if err != nil {
 				panic(err)
 			}
-			fmt.Printf("bestmove %s\n", board.MoveToString(pos.PvArray[0]))
 			positionSet = false
 			break
 		}

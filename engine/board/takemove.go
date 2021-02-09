@@ -9,8 +9,8 @@ func (pos *PositionStruct) TakeMove() error {
 	pos.Ply--
 
 	move := pos.History[pos.HisPly].Move
-	from := getFrom(move)
-	to := getTo(move)
+	from := GetFrom(move)
+	to := GetTo(move)
 
 	if DEBUG {
 		err := pos.CheckBoard()
@@ -40,13 +40,13 @@ func (pos *PositionStruct) TakeMove() error {
 	pos.Side ^= 1
 	pos.hashSide()
 
-	if moveFlagEP&move != 0 {
+	if MoveFlagEP&move != 0 {
 		if pos.Side == white {
 			pos.addPiece(to-10, bP)
 		} else {
 			pos.addPiece(to+10, wP)
 		}
-	} else if moveFlagCA&move != 0 {
+	} else if MoveFlagCA&move != 0 {
 		var err error
 		switch to {
 		case c1:
@@ -78,7 +78,7 @@ func (pos *PositionStruct) TakeMove() error {
 		pos.KingSquare[pos.Side] = from
 	}
 
-	captured := getCapture(move)
+	captured := GetCapture(move)
 	if captured != empty {
 		if DEBUG && !pieceValid(captured) {
 			return fmt.Errorf("Invalid capture piece %d", captured)
@@ -89,7 +89,7 @@ func (pos *PositionStruct) TakeMove() error {
 		}
 	}
 
-	promotedPiece := getPromoted(move)
+	promotedPiece := GetPromoted(move)
 	if promotedPiece != empty {
 		if !pieceValid(promotedPiece) || !isPieceBig(promotedPiece) {
 			return fmt.Errorf("Invalid promotion piece of %d", promotedPiece)

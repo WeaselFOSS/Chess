@@ -10,7 +10,7 @@ import (
 //InfoStruct The search info struct
 type InfoStruct struct {
 	StartTime int64
-	StopTiem  int64
+	StopTime  int64
 	Depth     int
 	DepthSet  bool
 	TimeSet   bool
@@ -29,9 +29,29 @@ type InfoStruct struct {
 const infinitie = 30000
 const mate = 29000
 
-//checkUp Check if time up, or interrupt from GUI
-func checkUp() {
+//pickNextMove Pick the next move base on inital score
+func pickNextMove(moveNum int, list *board.MoveListStruct) {
+	var temp board.MoveStruct
+	bestScore := 0
+	bestNum := moveNum
 
+	for i := moveNum; i < list.Count; i++ {
+		if list.Moves[i].Score > bestScore {
+			bestScore = list.Moves[i].Score
+			bestNum = i
+		}
+	}
+	temp = list.Moves[moveNum]
+	list.Moves[moveNum] = list.Moves[bestNum]
+	list.Moves[bestNum] = temp
+}
+
+//checkUp Check if time up, or interrupt from GUI
+func (info *InfoStruct) checkUp() {
+	currentTime := time.Now().UnixNano() / int64(time.Millisecond)
+	if info.TimeSet && currentTime > info.StopTime {
+		info.Stopped = true
+	}
 }
 
 //clearForSearch Reset serach info and PVTables to get ready for a enw search
@@ -51,7 +71,6 @@ func (info *InfoStruct) clearForSearch(pos *board.PositionStruct) {
 	pos.PVTable.Clear()
 	pos.Ply = 0
 
-	info.StartTime = time.Now().UnixNano() / int64(time.Millisecond)
 	info.Stopped = false
 	info.Nodes = 0
 	info.FailHigh = 0
@@ -61,8 +80,92 @@ func (info *InfoStruct) clearForSearch(pos *board.PositionStruct) {
 //quiescence Search capture moves until a "quite" position is found or the trade has been resolved
 //
 //Used to counter the horizon effect
-func (info *InfoStruct) quiescence(alpha, beta, pos *board.PositionStruct) int {
-	return 0
+func (info *InfoStruct) quiescence(alpha, beta int, pos *board.PositionStruct) (int, error) {
+
+	//Checkup ever 2048 nodes
+	if info.Nodes&2047 == 0 {
+		info.checkUp()
+	}
+
+	info.Nodes++
+	if (pos.IsRepition() || pos.FiftyMove >= 100) && pos.Ply > 0 {
+		return 0, nil
+	}
+
+	if pos.Ply > board.MaxDepth-1 {
+		return pos.Evaluate(), nil
+	}
+
+	score := pos.Evaluate()
+
+	if score >= beta {
+		return beta, nil
+	}
+
+	if score > alpha {
+		alpha = score
+	}
+
+	var list board.MoveListStruct
+	err := pos.GenerateAllCaptureMoves(&list)
+	if err != nil {
+		return 0, err
+	}
+
+	legal := 0
+	oldAlpha := alpha
+	bestMove := board.NoMove
+	score = -infinitie
+
+	for i := 0; i < list.Count; i++ {
+
+		pickNextMove(i, &list)
+
+		moveMade := false
+		moveMade, err := pos.MakeMove(list.Moves[i].Move)
+		if err != nil {
+			return 0, nil
+		}
+
+		if !moveMade {
+			continue
+		}
+
+		legal++
+		score, err = info.quiescence(-beta, -alpha, pos)
+		//Flipping score for the other sides POV
+		score *= -1
+		err = pos.TakeMove()
+		if err != nil {
+			return 0, err
+		}
+
+		if info.Stopped {
+			return 0, nil
+		}
+
+		//If score beats alpha set alpha to score
+		if score > alpha {
+			//If score is better than our beta cutoff return beta
+			if score >= beta {
+				if legal == 1 {
+					info.FailHighFirst++
+				}
+				info.FailHigh++
+				return beta, nil
+			}
+			alpha = score
+			bestMove = list.Moves[i].Move
+		}
+	}
+
+	if alpha != oldAlpha {
+		err := pos.StorePVMove(bestMove)
+		if err != nil {
+			return 0, err
+		}
+	}
+	return alpha, nil
 }
 
 //alphaBeta Normal alphabeta searching
@@ -76,8 +179,12 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 	}
 
 	if depth == 0 {
-		info.Nodes++
-		return pos.Evaluate(), nil
+		return info.quiescence(alpha, beta, pos)
+	}
+
+	//Checkup ever 2048 nodes
+	if info.Nodes&2047 == 0 {
+		info.checkUp()
 	}
 
 	info.Nodes++
@@ -102,9 +209,23 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 	oldAlpha := alpha
 	bestMove := board.NoMove
 	score := -infinitie
+	var pvMove int
+	pvMove, err = pos.ProbePVTable()
+
+	if pvMove != board.NoMove {
+		for i := 0; i < list.Count; i++ {
+			if list.Moves[i].Move == pvMove {
+				list.Moves[i].Score = 2000000
+				break
+			}
+		}
+	}
 
 	//Move loop
 	for i := 0; i < list.Count; i++ {
+
+		pickNextMove(i, &list)
+
 		moveMade := false
 		moveMade, err = pos.MakeMove(list.Moves[i].Move)
 		if err != nil {
@@ -124,6 +245,10 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 			return 0, err
 		}
 
+		if info.Stopped {
+			return 0, nil
+		}
+
 		//If score beats alpha set alpha to score
 		if score > alpha {
 			//If score is better than our beta cutoff return beta
@@ -132,11 +257,19 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 					info.FailHighFirst++
 				}
 				info.FailHigh++
+
+				if list.Moves[i].Move&board.MoveFlagCA == 0 {
+					pos.SearchKillers[1][pos.Ply] = pos.SearchKillers[0][pos.Ply]
+					pos.SearchKillers[0][pos.Ply] = list.Moves[i].Move
+				}
 				return beta, nil
 			}
-
 			alpha = score
 			bestMove = list.Moves[i].Move
+
+			if list.Moves[i].Move&board.MoveFlagCAP == 0 {
+				pos.SearchHistory[pos.Pieces[board.GetFrom(bestMove)]][board.GetTo(bestMove)] += depth
+			}
 		}
 	}
 
@@ -186,7 +319,9 @@ func (info *InfoStruct) SearchPosition(pos *board.PositionStruct) error {
 			return err
 		}
 
-		//TODO: Check if out of time
+		if info.Stopped {
+			break
+		}
 
 		pvMoves, err = pos.GetPvLine(currentDepth)
 		if err != nil {
@@ -194,16 +329,18 @@ func (info *InfoStruct) SearchPosition(pos *board.PositionStruct) error {
 		}
 		bestMove = pos.PvArray[0]
 
-		fmt.Printf("Depth: %d, Scroe: %d, Move: %s, Nodes %d, ",
-			currentDepth, bestScore, board.MoveToString(bestMove), info.Nodes)
+		//Sending infor to GUI
+		currentTime := time.Now().UnixNano() / int64(time.Millisecond)
+		fmt.Printf("info score cp %d depth %d nodes %d time %d ",
+			bestScore, currentDepth, info.Nodes, currentTime-info.StartTime)
 
-		fmt.Print("PV: ")
+		fmt.Print("pv")
 		for pvNum = 0; pvNum < pvMoves; pvNum++ {
 			fmt.Printf(" %s", board.MoveToString(pos.PvArray[pvNum]))
 		}
 		fmt.Print("\n")
-		fmt.Printf("Ordering: %.2f\n", info.FailHighFirst/info.FailHigh)
+		//fmt.Printf("Ordering: %.2f\n", info.FailHighFirst/info.FailHigh)
 	}
-
+	fmt.Printf("bestmove %s\n", board.MoveToString(bestMove))
 	return err
 }

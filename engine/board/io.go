@@ -16,12 +16,12 @@ func SquareToString(sq int) string {
 
 //MoveToString move int to algebraic notation
 func MoveToString(move int) string {
-	ff := filesBoard[getFrom(move)]
-	rf := ranksBoard[getFrom(move)]
-	ft := filesBoard[getTo(move)]
-	rt := ranksBoard[getTo(move)]
+	ff := filesBoard[GetFrom(move)]
+	rf := ranksBoard[GetFrom(move)]
+	ft := filesBoard[GetTo(move)]
+	rt := ranksBoard[GetTo(move)]
 
-	promoted := getPromoted(move)
+	promoted := GetPromoted(move)
 	if promoted != 0 {
 		pchar := 'q'
 		if promoted == wN || promoted == bN {
@@ -78,8 +78,8 @@ func (pos *PositionStruct) ParseMove(move string) (int, error) {
 
 	for i := 0; i < list.Count; i++ {
 		moveInt = list.Moves[i].Move
-		if getFrom(moveInt) == from && getTo(moveInt) == to {
-			promotionPiece = getPromoted(moveInt)
+		if GetFrom(moveInt) == from && GetTo(moveInt) == to {
+			promotionPiece = GetPromoted(moveInt)
 			if promotionPiece != empty {
 				if (promotionPiece == wQ || promotionPiece == bQ) && move[4] == 'q' {
 					return moveInt, nil
