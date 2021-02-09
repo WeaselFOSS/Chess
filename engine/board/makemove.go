@@ -99,7 +99,7 @@ func (pos *PositionStruct) MakeMove(move int) (bool, error) {
 
 	if !isPieceBig(pos.Pieces[from]) {
 		pos.FiftyMove = 0
-		if move&moveFlagPS != 0 {
+		if move&moveFlagEP != 0 {
 			if side == white {
 				pos.EnPassant = from + 10
 				if ranksBoard[pos.EnPassant] != rank3 {

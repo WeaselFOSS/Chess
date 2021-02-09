@@ -73,7 +73,7 @@ func UCI(engineInfo EngineInfo) {
 				go positionHandler(command[index:])
 			}
 		case "go":
-			if ready && positionSet {
+			if ready {
 				go goHandler()
 			}
 		case "stop":
@@ -107,24 +107,25 @@ func uciHander(engineInfo EngineInfo) {
 }
 
 func positionHandler(command []string) {
-
+	var boardSet bool
 	if command[1] == "startpos" {
 		err := pos.LoadFEN(board.StartPosFEN)
 		if err != nil {
 			panic(err)
 		}
-		positionSet = true
+		boardSet = true
 	} else if command[1] == "fen" {
 		err := pos.LoadFEN(strings.Join(command[2:], " "))
 		if err != nil {
 			panic(err)
 		}
-		positionSet = true
+		boardSet = true
 	}
 
 	str := strings.Join(command[2:], " ")
 
-	if strings.Contains(str, "moves") && positionSet {
+	if strings.Contains(str, "moves") && boardSet {
+
 		index := strings.Index(str, "moves")
 
 		str = str[index+6:]
@@ -152,7 +153,9 @@ func positionHandler(command []string) {
 
 			break
 		}
+
 	}
+	positionSet = true
 
 }
 
@@ -169,10 +172,16 @@ func divideHander(command []string) {
 }
 
 func goHandler() {
-	info.Depth = 2
-	err := info.SearchPosition(&pos)
-	if err != nil {
-		panic(err)
+	for {
+		if positionSet {
+			info.Depth = 6
+			err := info.SearchPosition(&pos)
+			if err != nil {
+				panic(err)
+			}
+			fmt.Printf("bestmove %s\n", board.MoveToString(pos.PvArray[0]))
+			positionSet = false
+			break
+		}
 	}
-	fmt.Printf("bestmove %s\n", board.MoveToString(pos.PvArray[0]))
 }
