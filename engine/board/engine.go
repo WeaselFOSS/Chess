@@ -11,7 +11,7 @@ func Initialize() {
 
 //initSq120To64 Initalize sq120tosq64 and sq64tosq120 arrays
 func initSq120To64() {
-	for i := 0; i < squareNumber; i++ {
+	for i := 0; i < SquareNumber; i++ {
 		sq120ToSq64[i] = 65
 	}
 
@@ -32,7 +32,7 @@ func initSq120To64() {
 
 //initFileRanks Initialize File and Rank arrays
 func initFileRanks() {
-	for i := 0; i < squareNumber; i++ {
+	for i := 0; i < SquareNumber; i++ {
 		filesBoard[i] = offBoard
 		ranksBoard[i] = offBoard
 	}

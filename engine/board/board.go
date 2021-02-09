@@ -7,7 +7,7 @@ import (
 
 //PositionStruct the boards struct
 type PositionStruct struct {
-	Pieces      [squareNumber]int
+	Pieces      [SquareNumber]int
 	Pawns       [3]uint64
 	KingSquare  [2]int
 	PieceNum    [13]int
@@ -31,7 +31,7 @@ type PositionStruct struct {
 	PVTable PVTableStruct
 	PvArray [MaxDepth]int
 
-	SearchHistory [13][squareNumber]int
+	SearchHistory [13][SquareNumber]int
 	SearchKillers [2][MaxDepth]int
 }
 
@@ -45,16 +45,16 @@ type UndoStruct struct {
 }
 
 //sq120ToSq64 120 Square board to 64 square board index
-var sq120ToSq64 [squareNumber]int
+var sq120ToSq64 [SquareNumber]int
 
 //sq64ToSq120 64 Square board to 64 square board index
 var sq64ToSq120 [64]int
 
 //filesBoard Get a positions file
-var filesBoard [squareNumber]int
+var filesBoard [SquareNumber]int
 
 //ranksBoard Get a positions rank
-var ranksBoard [squareNumber]int
+var ranksBoard [SquareNumber]int
 
 var pieceChar = [13]rune{'.', 'P', 'N', 'B', 'R', 'Q', 'K', 'p', 'n', 'b', 'r', 'q', 'k'}
 var sideChar = [3]rune{'w', 'b', '-'}
@@ -66,7 +66,7 @@ func fileRankToSquare(file int, rank int) int {
 
 //resetBoard Reset the board
 func (pos *PositionStruct) resetBoard() {
-	for i := 0; i < squareNumber; i++ {
+	for i := 0; i < SquareNumber; i++ {
 		pos.Pieces[i] = offBoard
 	}
 
@@ -279,7 +279,7 @@ func (pos *PositionStruct) Print() {
 
 //updateMaterialLists Update the material lists for the baord
 func (pos *PositionStruct) updateMaterialLists() {
-	for i := 0; i < squareNumber; i++ {
+	for i := 0; i < SquareNumber; i++ {
 		piece := pos.Pieces[i]
 		if piece != offBoard && piece != empty {
 			color := getPieceColor(piece)

@@ -6,4 +6,5 @@
 *.dylib
 *.test
 *.out
+*.log
 .vscode

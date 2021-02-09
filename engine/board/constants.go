@@ -1,7 +1,7 @@
 package board
 
-//squareNumber Number of squares in the board representastion
-const squareNumber = 120
+//SquareNumber Number of squares in the board representastion
+const SquareNumber = 120
 
 //maxPositionMoves the max number of moves we can expect from any given position
 const maxPositionMoves = 256

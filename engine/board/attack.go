@@ -14,8 +14,8 @@ var bishopDir = [4]int{-9, -11, 11, 9}
 //kingDir King directions
 var kingDir = [8]int{-1, -10, 1, 10, -9, -11, 11, 9}
 
-//isAttacked Returns if square is attacked
-func (pos *PositionStruct) isAttacked(sq, side int) (bool, error) {
+//IsAttacked Returns if square is attacked
+func (pos *PositionStruct) IsAttacked(sq, side int) (bool, error) {
 
 	if DEBUG && !squareOnBoard(sq) {
 		return false, fmt.Errorf("Square not on board %s", SquareToString(sq))
@@ -97,25 +97,4 @@ func (pos *PositionStruct) isAttacked(sq, side int) (bool, error) {
 	}
 
 	return false, nil
-}
-
-func (pos *PositionStruct) printSqAttacked(side int) error {
-	fmt.Printf("\nSquares attacked by: %c\n", sideChar[side])
-	for rank := rank8; rank >= rank1; rank-- {
-		for file := fileA; file <= fileH; file++ {
-			sq := fileRankToSquare(file, rank)
-			isAttacked, err := pos.isAttacked(sq, side)
-			if err != nil {
-				return err
-			}
-			if isAttacked {
-				fmt.Print(" X ")
-			} else {
-				fmt.Print(" - ")
-			}
-		}
-		fmt.Print("\n")
-	}
-	fmt.Print("\n")
-	return nil
 }

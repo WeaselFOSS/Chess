@@ -29,6 +29,11 @@ func (table *PVTableStruct) Init(hashSizeMB uint64) {
 	table.EntriesCount -= 2 //Saftey net for indexing
 }
 
+//Clear Clear the PV table
+func (table *PVTableStruct) Clear() {
+	table.Entries = make([]PVEnteryStruct, table.EntriesCount)
+}
+
 //StorePVMove a move in the PV table
 func (pos *PositionStruct) StorePVMove(move int) error {
 	//Indexing based off of position hash

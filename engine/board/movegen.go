@@ -74,12 +74,12 @@ func (pos *PositionStruct) GenerateAllMoves(list *MoveListStruct) error {
 		//White king side castel
 		if pos.CastelPerm&wkcastel != 0 {
 			if pos.Pieces[f1] == empty && pos.Pieces[g1] == empty {
-				e1A, err := pos.isAttacked(e1, black)
+				e1A, err := pos.IsAttacked(e1, black)
 				if err != nil {
 					return err
 				}
 				var f1A bool
-				f1A, err = pos.isAttacked(f1, black)
+				f1A, err = pos.IsAttacked(f1, black)
 				if err != nil {
 					return err
 				}
@@ -93,12 +93,12 @@ func (pos *PositionStruct) GenerateAllMoves(list *MoveListStruct) error {
 		//White queen side castel
 		if pos.CastelPerm&wqcastel != 0 {
 			if pos.Pieces[d1] == empty && pos.Pieces[c1] == empty && pos.Pieces[b1] == empty {
-				e1A, err := pos.isAttacked(e1, black)
+				e1A, err := pos.IsAttacked(e1, black)
 				if err != nil {
 					return err
 				}
 				var d1A bool
-				d1A, err = pos.isAttacked(d1, black)
+				d1A, err = pos.IsAttacked(d1, black)
 				if err != nil {
 					return err
 				}
@@ -112,12 +112,12 @@ func (pos *PositionStruct) GenerateAllMoves(list *MoveListStruct) error {
 		//Black king side castel
 		if pos.CastelPerm&bkcastel != 0 {
 			if pos.Pieces[f8] == empty && pos.Pieces[g8] == empty {
-				e8A, err := pos.isAttacked(e8, white)
+				e8A, err := pos.IsAttacked(e8, white)
 				if err != nil {
 					return err
 				}
 				var f8A bool
-				f8A, err = pos.isAttacked(f8, white)
+				f8A, err = pos.IsAttacked(f8, white)
 				if err != nil {
 					return err
 				}
@@ -131,12 +131,12 @@ func (pos *PositionStruct) GenerateAllMoves(list *MoveListStruct) error {
 		//Black queen side castel
 		if pos.CastelPerm&bqcastel != 0 {
 			if pos.Pieces[d8] == empty && pos.Pieces[c8] == empty && pos.Pieces[b8] == empty {
-				e8A, err := pos.isAttacked(e8, white)
+				e8A, err := pos.IsAttacked(e8, white)
 				if err != nil {
 					return err
 				}
 				var d8A bool
-				d8A, err = pos.isAttacked(d8, white)
+				d8A, err = pos.IsAttacked(d8, white)
 				if err != nil {
 					return err
 				}

@@ -31,7 +31,7 @@ func (pos *PositionStruct) generatePosKey() (uint64, error) {
 	var piece int = empty
 
 	//Pieces
-	for sq := 0; sq < squareNumber; sq++ {
+	for sq := 0; sq < SquareNumber; sq++ {
 		piece = pos.Pieces[sq]
 		if piece != noSquare && piece != empty && piece != offBoard {
 			if !(piece >= wP && piece <= bK) {
@@ -48,7 +48,7 @@ func (pos *PositionStruct) generatePosKey() (uint64, error) {
 
 	//EnPassant
 	if pos.EnPassant != noSquare {
-		if !(pos.EnPassant >= 0 && pos.EnPassant < squareNumber) {
+		if !(pos.EnPassant >= 0 && pos.EnPassant < SquareNumber) {
 			return 0, errors.New("EnPassant value out of bounds")
 		}
 		finalKey ^= pieceKeys[empty][pos.EnPassant]

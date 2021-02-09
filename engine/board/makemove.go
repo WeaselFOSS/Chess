@@ -151,7 +151,7 @@ func (pos *PositionStruct) MakeMove(move int) (bool, error) {
 	}
 
 	var isKAttacked bool
-	isKAttacked, err = pos.isAttacked(pos.KingSquare[side], pos.Side)
+	isKAttacked, err = pos.IsAttacked(pos.KingSquare[side], pos.Side)
 	if err != nil {
 		return false, err
 	}

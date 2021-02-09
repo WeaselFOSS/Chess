@@ -6,7 +6,7 @@ import (
 )
 
 //DEBUG tells us if we should output debug messages
-var DEBUG bool = true //Default set to true while debugging, should be false normally
+var DEBUG bool = false //Default set to true while debugging, should be false normally
 
 //CheckBoard VERY expensive only use for debugging
 func (pos *PositionStruct) CheckBoard() error {

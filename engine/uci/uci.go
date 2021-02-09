@@ -9,6 +9,7 @@ import (
 	"unicode"
 
 	"github.com/WeaselChess/Weasel/engine/board"
+	"github.com/WeaselChess/Weasel/engine/search"
 )
 
 //EngineInfo holds the info for our engine
@@ -21,11 +22,16 @@ type EngineInfo struct {
 //Current board position
 var pos board.PositionStruct
 
+//Search Info
+var info search.InfoStruct
+
+//Set to true if a position is set
+var positionSet bool
+
 //UCI is our main loop for
 func UCI(engineInfo EngineInfo) {
 	var command []string
 	var ready bool
-
 	scanner := bufio.NewScanner(os.Stdin)
 
 	space := regexp.MustCompile(`\s+`) //Used to delete multiple spaces
@@ -67,6 +73,9 @@ func UCI(engineInfo EngineInfo) {
 				go positionHandler(command[index:])
 			}
 		case "go":
+			if ready && positionSet {
+				go goHandler()
+			}
 		case "stop":
 		case "ponderhit":
 		case "quit":
@@ -74,7 +83,7 @@ func UCI(engineInfo EngineInfo) {
 		case "print":
 			go pos.Print()
 		case "divide":
-			if ready {
+			if ready && positionSet {
 				go divideHander(command[index:])
 			}
 		default:
@@ -98,25 +107,24 @@ func uciHander(engineInfo EngineInfo) {
 }
 
 func positionHandler(command []string) {
-	boardSet := false
 
 	if command[1] == "startpos" {
 		err := pos.LoadFEN(board.StartPosFEN)
 		if err != nil {
 			panic(err)
 		}
-		boardSet = true
+		positionSet = true
 	} else if command[1] == "fen" {
 		err := pos.LoadFEN(strings.Join(command[2:], " "))
 		if err != nil {
 			panic(err)
 		}
-		boardSet = true
+		positionSet = true
 	}
 
 	str := strings.Join(command[2:], " ")
 
-	if strings.Contains(str, "moves") && boardSet {
+	if strings.Contains(str, "moves") && positionSet {
 		index := strings.Index(str, "moves")
 
 		str = str[index+6:]
@@ -145,6 +153,7 @@ func positionHandler(command []string) {
 			break
 		}
 	}
+
 }
 
 func divideHander(command []string) {
@@ -157,4 +166,13 @@ func divideHander(command []string) {
 			}
 		}
 	}
+}
+
+func goHandler() {
+	info.Depth = 2
+	err := info.SearchPosition(&pos)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("bestmove %s\n", board.MoveToString(pos.PvArray[0]))
 }
