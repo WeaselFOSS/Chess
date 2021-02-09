@@ -30,6 +30,9 @@ type PositionStruct struct {
 
 	PVTable PVTableStruct
 	PvArray [MaxDepth]int
+
+	SearchHistory [13][squareNumber]int
+	SearchKillers [2][MaxDepth]int
 }
 
 //UndoStruct the undo move struct
