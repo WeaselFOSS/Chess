@@ -247,9 +247,14 @@ func goHandler(command []string) {
 
 	if timeV != -1 {
 		info.TimeSet = true
-		timeV /= movesToGo
-		timeV -= 50
+
+		if timeV >= 200 {
+			timeV /= movesToGo
+		}
 		info.StopTime = info.StartTime + int64(timeV+inc)
+		if info.StopTime <= 50 {
+			info.StopTime = 500
+		}
 	}
 
 	if depth == -1 {

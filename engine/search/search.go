@@ -290,7 +290,7 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 	}
 
 	//If we found a better move store it in the PV table
-	if alpha != oldAlpha {
+	if alpha != oldAlpha || alpha == -infinitie {
 		err = pos.StorePVMove(bestMove)
 		if err != nil {
 			return 0, err
