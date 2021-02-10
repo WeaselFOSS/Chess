@@ -11,11 +11,75 @@ var bitTables = [64]int{
 var setMask [64]uint64
 var clearMask [64]uint64
 
+//Bitboard file maseks
+var fileMasks [8]uint64
+var rankMasks [8]uint64
+
+//Passed and isolated pawns masks
+var blackPassedMasks [64]uint64
+var whitePassedMasks [64]uint64
+var isolatedMasks [64]uint64
+
 //initBitMasks Initialize the bit masks
 func initBitMasks() {
 	for i := 0; i < 64; i++ {
 		setMask[i] |= uint64(1) << uint64(i)
 		clearMask[i] = ^setMask[i]
+	}
+
+	for r := rank8; r >= rank1; r-- {
+		for f := fileA; f <= fileH; f++ {
+			sq := r*8 + f
+			fileMasks[f] |= (uint64(1) << sq)
+			rankMasks[r] |= (uint64(1) << sq)
+		}
+	}
+
+	for sq := 0; sq < 64; sq++ {
+
+		tsq := sq + 8
+		for tsq < 64 {
+			whitePassedMasks[sq] |= (uint64(1) << uint64(tsq))
+			tsq += 8
+		}
+
+		tsq = sq - 8
+		for tsq >= 0 {
+			blackPassedMasks[sq] |= (uint64(1) << uint64(tsq))
+			tsq -= 8
+		}
+
+		if filesBoard[sq64ToSq120[sq]] > fileA {
+			isolatedMasks[sq] |= fileMasks[filesBoard[sq64ToSq120[sq]]-1]
+
+			tsq = sq + 7
+			for tsq < 64 {
+				whitePassedMasks[sq] |= (uint64(1) << uint64(tsq))
+				tsq += 8
+			}
+
+			tsq = sq - 9
+			for tsq >= 0 {
+				blackPassedMasks[sq] |= (uint64(1) << uint64(tsq))
+				tsq -= 8
+			}
+		}
+
+		if filesBoard[sq64ToSq120[sq]] < fileH {
+			isolatedMasks[sq] |= fileMasks[filesBoard[sq64ToSq120[sq]]+1]
+
+			tsq = sq + 9
+			for tsq < 64 {
+				whitePassedMasks[sq] |= (uint64(1) << uint64(tsq))
+				tsq += 8
+			}
+
+			tsq = sq - 7
+			for tsq >= 0 {
+				blackPassedMasks[sq] |= (uint64(1) << uint64(tsq))
+				tsq -= 8
+			}
+		}
 	}
 }
 

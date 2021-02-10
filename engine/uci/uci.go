@@ -47,15 +47,13 @@ func UCI(engineInfo EngineInfo) {
 
 		switch command[index] {
 		case "uci":
-			go uciHander(engineInfo)
+			uciHander(engineInfo)
 		case "debug":
-			go func() {
-				if command[index+1] == "on" {
-					board.DEBUG = true
-				} else {
-					board.DEBUG = false
-				}
-			}()
+			if command[index+1] == "on" {
+				board.DEBUG = true
+			} else {
+				board.DEBUG = false
+			}
 		case "isready":
 			go func() {
 
@@ -77,10 +75,10 @@ func UCI(engineInfo EngineInfo) {
 			}
 		case "position":
 			if ready {
-				go positionHandler(command[index:])
+				positionHandler(command[index:])
 			}
 		case "go":
-			if ready {
+			if ready && positionSet {
 				go goHandler(command[index:])
 			}
 		case "stop":
@@ -106,7 +104,7 @@ func UCI(engineInfo EngineInfo) {
 }
 
 func uciHander(engineInfo EngineInfo) {
-	fmt.Println("id name " + engineInfo.Name + engineInfo.Version)
+	fmt.Println("id name " + engineInfo.Name + " " + engineInfo.Version)
 	fmt.Println("id author " + engineInfo.Author)
 
 	//TODO: Add supported options
@@ -116,6 +114,7 @@ func uciHander(engineInfo EngineInfo) {
 
 func positionHandler(command []string) {
 	var boardSet bool
+	positionSet = false
 	if command[1] == "startpos" {
 		err := pos.LoadFEN(board.StartPosFEN)
 		if err != nil {
@@ -180,6 +179,7 @@ func divideHander(command []string) {
 }
 
 func goHandler(command []string) {
+	fmt.Println(command)
 	var err error
 	depth := -1
 	movesToGo := 30
@@ -193,46 +193,48 @@ func goHandler(command []string) {
 			if pos.Side == 1 {
 				inc, err = strconv.Atoi(command[i+1])
 				if err != nil {
-					fmt.Println("Failed to parse binc time")
+					panic("Failed to parse binc time " + err.Error())
 				}
 			}
 		case "winc":
 			if pos.Side == 0 {
 				inc, err = strconv.Atoi(command[i+1])
 				if err != nil {
-					fmt.Println("Failed to parse winc time")
+					panic("Failed to parse winc time " + err.Error())
 				}
 			}
 		case "wtime":
 			if pos.Side == 0 {
+				fmt.Println(command[i+1])
 				timeV, err = strconv.Atoi(command[i+1])
 				if err != nil {
-					fmt.Println("Failed to parse wtime time")
+					panic("Failed to parse wtime time " + err.Error())
 				}
 			}
 		case "btime":
 			if pos.Side == 1 {
+				fmt.Println(command[i+1])
 				timeV, err = strconv.Atoi(command[i+1])
 				if err != nil {
-					fmt.Println("Failed to parse btime time")
+					panic("Failed to parse btime time " + err.Error())
 				}
 			}
 
 		case "movestogo":
 			movesToGo, err = strconv.Atoi(command[i+1])
 			if err != nil {
-				fmt.Println("Failed to parse binc time")
+				panic("Failed to parse binc time " + err.Error())
 			}
 
 		case "movetime":
 			moveTime, err = strconv.Atoi(command[i+1])
 			if err != nil {
-				fmt.Println("Failed to parse binc time")
+				panic("Failed to parse move time " + err.Error())
 			}
 		case "depth":
 			depth, err = strconv.Atoi(command[i+1])
 			if err != nil {
-				fmt.Println("Failed to parse binc time")
+				panic("Failed to parse depth " + err.Error())
 			}
 		}
 	}
@@ -264,14 +266,8 @@ func goHandler(command []string) {
 	fmt.Printf("time: %d start: %d stop: %d depth %d timeset %v\n",
 		timeV, info.StartTime, info.StopTime, info.Depth, info.TimeSet)
 
-	for {
-		if positionSet {
-			err := info.SearchPosition(&pos)
-			if err != nil {
-				panic(err)
-			}
-			positionSet = false
-			break
-		}
+	err = info.SearchPosition(&pos)
+	if err != nil {
+		panic(err)
 	}
 }

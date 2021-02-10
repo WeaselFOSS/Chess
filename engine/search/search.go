@@ -199,8 +199,18 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 		return pos.Evaluate(), nil
 	}
 
+	//Test if the side to move is in check, if so extend the search by 1 depth
+	inCheck, err := pos.IsAttacked(pos.KingSquare[pos.Side], pos.Side^1)
+	if err != nil {
+		return 0, err
+	}
+
+	if inCheck {
+		depth++
+	}
+
 	var list board.MoveListStruct
-	err := pos.GenerateAllMoves(&list)
+	err = pos.GenerateAllMoves(&list)
 	if err != nil {
 		return 0, err
 	}
@@ -274,14 +284,7 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 	}
 
 	if legal == 0 {
-		//pos.Side^1 WHITE^1 == black and BLACK^1 == white
-		isAttacked := false
-		isAttacked, err = pos.IsAttacked(pos.KingSquare[pos.Side], pos.Side^1)
-		if err != nil {
-			return 0, err
-		}
-
-		if isAttacked {
+		if inCheck {
 			//Return -mate plus the ply or moves to the mate so later we can take score and subtrace mate to get mate in X val
 			return -mate + pos.Ply, nil
 		} else {

@@ -310,3 +310,63 @@ func (pos *PositionStruct) updateMaterialLists() {
 		}
 	}
 }
+
+//mirrorBoard Mirror the position
+func (pos *PositionStruct) mirrorBoard() error {
+	var tempPieceArray [64]int
+	tempSide := pos.Side ^ 1
+	var swapPieces = [13]int{empty, bP, bN, bB, bR, bQ, bK, wP, wN, wB, wR, wQ, wK}
+	var tempCastelPerm = 0
+	var tempEnpas = noSquare
+
+	if pos.CastelPerm&wkcastel != 0 {
+		tempCastelPerm |= bkcastel
+	}
+
+	if pos.CastelPerm&wqcastel != 0 {
+		tempCastelPerm |= bqcastel
+	}
+
+	if pos.CastelPerm&bkcastel != 0 {
+		tempCastelPerm |= wkcastel
+	}
+
+	if pos.CastelPerm&bqcastel != 0 {
+		tempCastelPerm |= wqcastel
+	}
+
+	if pos.EnPassant != noSquare {
+		tempEnpas = sq64ToSq120[mirror64[sq120ToSq64[pos.EnPassant]]]
+	}
+
+	for sq := 0; sq < 64; sq++ {
+		tempPieceArray[sq] = pos.Pieces[sq64ToSq120[mirror64[sq]]]
+	}
+
+	pos.resetBoard()
+
+	for sq := 0; sq < 64; sq++ {
+		tp := swapPieces[tempPieceArray[sq]]
+		pos.Pieces[sq64ToSq120[sq]] = tp
+	}
+
+	pos.Side = tempSide
+	pos.CastelPerm = tempCastelPerm
+	pos.EnPassant = tempEnpas
+
+	var err error
+	pos.PosKey, err = pos.generatePosKey()
+	if err != nil {
+		return err
+	}
+
+	pos.updateMaterialLists()
+
+	if DEBUG {
+		err = pos.CheckBoard()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
