@@ -58,7 +58,7 @@ func UCI(engineInfo EngineInfo) {
 
 				board.Initialize()
 				//Init hash tables size with 2 MB's
-				pos.PVTable.Init(2) //TODO: Add option to set hash size in mb
+				pos.HashTable.Init(32) //TODO: Add option to set hash size in mb
 
 				ready = true
 
@@ -67,7 +67,7 @@ func UCI(engineInfo EngineInfo) {
 		case "setoption":
 		case "register":
 		case "ucinewgame":
-			pos.PVTable.Clear()
+			pos.HashTable.Clear()
 			err := pos.LoadFEN(board.StartPosFEN)
 			if err != nil {
 				panic(err)

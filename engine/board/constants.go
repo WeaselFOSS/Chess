@@ -15,6 +15,22 @@ const MaxDepth = 64
 //NoMove constant for no move found
 const NoMove = 0
 
+//infinite Largest score value
+const Infinite = 30000
+
+//Mate the mate score
+const Mate = 29000
+
+const IsMate = Infinite - MaxDepth
+
+const (
+	//flags for hash table
+	HFNONE = iota
+	HFALPHA
+	HFBETA
+	HFEXACT
+)
+
 const (
 	//empty empty square
 	empty = iota

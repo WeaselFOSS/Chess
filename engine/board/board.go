@@ -28,8 +28,8 @@ type PositionStruct struct {
 
 	PieceList [13][10]int
 
-	PVTable PVTableStruct
-	PvArray [MaxDepth]int
+	HashTable HashTableStruct
+	PvArray   [MaxDepth]int
 
 	SearchHistory [13][SquareNumber]int
 	SearchKillers [2][MaxDepth]int

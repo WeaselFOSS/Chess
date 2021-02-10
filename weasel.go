@@ -53,7 +53,7 @@ func weaselConsol() {
 	var pos board.PositionStruct
 	board.Initialize()
 	//Init hash tables size with 2 MB's
-	pos.PVTable.Init(2)
+	pos.HashTable.Init(16)
 
 	pos.LoadFEN(board.StartPosFEN)
 	pos.Print()
@@ -75,8 +75,10 @@ func weaselConsol() {
 		case "eval":
 			fmt.Printf("The current Eveluation is %d\n", pos.Evaluate())
 		case "startpos":
+			pos.HashTable.Clear()
 			pos.LoadFEN(board.StartPosFEN)
 		case "setboard":
+			pos.HashTable.Clear()
 			pos.LoadFEN(strings.Join(command[index+1:], " "))
 		case "force":
 			forceMode = true

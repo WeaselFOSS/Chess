@@ -20,14 +20,12 @@ type InfoStruct struct {
 	Quit      bool
 	Stopped   bool
 
+	NullCut int
+
 	//Used to calculate the efficency of our move ordering
 	FailHigh      float32
 	FailHighFirst float32
 }
-
-//infinite Largest score value
-const infinite = 30000
-const mate = 29000
 
 //pickNextMove Pick the next move base on inital score
 func pickNextMove(moveNum int, list *board.MoveListStruct) {
@@ -68,7 +66,10 @@ func (info *InfoStruct) clearForSearch(pos *board.PositionStruct) {
 		}
 	}
 
-	pos.PVTable.Clear()
+	pos.HashTable.OverWrite = 0
+	pos.HashTable.Hit = 0
+	pos.HashTable.Cut = 0
+
 	pos.Ply = 0
 
 	info.Stopped = false
@@ -113,9 +114,7 @@ func (info *InfoStruct) quiescence(alpha, beta int, pos *board.PositionStruct) (
 	}
 
 	legal := 0
-	oldAlpha := alpha
-	bestMove := board.NoMove
-	score = -infinite
+	score = -board.Infinite
 
 	for i := 0; i < list.Count; i++ {
 
@@ -155,14 +154,6 @@ func (info *InfoStruct) quiescence(alpha, beta int, pos *board.PositionStruct) (
 				return beta, nil
 			}
 			alpha = score
-			bestMove = list.Moves[i].Move
-		}
-	}
-
-	if alpha != oldAlpha {
-		err := pos.StorePVMove(bestMove)
-		if err != nil {
-			return 0, err
 		}
 	}
 	return alpha, nil
@@ -209,7 +200,19 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 		depth++
 	}
 
-	score := -infinite
+	var found bool
+	pvMove := board.NoMove
+	score := -board.Infinite
+
+	found, err = pos.ProbeHashEntry(&pvMove, &score, alpha, beta, depth)
+	if err != nil {
+		return 0, err
+	}
+
+	if found {
+		pos.HashTable.Cut++
+		return score, nil
+	}
 
 	if doNull && !inCheck && pos.Ply != 0 && pos.BigPieces[pos.Side] > 0 && depth >= 4 {
 		err = pos.MakeNullMove()
@@ -232,7 +235,8 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 			return 0, nil
 		}
 
-		if score >= beta {
+		if score >= beta && score < board.IsMate {
+			info.NullCut++
 			return beta, nil
 		}
 
@@ -247,9 +251,8 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 	legal := 0
 	oldAlpha := alpha
 	bestMove := board.NoMove
-	score = -infinite
-	var pvMove int
-	pvMove, err = pos.ProbePVTable()
+	bestScore := -board.Infinite
+	score = -board.Infinite
 
 	if pvMove != board.NoMove {
 		for i := 0; i < list.Count; i++ {
@@ -288,26 +291,32 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 			return 0, nil
 		}
 
-		//If score beats alpha set alpha to score
-		if score > alpha {
-			//If score is better than our beta cutoff return beta
-			if score >= beta {
-				if legal == 1 {
-					info.FailHighFirst++
-				}
-				info.FailHigh++
-
-				if list.Moves[i].Move&board.MoveFlagCA == 0 {
-					pos.SearchKillers[1][pos.Ply] = pos.SearchKillers[0][pos.Ply]
-					pos.SearchKillers[0][pos.Ply] = list.Moves[i].Move
-				}
-				return beta, nil
-			}
-			alpha = score
+		if score > bestScore {
+			bestScore = score
 			bestMove = list.Moves[i].Move
+			//If score beats alpha set alpha to score
+			if score > alpha {
+				//If score is better than our beta cutoff return beta
+				if score >= beta {
+					if legal == 1 {
+						info.FailHighFirst++
+					}
+					info.FailHigh++
 
-			if list.Moves[i].Move&board.MoveFlagCAP == 0 {
-				pos.SearchHistory[pos.Pieces[board.GetFrom(bestMove)]][board.GetTo(bestMove)] += depth
+					if list.Moves[i].Move&board.MoveFlagCA == 0 {
+						pos.SearchKillers[1][pos.Ply] = pos.SearchKillers[0][pos.Ply]
+						pos.SearchKillers[0][pos.Ply] = list.Moves[i].Move
+					}
+
+					err = pos.StoreHashEntry(bestMove, beta, board.HFBETA, depth)
+					return beta, err
+				}
+				alpha = score
+				bestMove = list.Moves[i].Move
+
+				if list.Moves[i].Move&board.MoveFlagCAP == 0 {
+					pos.SearchHistory[pos.Pieces[board.GetFrom(bestMove)]][board.GetTo(bestMove)] += depth
+				}
 			}
 		}
 	}
@@ -315,15 +324,20 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 	if legal == 0 {
 		if inCheck {
 			//Return -mate plus the ply or moves to the mate so later we can take score and subtrace mate to get mate in X val
-			return -mate + pos.Ply, nil
+			return -board.Mate + pos.Ply, nil
 		} else {
 			return 0, nil
 		}
 	}
 
 	//If we found a better move store it in the PV table
-	if alpha != oldAlpha || alpha == -infinite {
-		err = pos.StorePVMove(bestMove)
+	if alpha != oldAlpha {
+		err = pos.StoreHashEntry(bestMove, bestScore, board.HFEXACT, depth)
+		if err != nil {
+			return 0, err
+		}
+	} else {
+		err = pos.StoreHashEntry(bestMove, alpha, board.HFALPHA, depth)
 		if err != nil {
 			return 0, err
 		}
@@ -336,7 +350,7 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 //SearchPosition for best move
 func (info *InfoStruct) SearchPosition(pos *board.PositionStruct) error {
 	var bestMove int = board.NoMove
-	var bestScore int = -infinite
+	var bestScore int = -board.Infinite
 	var pvMoves = 0
 	var pvNum = 0
 
@@ -346,7 +360,7 @@ func (info *InfoStruct) SearchPosition(pos *board.PositionStruct) error {
 
 	//Iterative deepening loop
 	for currentDepth := 1; currentDepth <= info.Depth; currentDepth++ {
-		bestScore, err = info.alphaBeta(-infinite, infinite, currentDepth, true, pos)
+		bestScore, err = info.alphaBeta(-board.Infinite, board.Infinite, currentDepth, true, pos)
 		if err != nil {
 			return err
 		}
@@ -371,7 +385,7 @@ func (info *InfoStruct) SearchPosition(pos *board.PositionStruct) error {
 			fmt.Printf(" %s", board.MoveToString(pos.PvArray[pvNum]))
 		}
 		fmt.Print("\n")
-		//fmt.Printf("Ordering: %.2f\n", info.FailHighFirst/info.FailHigh)
+		fmt.Printf("Hits:%d Overwrite:%d NewWrite:%d Cut:%d\n", pos.HashTable.Hit, pos.HashTable.OverWrite, pos.HashTable.NewWrite, pos.HashTable.Cut)
 	}
 	fmt.Printf("bestmove %s\n", board.MoveToString(bestMove))
 	return err
