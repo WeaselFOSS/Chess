@@ -3,8 +3,17 @@ package board
 //pawnIsolated penalty for having an isolated pawn
 const pawnIsolated = -10
 
-//rookOpenFile Bonus for having a rook on an open file
-const rookOpenFile = 5
+//rookOpenFile Bonus for having a rook on a open file
+const rookOpenFile = 10
+
+//rookSemiOpenFile Bonus for having a rook on a semi open file
+const rookSemiOpenFile = 5
+
+//queenOpenFile Bonus for having a queen on a open file
+const queenOpenFile = 5
+
+//queenSemiOpenFile Bonus for having a queen on a semi open file
+const queenSemiOpenFile = 3
 
 //Bonus for pushing passed pawns
 var pawnPassed = [8]int{0, 5, 10, 20, 35, 60, 100, 200}
@@ -70,7 +79,7 @@ var mirror64 = [64]int{
 func (pos *PositionStruct) Evaluate() int {
 	score := pos.Material[white] - pos.Material[black]
 
-	//Pawn square tables
+	//Pawn square tables and isolated / passed check
 	for i := 0; i < pos.PieceNum[wP]; i++ {
 		sq := pos.PieceList[wP][i]
 		score += pawnTable[sq120ToSq64[sq]]
@@ -119,15 +128,46 @@ func (pos *PositionStruct) Evaluate() int {
 		score -= bishopTable[mirror64[sq120ToSq64[sq]]]
 	}
 
-	//Rook square tables
+	//Rook square tables and open files
 	for i := 0; i < pos.PieceNum[wR]; i++ {
 		sq := pos.PieceList[wR][i]
 		score += rookTable[sq120ToSq64[sq]]
+
+		if pos.Pawns[both]&fileMasks[filesBoard[sq]] == 0 {
+			score += rookOpenFile
+		} else if pos.Pawns[white]&fileMasks[filesBoard[sq]] == 0 {
+			score += rookSemiOpenFile
+		}
 	}
 
 	for i := 0; i < pos.PieceNum[bR]; i++ {
 		sq := pos.PieceList[bR][i]
 		score -= rookTable[mirror64[sq120ToSq64[sq]]]
+
+		if pos.Pawns[both]&fileMasks[filesBoard[sq]] == 0 {
+			score -= rookOpenFile
+		} else if pos.Pawns[black]&fileMasks[filesBoard[sq]] == 0 {
+			score -= rookSemiOpenFile
+		}
+	}
+
+	//Queen open/semi open files
+	for i := 0; i < pos.PieceNum[wQ]; i++ {
+		sq := pos.PieceList[wQ][i]
+		if pos.Pawns[both]&fileMasks[filesBoard[sq]] == 0 {
+			score += queenOpenFile
+		} else if pos.Pawns[white]&fileMasks[filesBoard[sq]] == 0 {
+			score += queenSemiOpenFile
+		}
+	}
+
+	for i := 0; i < pos.PieceNum[bQ]; i++ {
+		sq := pos.PieceList[bQ][i]
+		if pos.Pawns[both]&fileMasks[filesBoard[sq]] == 0 {
+			score += queenOpenFile
+		} else if pos.Pawns[black]&fileMasks[filesBoard[sq]] == 0 {
+			score += queenSemiOpenFile
+		}
 	}
 
 	//Return a positive score no matter the side to move
