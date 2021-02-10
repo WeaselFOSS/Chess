@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"unicode"
 
 	"github.com/WeaselChess/Weasel/engine/board"
 	"github.com/WeaselChess/Weasel/engine/search"
@@ -88,10 +87,6 @@ func UCI(engineInfo EngineInfo) {
 			os.Exit(0)
 		case "print":
 			go pos.Print()
-		case "divide":
-			if ready && positionSet {
-				go divideHander(command[index:])
-			}
 		default:
 			if len(command) == index+1 {
 				break
@@ -164,18 +159,6 @@ func positionHandler(command []string) {
 	}
 	positionSet = true
 
-}
-
-func divideHander(command []string) {
-	if len(command) > 1 {
-		if unicode.IsDigit(rune(command[1][0])) {
-			var depth int = int(rune(command[1][0]) - '0')
-			err := pos.PerftDivide(depth)
-			if err != nil {
-				panic(err)
-			}
-		}
-	}
 }
 
 func goHandler(command []string) {

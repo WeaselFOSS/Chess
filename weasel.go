@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"strings"
 	"time"
+	"unicode"
 
 	"github.com/WeaselChess/Weasel/engine/board"
 	"github.com/WeaselChess/Weasel/engine/search"
@@ -82,6 +83,8 @@ func weaselConsol() {
 		case "go":
 			forceMode = false
 			moveMade = true
+		case "divide":
+			divideHander(command[index:], &pos)
 		case "quit":
 			os.Exit(0)
 		case "help":
@@ -91,6 +94,7 @@ func weaselConsol() {
 			fmt.Println("setboard x - set the board position to the FEN x")
 			fmt.Println("force - make the engine not make moves")
 			fmt.Println("go - let the engine make moves")
+			fmt.Println("divide x - runs a perft divide to the depth of x")
 			fmt.Println("quit - exit the program")
 		default:
 			move, err := pos.ParseMove(command[index])
@@ -127,4 +131,16 @@ func weaselConsol() {
 
 	}
 
+}
+
+func divideHander(command []string, pos *board.PositionStruct) {
+	if len(command) > 1 {
+		if unicode.IsDigit(rune(command[1][0])) {
+			var depth int = int(rune(command[1][0]) - '0')
+			err := pos.PerftDivide(depth)
+			if err != nil {
+				panic(err)
+			}
+		}
+	}
 }
