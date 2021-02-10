@@ -25,8 +25,8 @@ type InfoStruct struct {
 	FailHighFirst float32
 }
 
-//infinitie Largest score value
-const infinitie = 30000
+//infinite Largest score value
+const infinite = 30000
 const mate = 29000
 
 //pickNextMove Pick the next move base on inital score
@@ -115,7 +115,7 @@ func (info *InfoStruct) quiescence(alpha, beta int, pos *board.PositionStruct) (
 	legal := 0
 	oldAlpha := alpha
 	bestMove := board.NoMove
-	score = -infinitie
+	score = -infinite
 
 	for i := 0; i < list.Count; i++ {
 
@@ -209,6 +209,35 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 		depth++
 	}
 
+	score := -infinite
+
+	if doNull && !inCheck && pos.Ply != 0 && pos.BigPieces[pos.Side] > 0 && depth >= 4 {
+		err = pos.MakeNullMove()
+		if err != nil {
+			return 0, err
+		}
+
+		score, err = info.alphaBeta(-beta, -beta+1, depth-4, false, pos)
+		if err != nil {
+			return 0, err
+		}
+		score *= -1
+
+		err = pos.TakeNullMove()
+		if err != nil {
+			return 0, err
+		}
+
+		if info.Stopped {
+			return 0, nil
+		}
+
+		if score >= beta {
+			return beta, nil
+		}
+
+	}
+
 	var list board.MoveListStruct
 	err = pos.GenerateAllMoves(&list)
 	if err != nil {
@@ -218,7 +247,7 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 	legal := 0
 	oldAlpha := alpha
 	bestMove := board.NoMove
-	score := -infinitie
+	score = -infinite
 	var pvMove int
 	pvMove, err = pos.ProbePVTable()
 
@@ -293,7 +322,7 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 	}
 
 	//If we found a better move store it in the PV table
-	if alpha != oldAlpha || alpha == -infinitie {
+	if alpha != oldAlpha || alpha == -infinite {
 		err = pos.StorePVMove(bestMove)
 		if err != nil {
 			return 0, err
@@ -307,7 +336,7 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 //SearchPosition for best move
 func (info *InfoStruct) SearchPosition(pos *board.PositionStruct) error {
 	var bestMove int = board.NoMove
-	var bestScore int = -infinitie
+	var bestScore int = -infinite
 	var pvMoves = 0
 	var pvNum = 0
 
@@ -317,7 +346,7 @@ func (info *InfoStruct) SearchPosition(pos *board.PositionStruct) error {
 
 	//Iterative deepening loop
 	for currentDepth := 1; currentDepth <= info.Depth; currentDepth++ {
-		bestScore, err = info.alphaBeta(-infinitie, infinitie, currentDepth, true, pos)
+		bestScore, err = info.alphaBeta(-infinite, infinite, currentDepth, true, pos)
 		if err != nil {
 			return err
 		}
