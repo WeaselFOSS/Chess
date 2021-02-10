@@ -15,6 +15,12 @@ const queenOpenFile = 5
 //queenSemiOpenFile Bonus for having a queen on a semi open file
 const queenSemiOpenFile = 3
 
+//bishopPair bonus for having a bishop pair
+const bishopPair = 30
+
+//endGameMaterial If there are no queens on the board or material is less than this, than we are in a end game
+var endGameMaterial = getPieceValue(wR) + 2*getPieceValue(wN) + 2*getPieceValue(wP)
+
 //Bonus for pushing passed pawns
 var pawnPassed = [8]int{0, 5, 10, 20, 35, 60, 100, 200}
 
@@ -63,6 +69,28 @@ var rookTable = [64]int{
 	0, 0, 5, 10, 10, 5, 0, 0,
 }
 
+var kingE = [64]int{
+	-50, -10, 0, 0, 0, 0, -10, -50,
+	-10, 0, 10, 10, 10, 10, 0, -10,
+	0, 10, 15, 15, 15, 15, 10, 0,
+	0, 10, 15, 20, 20, 15, 10, 0,
+	0, 10, 15, 20, 20, 15, 10, 0,
+	0, 10, 15, 15, 15, 15, 10, 0,
+	-10, 0, 10, 10, 10, 10, 0, -10,
+	-50, -10, 0, 0, 0, 0, -10, -50,
+}
+
+var kingO = [64]int{
+	0, 5, 5, -10, -10, 0, 10, 5,
+	-30, -30, -30, -30, -30, -30, -30, -30,
+	-50, -50, -50, -50, -50, -50, -50, -50,
+	-70, -70, -70, -70, -70, -70, -70, -70,
+	-70, -70, -70, -70, -70, -70, -70, -70,
+	-70, -70, -70, -70, -70, -70, -70, -70,
+	-70, -70, -70, -70, -70, -70, -70, -70,
+	-70, -70, -70, -70, -70, -70, -70, -70,
+}
+
 //mirror64 Mirror the piece square tables for the other side
 var mirror64 = [64]int{
 	56, 57, 58, 59, 60, 61, 62, 63,
@@ -75,9 +103,48 @@ var mirror64 = [64]int{
 	0, 1, 2, 3, 4, 5, 6, 7,
 }
 
+//materialDraw Test if the position is a material draw
+//Credit sjeng 11.2
+func (pos *PositionStruct) materialDraw() bool {
+	if pos.PieceNum[wR] == 0 && pos.PieceNum[bR] == 0 && pos.PieceNum[wQ] == 0 && pos.PieceNum[bQ] == 0 {
+		if pos.PieceNum[bB] == 0 && pos.PieceNum[wB] == 0 {
+			if pos.PieceNum[wN] < 3 && pos.PieceNum[bN] < 3 {
+				return true
+			}
+		} else if pos.PieceNum[wN] == 0 && pos.PieceNum[bN] == 0 {
+			if pos.PieceNum[wB]-pos.PieceNum[bB] < 2 {
+				return true
+			}
+		} else if (pos.PieceNum[wN] < 3 && pos.PieceNum[wB] == 0) || (pos.PieceNum[wB] == 1 && pos.PieceNum[wN] == 0) {
+			if (pos.PieceNum[bN] < 3 && pos.PieceNum[bB] == 0) || (pos.PieceNum[bB] == 1 && pos.PieceNum[bN] == 0) {
+				return true
+			}
+		}
+	} else if pos.PieceNum[wQ] == 0 && pos.PieceNum[bQ] == 0 {
+		if pos.PieceNum[wR] == 1 && pos.PieceNum[bR] == 1 {
+			if (pos.PieceNum[wN]+pos.PieceNum[wB]) < 2 && (pos.PieceNum[bN]+pos.PieceNum[bB]) < 2 {
+				return true
+			}
+		} else if pos.PieceNum[wR] == 1 && pos.PieceNum[bR] == 0 {
+			if (pos.PieceNum[wN]+pos.PieceNum[wB] == 0) && (((pos.PieceNum[bN] + pos.PieceNum[bB]) == 1) || ((pos.PieceNum[bN] + pos.PieceNum[bB]) == 2)) {
+				return true
+			}
+		} else if pos.PieceNum[bR] == 1 && pos.PieceNum[wR] == 0 {
+			if (pos.PieceNum[bN]+pos.PieceNum[bB] == 0) && (((pos.PieceNum[wN] + pos.PieceNum[wB]) == 1) || ((pos.PieceNum[wN] + pos.PieceNum[wB]) == 2)) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 //Evaluate the currect position and return a score
 func (pos *PositionStruct) Evaluate() int {
 	score := pos.Material[white] - pos.Material[black]
+
+	if pos.PieceNum[wP] == 0 && pos.PieceNum[bP] == 0 && pos.materialDraw() {
+		return 0
+	}
 
 	//Pawn square tables and isolated / passed check
 	for i := 0; i < pos.PieceNum[wP]; i++ {
@@ -89,7 +156,7 @@ func (pos *PositionStruct) Evaluate() int {
 		}
 
 		if whitePassedMasks[sq120ToSq64[sq]]&pos.Pawns[black] == 0 {
-			score -= pawnPassed[ranksBoard[sq]]
+			score += pawnPassed[ranksBoard[sq]]
 		}
 	}
 
@@ -164,10 +231,33 @@ func (pos *PositionStruct) Evaluate() int {
 	for i := 0; i < pos.PieceNum[bQ]; i++ {
 		sq := pos.PieceList[bQ][i]
 		if pos.Pawns[both]&fileMasks[filesBoard[sq]] == 0 {
-			score += queenOpenFile
+			score -= queenOpenFile
 		} else if pos.Pawns[black]&fileMasks[filesBoard[sq]] == 0 {
-			score += queenSemiOpenFile
+			score -= queenSemiOpenFile
 		}
+	}
+
+	//King piece squares
+	sq := pos.PieceList[wK][0]
+	if pos.Material[black] <= endGameMaterial {
+		score += kingE[sq120ToSq64[sq]]
+	} else {
+		score += kingO[sq120ToSq64[sq]]
+	}
+
+	sq = pos.PieceList[bK][0]
+	if pos.Material[white] <= endGameMaterial {
+		score -= kingE[mirror64[sq120ToSq64[sq]]]
+	} else {
+		score -= kingO[mirror64[sq120ToSq64[sq]]]
+	}
+
+	if pos.PieceNum[wB] >= 2 {
+		score += bishopPair
+	}
+
+	if pos.PieceNum[bB] >= 2 {
+		score -= bishopPair
 	}
 
 	//Return a positive score no matter the side to move

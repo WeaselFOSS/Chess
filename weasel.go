@@ -85,6 +85,11 @@ func weaselConsol() {
 			moveMade = true
 		case "divide":
 			divideHander(command[index:], &pos)
+		case "mirror":
+			err := pos.MirrorBoard()
+			if err != nil {
+				panic(err)
+			}
 		case "quit":
 			os.Exit(0)
 		case "help":

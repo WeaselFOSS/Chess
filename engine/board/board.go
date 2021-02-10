@@ -313,7 +313,7 @@ func (pos *PositionStruct) updateMaterialLists() {
 }
 
 //mirrorBoard Mirror the position
-func (pos *PositionStruct) mirrorBoard() error {
+func (pos *PositionStruct) MirrorBoard() error {
 	var tempPieceArray [64]int
 	tempSide := pos.Side ^ 1
 	var swapPieces = [13]int{empty, bP, bN, bB, bR, bQ, bK, wP, wN, wB, wR, wQ, wK}
