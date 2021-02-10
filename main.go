@@ -14,7 +14,7 @@ var EngineInfo = uci.EngineInfo{
 }
 
 func main() {
-	go uci.UCI(EngineInfo)
+	go start(EngineInfo)
 
 	fmt.Println("                                                  ")
 	fmt.Println("██╗    ██╗███████╗ █████╗ ███████╗███████╗██╗     ")

@@ -49,23 +49,6 @@ func isPieceSlider(piece int) bool {
 		piece == bB || piece == bR || piece == bQ
 }
 
-//GetPieceValue returns the value of a piece
-func getPieceValue(piece int) int {
-	switch piece {
-	case wP, bP:
-		return 100
-	case wN, bN, wB, bB:
-		return 325
-	case wR, bR:
-		return 550
-	case wQ, bQ:
-		return 1000
-	case wK, bK:
-		return 50000
-	}
-	return 0
-}
-
 //GetPieceColor returns the color of a piece
 func getPieceColor(piece int) int {
 	if piece >= wP && piece <= wK {

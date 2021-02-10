@@ -275,6 +275,7 @@ func (pos *PositionStruct) Print() {
 	fmt.Printf("Castel Perms: %c%c%c%c\n", WK, WQ, BK, BQ)
 	fmt.Printf("Position Hash: %X\n", pos.PosKey)
 	fmt.Printf("Is Repition: %v\n", pos.IsRepition())
+	fmt.Printf("Evaluation CP: %d\n", pos.Evaluate())
 }
 
 //updateMaterialLists Update the material lists for the baord

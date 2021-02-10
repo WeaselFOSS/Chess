@@ -37,7 +37,7 @@ func UCI(engineInfo EngineInfo) {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	space := regexp.MustCompile(`\s+`) //Used to delete multiple spaces
-
+	uciHander(engineInfo)
 	for scanner.Scan() {
 		index := 0
 

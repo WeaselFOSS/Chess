@@ -1,5 +1,14 @@
 package board
 
+//pawnIsolated penalty for having an isolated pawn
+const pawnIsolated = -10
+
+//rookOpenFile Bonus for having a rook on an open file
+const rookOpenFile = 5
+
+//Bonus for pushing passed pawns
+var pawnPassed = [8]int{0, 5, 10, 20, 35, 60, 100, 200}
+
 //These are piece square tables. A simple method to get a better evaluation
 var pawnTable = [64]int{
 	0, 0, 0, 0, 0, 0, 0, 0,
@@ -65,11 +74,27 @@ func (pos *PositionStruct) Evaluate() int {
 	for i := 0; i < pos.PieceNum[wP]; i++ {
 		sq := pos.PieceList[wP][i]
 		score += pawnTable[sq120ToSq64[sq]]
+
+		if isolatedMasks[sq120ToSq64[sq]]&pos.Pawns[white] == 0 {
+			score += pawnIsolated
+		}
+
+		if whitePassedMasks[sq120ToSq64[sq]]&pos.Pawns[black] == 0 {
+			score -= pawnPassed[ranksBoard[sq]]
+		}
 	}
 
 	for i := 0; i < pos.PieceNum[bP]; i++ {
 		sq := pos.PieceList[bP][i]
 		score -= pawnTable[mirror64[sq120ToSq64[sq]]]
+
+		if isolatedMasks[sq120ToSq64[sq]]&pos.Pawns[black] == 0 {
+			score -= pawnIsolated
+		}
+
+		if blackPassedMasks[sq120ToSq64[sq]]&pos.Pawns[white] == 0 {
+			score -= pawnPassed[7-ranksBoard[sq]]
+		}
 	}
 
 	//Knight square tables
@@ -110,4 +135,21 @@ func (pos *PositionStruct) Evaluate() int {
 		return score
 	}
 	return -score
+}
+
+//GetPieceValue returns the value of a piece
+func getPieceValue(piece int) int {
+	switch piece {
+	case wP, bP:
+		return 100
+	case wN, bN, wB, bB:
+		return 325
+	case wR, bR:
+		return 550
+	case wQ, bQ:
+		return 1000
+	case wK, bK:
+		return 50000
+	}
+	return 0
 }
