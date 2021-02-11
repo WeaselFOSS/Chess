@@ -10,7 +10,7 @@ It provides:
 
   * An efficient 0x88 and bitboard based chess engine
   * Support for UCI
-  * All chess rules including En passant and casteling
+  * All chess rules including En passant and castling
 
 Table of Contents:
 
