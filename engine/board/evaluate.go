@@ -1,7 +1,5 @@
 package board
 
-import "fmt"
-
 //pawnIsolated penalty for having an isolated pawn
 const pawnIsolated = -10
 
@@ -252,7 +250,6 @@ func (pos *PositionStruct) Evaluate() int {
 		score -= kingE[mirror64[sq120ToSq64[sq]]]
 	} else {
 		score -= kingO[mirror64[sq120ToSq64[sq]]]
-		fmt.Println(pos.Material[white], endGameMaterial)
 	}
 
 	if pos.PieceNum[wB] >= 2 {
