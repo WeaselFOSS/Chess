@@ -7,4 +7,5 @@
 *.test
 *.out
 *.log
+*.zip
 .vscode
