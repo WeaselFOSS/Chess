@@ -165,7 +165,6 @@ func positionHandler(command []string) {
 }
 
 func goHandler(command []string) {
-	fmt.Println(command)
 	var err error
 	depth := -1
 	movesToGo := 30

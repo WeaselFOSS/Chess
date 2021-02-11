@@ -89,7 +89,7 @@ func (info *InfoStruct) quiescence(alpha, beta int, pos *board.PositionStruct) (
 	}
 
 	info.Nodes++
-	if (pos.IsRepition() || pos.FiftyMove >= 100) && pos.Ply > 0 {
+	if pos.IsRepition() || pos.FiftyMove >= 100 {
 		return 0, nil
 	}
 
@@ -122,10 +122,6 @@ func (info *InfoStruct) quiescence(alpha, beta int, pos *board.PositionStruct) (
 
 		moveMade := false
 
-		/*if board.GetPieceValue(board.GetCapture(list.Moves[i].Move)) >= board.GetPieceValue(pos.Pieces[board.GetFrom(list.Moves[i].Move)])-300 {
-			break
-		}*/
-
 		moveMade, err := pos.MakeMove(list.Moves[i].Move)
 		if err != nil {
 			return 0, nil
@@ -136,6 +132,7 @@ func (info *InfoStruct) quiescence(alpha, beta int, pos *board.PositionStruct) (
 		}
 
 		legal++
+
 		score, err = info.quiescence(-beta, -alpha, pos)
 		//Flipping score for the other sides POV
 		score *= -1

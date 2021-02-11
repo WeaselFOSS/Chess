@@ -1,5 +1,7 @@
 package board
 
+import "fmt"
+
 //pawnIsolated penalty for having an isolated pawn
 const pawnIsolated = -10
 
@@ -19,7 +21,7 @@ const queenSemiOpenFile = 3
 const bishopPair = 30
 
 //endGameMaterial If there are no queens on the board or material is less than this, than we are in a end game
-var endGameMaterial = GetPieceValue(wR) + 2*GetPieceValue(wN) + 2*GetPieceValue(wP)
+var endGameMaterial = GetPieceValue(wR) + 2*GetPieceValue(wN) + 2*GetPieceValue(wP) + GetPieceValue(wK)
 
 //Bonus for pushing passed pawns
 var pawnPassed = [8]int{0, 5, 10, 20, 35, 60, 100, 200}
@@ -250,6 +252,7 @@ func (pos *PositionStruct) Evaluate() int {
 		score -= kingE[mirror64[sq120ToSq64[sq]]]
 	} else {
 		score -= kingO[mirror64[sq120ToSq64[sq]]]
+		fmt.Println(pos.Material[white], endGameMaterial)
 	}
 
 	if pos.PieceNum[wB] >= 2 {
