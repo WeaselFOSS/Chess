@@ -70,7 +70,7 @@ func (pos *PositionStruct) ProbeHashEntry(move *int, score *int, alpha, beta, de
 				}
 				break
 			case HFBETA:
-				if *score <= beta {
+				if *score >= beta {
 					*score = beta
 					return true, nil
 				}
