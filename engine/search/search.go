@@ -324,7 +324,7 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 	if legal == 0 {
 		if inCheck {
 			//Return -mate plus the ply or moves to the mate so later we can take score and subtrace mate to get mate in X val
-			return -board.Mate + pos.Ply, nil
+			return -board.Infinite + pos.Ply, nil
 		} else {
 			return 0, nil
 		}
@@ -377,9 +377,17 @@ func (info *InfoStruct) SearchPosition(pos *board.PositionStruct) error {
 
 		//Sending infor to GUI
 		currentTime := time.Now().UnixNano() / int64(time.Millisecond)
-		fmt.Printf("info score cp %d depth %d nodes %d time %d ",
-			bestScore, currentDepth, info.Nodes, currentTime-info.StartTime)
 
+		if bestScore >= board.IsMate {
+			fmt.Printf("info score mate %d depth %d nodes %d time %d ",
+				board.Infinite-bestScore, currentDepth, info.Nodes, currentTime-info.StartTime)
+		} else if bestScore <= -board.IsMate {
+			fmt.Printf("info score mate %d depth %d nodes %d time %d ",
+				board.Infinite+bestScore, currentDepth, info.Nodes, currentTime-info.StartTime)
+		} else {
+			fmt.Printf("info score cp %d depth %d nodes %d time %d ",
+				bestScore, currentDepth, info.Nodes, currentTime-info.StartTime)
+		}
 		fmt.Print("pv")
 		for pvNum = 0; pvNum < pvMoves; pvNum++ {
 			fmt.Printf(" %s", board.MoveToString(pos.PvArray[pvNum]))
