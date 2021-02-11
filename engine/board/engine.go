@@ -56,8 +56,7 @@ func min(a, b int) int {
 
 //IsRepition Test if there has been repition
 func (pos *PositionStruct) IsRepition() bool {
-	end := min(pos.HisPly, pos.FiftyMove)
-	for i := 4; i <= end; i += 2 {
+	for i := pos.HisPly - pos.FiftyMove; i < pos.HisPly-1; i++ {
 		if pos.PosKey == pos.History[i].PosKey {
 			return true
 		}

@@ -12,7 +12,6 @@ type HashEnteryStruct struct {
 	Score  int
 	Depth  int
 	Flags  int
-	Ply    int
 }
 
 //enterytBytes calculated using  unsafe.Sizeof(pos.PVTable.Entry[0])
@@ -51,34 +50,52 @@ func (pos *PositionStruct) ProbeHashEntry(move *int, score *int, alpha, beta, de
 		return false, fmt.Errorf("PV Index out of range with value of %d", index)
 	}
 
-	if pos.HashTable.Entries[index].PosKey == pos.PosKey && pos.HashTable.Entries[index].Ply == pos.Ply {
+	if pos.HashTable.Entries[index].PosKey == pos.PosKey {
+		moveExists, err := pos.MakeMove(pos.HashTable.Entries[index].Move)
+		if err != nil {
+			return false, err
+		}
+
+		if !moveExists {
+			return false, nil
+		}
+
+		rep := pos.IsRepition()
+
+		err = pos.TakeMove()
+		if err != nil {
+			return false, err
+		}
 
 		*move = pos.HashTable.Entries[index].Move
 		if pos.HashTable.Entries[index].Depth >= depth {
 			pos.HashTable.Hit++
+			if rep {
+				*score = 0
+			} else {
+				*score = pos.HashTable.Entries[index].Score
+				if *score > IsMate {
+					*score -= pos.Ply
+				} else if *score < -IsMate {
+					*score += pos.Ply
+				}
 
-			*score = pos.HashTable.Entries[index].Score
-			if *score > IsMate {
-				*score -= pos.Ply
-			} else if *score < -IsMate {
-				*score += pos.Ply
-			}
-
-			switch pos.HashTable.Entries[index].Flags {
-			case HFALPHA:
-				if *score <= alpha {
-					*score = alpha
+				switch pos.HashTable.Entries[index].Flags {
+				case HFALPHA:
+					if *score <= alpha {
+						*score = alpha
+						return true, nil
+					}
+					break
+				case HFBETA:
+					if *score >= beta {
+						*score = beta
+						return true, nil
+					}
+					break
+				case HFEXACT:
 					return true, nil
 				}
-				break
-			case HFBETA:
-				if *score >= beta {
-					*score = beta
-					return true, nil
-				}
-				break
-			case HFEXACT:
-				return true, nil
 			}
 		}
 	}
@@ -108,7 +125,6 @@ func (pos *PositionStruct) StoreHashEntry(move, score, flags, depth int) error {
 
 	pos.HashTable.Entries[index].Move = move
 	pos.HashTable.Entries[index].PosKey = pos.PosKey
-	pos.HashTable.Entries[index].Ply = pos.Ply
 	pos.HashTable.Entries[index].Flags = flags
 	pos.HashTable.Entries[index].Score = score
 	pos.HashTable.Entries[index].Depth = depth
