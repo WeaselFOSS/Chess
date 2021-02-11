@@ -121,6 +121,11 @@ func (info *InfoStruct) quiescence(alpha, beta int, pos *board.PositionStruct) (
 		pickNextMove(i, &list)
 
 		moveMade := false
+
+		/*if board.GetPieceValue(board.GetCapture(list.Moves[i].Move)) >= board.GetPieceValue(pos.Pieces[board.GetFrom(list.Moves[i].Move)])-300 {
+			break
+		}*/
+
 		moveMade, err := pos.MakeMove(list.Moves[i].Move)
 		if err != nil {
 			return 0, nil
@@ -211,6 +216,7 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 
 	if found {
 		pos.HashTable.Cut++
+
 		return score, nil
 	}
 
@@ -265,7 +271,6 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 
 	//Move loop
 	for i := 0; i < list.Count; i++ {
-
 		pickNextMove(i, &list)
 
 		moveMade := false
@@ -393,7 +398,6 @@ func (info *InfoStruct) SearchPosition(pos *board.PositionStruct) error {
 			fmt.Printf(" %s", board.MoveToString(pos.PvArray[pvNum]))
 		}
 		fmt.Print("\n")
-		fmt.Printf("Hits:%d Overwrite:%d NewWrite:%d Cut:%d\n", pos.HashTable.Hit, pos.HashTable.OverWrite, pos.HashTable.NewWrite, pos.HashTable.Cut)
 	}
 	fmt.Printf("bestmove %s\n", board.MoveToString(bestMove))
 	return err

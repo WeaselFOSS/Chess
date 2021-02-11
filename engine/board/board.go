@@ -296,7 +296,7 @@ func (pos *PositionStruct) updateMaterialLists() {
 				pos.MinorPieces[color]++
 			}
 
-			pos.Material[color] += getPieceValue(piece)
+			pos.Material[color] += GetPieceValue(piece)
 			pos.PieceList[piece][pos.PieceNum[piece]] = i
 			pos.PieceNum[piece]++
 

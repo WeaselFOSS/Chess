@@ -51,6 +51,15 @@ func (pos *PositionStruct) ProbeHashEntry(move *int, score *int, alpha, beta, de
 	}
 
 	if pos.HashTable.Entries[index].PosKey == pos.PosKey {
+		moveExists, err := pos.MoveExists(pos.HashTable.Entries[index].Move)
+		if err != nil {
+			return false, err
+		}
+
+		if !moveExists {
+			return false, nil
+		}
+
 		*move = pos.HashTable.Entries[index].Move
 		if pos.HashTable.Entries[index].Depth >= depth {
 			pos.HashTable.Hit++
@@ -148,7 +157,6 @@ func (pos *PositionStruct) GetPvLine(depth int) (int, error) {
 			if err != nil {
 				return NoMove, err
 			}
-
 			pos.PvArray[count] = move
 			count++
 		} else {

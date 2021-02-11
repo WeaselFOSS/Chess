@@ -97,7 +97,7 @@ func (pos *PositionStruct) clearPiece(sq int) error {
 	pos.hashPiece(piece, sq)
 
 	pos.Pieces[sq] = empty
-	pos.Material[color] -= getPieceValue(piece)
+	pos.Material[color] -= GetPieceValue(piece)
 
 	if isPieceBig(piece) {
 		pos.BigPieces[color]--
@@ -155,7 +155,7 @@ func (pos *PositionStruct) addPiece(sq, piece int) error {
 		setBit(&pos.Pawns[both], sq120ToSq64[sq])
 	}
 
-	pos.Material[color] += getPieceValue(piece)
+	pos.Material[color] += GetPieceValue(piece)
 	pos.PieceList[piece][pos.PieceNum[piece]] = sq
 	pos.PieceNum[piece]++
 

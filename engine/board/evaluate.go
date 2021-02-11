@@ -19,7 +19,7 @@ const queenSemiOpenFile = 3
 const bishopPair = 30
 
 //endGameMaterial If there are no queens on the board or material is less than this, than we are in a end game
-var endGameMaterial = getPieceValue(wR) + 2*getPieceValue(wN) + 2*getPieceValue(wP)
+var endGameMaterial = GetPieceValue(wR) + 2*GetPieceValue(wN) + 2*GetPieceValue(wP)
 
 //Bonus for pushing passed pawns
 var pawnPassed = [8]int{0, 5, 10, 20, 35, 60, 100, 200}
@@ -268,7 +268,7 @@ func (pos *PositionStruct) Evaluate() int {
 }
 
 //GetPieceValue returns the value of a piece
-func getPieceValue(piece int) int {
+func GetPieceValue(piece int) int {
 	switch piece {
 	case wP, bP:
 		return 100

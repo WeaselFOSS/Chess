@@ -133,8 +133,12 @@ func positionHandler(command []string) {
 		str = str[index+6:]
 
 		moves := strings.Split(str, " ")
-
+		fmt.Println(len(moves))
+		tmp := 0
 		for i := 0; i < len(moves); i++ {
+			if len(moves[i]) < 4 {
+				continue
+			}
 			move, err := pos.ParseMove(moves[i])
 			if err != nil {
 				panic(err)
@@ -147,15 +151,15 @@ func positionHandler(command []string) {
 					panic(err)
 				}
 				if moveMade {
+					tmp++
 					continue
 				}
 			}
 
-			fmt.Printf("Non-legal move: %s", moves[i])
+			fmt.Printf("Non-legal move: %s index: %d", moves[i], i)
 
 			break
 		}
-
 	}
 	positionSet = true
 

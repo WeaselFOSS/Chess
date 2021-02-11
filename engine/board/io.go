@@ -39,7 +39,7 @@ func MoveToString(move int) string {
 //ParseMove algebraic notation to move int
 func (pos *PositionStruct) ParseMove(move string) (int, error) {
 	if len(move) < 4 {
-		return NoMove, fmt.Errorf("Move %s out of bounds", move)
+		return NoMove, nil
 	}
 
 	if rune(move[1]) > '8' || rune(move[1]) < '1' {

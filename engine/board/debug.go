@@ -52,7 +52,7 @@ func (pos *PositionStruct) CheckBoard() error {
 		}
 
 		if color != both {
-			tMaterial[color] += getPieceValue(tPiece)
+			tMaterial[color] += GetPieceValue(tPiece)
 		}
 	}
 
