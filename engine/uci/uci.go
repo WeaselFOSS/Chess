@@ -133,7 +133,6 @@ func positionHandler(command []string) {
 		str = str[index+6:]
 
 		moves := strings.Split(str, " ")
-		fmt.Println(len(moves))
 		tmp := 0
 		for i := 0; i < len(moves); i++ {
 			if len(moves[i]) < 4 {
