@@ -65,7 +65,6 @@ func UCI(engineInfo EngineInfo) {
 				fmt.Println("readyok")
 			}()
 		case "setoption":
-		case "register":
 		case "ucinewgame":
 			pos.HashTable.Clear()
 			err := pos.LoadFEN(board.StartPosFEN)
@@ -82,7 +81,6 @@ func UCI(engineInfo EngineInfo) {
 			}
 		case "stop":
 			info.Stopped = true
-		case "ponderhit":
 		case "quit":
 			os.Exit(0)
 		case "print":
