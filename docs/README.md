@@ -11,7 +11,7 @@ It provides:
   * An efficient 0x88 and bitboard based chess engine
   * Simple but effective alpha beta pruning with null searches
   * Support for UCI, and a console mode
-  * All chess rules including En passant, Fifty move rule, three fold repition and castling
+  * All chess rules including En passant, Fifty move rule, threefold repetition and castling
 
 Table of Contents:
 
