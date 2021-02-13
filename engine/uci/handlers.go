@@ -12,8 +12,8 @@ import (
 func uciHander(engineInfo EngineInfo) {
 	fmt.Println("id name " + engineInfo.Name + " " + engineInfo.Version)
 	fmt.Println("id author " + engineInfo.Author)
-
-	//TODO: Add supported options
+	fmt.Print("\n")
+	printOptions()
 
 	fmt.Println("uciok")
 }
@@ -89,14 +89,14 @@ func goHandler(command []string) {
 			if pos.Side == 1 {
 				inc, err = strconv.Atoi(command[i+1])
 				if err != nil {
-					panic("Failed to parse binc time " + err.Error())
+					fmt.Println("Failed to parse binc time " + err.Error())
 				}
 			}
 		case "winc":
 			if pos.Side == 0 {
 				inc, err = strconv.Atoi(command[i+1])
 				if err != nil {
-					panic("Failed to parse winc time " + err.Error())
+					fmt.Println("Failed to parse winc time " + err.Error())
 				}
 			}
 		case "wtime":
@@ -104,7 +104,7 @@ func goHandler(command []string) {
 				fmt.Println(command[i+1])
 				timeV, err = strconv.Atoi(command[i+1])
 				if err != nil {
-					panic("Failed to parse wtime time " + err.Error())
+					fmt.Println("Failed to parse wtime time " + err.Error())
 				}
 			}
 		case "btime":
@@ -112,25 +112,25 @@ func goHandler(command []string) {
 				fmt.Println(command[i+1])
 				timeV, err = strconv.Atoi(command[i+1])
 				if err != nil {
-					panic("Failed to parse btime time " + err.Error())
+					fmt.Println("Failed to parse btime time " + err.Error())
 				}
 			}
 
 		case "movestogo":
 			movesToGo, err = strconv.Atoi(command[i+1])
 			if err != nil {
-				panic("Failed to parse binc time " + err.Error())
+				fmt.Println("Failed to parse binc time " + err.Error())
 			}
 
 		case "movetime":
 			moveTime, err = strconv.Atoi(command[i+1])
 			if err != nil {
-				panic("Failed to parse move time " + err.Error())
+				fmt.Println("Failed to parse move time " + err.Error())
 			}
 		case "depth":
 			depth, err = strconv.Atoi(command[i+1])
 			if err != nil {
-				panic("Failed to parse depth " + err.Error())
+				fmt.Println("Failed to parse depth " + err.Error())
 			}
 		}
 	}

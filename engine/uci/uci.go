@@ -16,6 +16,7 @@ type EngineInfo struct {
 	Name    string
 	Version string
 	Author  string
+	Options EngineOptions
 }
 
 //Current board position
@@ -55,16 +56,17 @@ func UCI(engineInfo EngineInfo) {
 			go func() {
 
 				board.Initialize()
-				//Init hash tables size with 2 MB's
-				pos.HashTable.Init(32) //TODO: Add option to set hash size in mb
+				//Init hash tables size with the size configured in options, defaults to 32 MBs
+				pos.HashTable.Init(uint64(engineInfo.Options.HashSize))
 
 				ready = true
 
 				fmt.Println("readyok")
 			}()
 		case "setoption":
+			engineInfo.optionsHnadler(command[index:])
 		case "ucinewgame":
-			pos.HashTable.Clear()
+			pos.HashTable.Init(uint64(engineInfo.Options.HashSize))
 			err := pos.LoadFEN(board.StartPosFEN)
 			if err != nil {
 				panic(err)
