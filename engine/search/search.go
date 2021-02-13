@@ -397,6 +397,8 @@ func (info *InfoStruct) SearchPosition(pos *board.PositionStruct) error {
 		}
 		fmt.Print("\n")
 	}
+	_, err = pos.MakeMove(bestMove)
+	pos.ClearMoveFromHash()
 	fmt.Printf("bestmove %s\n", board.MoveToString(bestMove))
 	return err
 }

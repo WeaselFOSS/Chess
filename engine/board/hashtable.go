@@ -141,10 +141,26 @@ func (pos *PositionStruct) ProbePVMove() (int, error) {
 	}
 
 	if pos.HashTable.Entries[index].PosKey == pos.PosKey {
+
 		return pos.HashTable.Entries[index].Move, nil
 	}
 
 	return NoMove, nil
+}
+
+//ClearMoveFromHash Clear the move made at the current position from the hash table
+func (pos *PositionStruct) ClearMoveFromHash() error {
+	index := pos.PosKey % pos.HashTable.EntrieCount
+
+	if DEBUG && (index <= 0 || index >= pos.HashTable.EntrieCount-1) {
+		return fmt.Errorf("PV Index out of range with value of %d", index)
+	}
+
+	if pos.HashTable.Entries[index].PosKey == pos.PosKey {
+		pos.HashTable.Entries[index] = HashEnteryStruct{}
+	}
+
+	return nil
 }
 
 //GetPvLine return the PVLine if found for the curren position
@@ -166,6 +182,9 @@ func (pos *PositionStruct) GetPvLine(depth int) (int, error) {
 			_, err = pos.MakeMove(move)
 			if err != nil {
 				return NoMove, err
+			}
+			if pos.IsRepition() {
+				break
 			}
 			pos.PvArray[count] = move
 			count++
