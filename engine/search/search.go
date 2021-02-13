@@ -400,5 +400,6 @@ func (info *InfoStruct) SearchPosition(pos *board.PositionStruct) error {
 	_, err = pos.MakeMove(bestMove)
 	pos.ClearMoveFromHash()
 	fmt.Printf("bestmove %s\n", board.MoveToString(bestMove))
+	err = pos.TakeMove()
 	return err
 }

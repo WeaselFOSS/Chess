@@ -9,8 +9,9 @@ This respository implements a basic chess engine.
 It provides:
 
   * An efficient 0x88 and bitboard based chess engine
-  * Support for UCI
-  * All chess rules including En passant and castling
+  * Simple but effective alpha beta pruning with null searches
+  * Support for UCI, and a console mode
+  * All chess rules including En passant, Fifty move rule, three fold repition and castling
 
 Table of Contents:
 
@@ -22,7 +23,7 @@ Table of Contents:
 About
 -----
 
-//TODO
+Weasel is to my current knowledge the strongest chess engine written in Golang. There are still many improvements to be made currently we are working towards the first beta release.
 
 Installing and Compiling from Source
 ------------
@@ -33,7 +34,16 @@ The easiest way to start using Weasel is to download it off the [releases](https
 If you're looking to compile from source, you'll need the following:
 
   * [Go](https://golang.org) installed and [configured](https://golang.org/doc/install)
-  * A chess GUI that can communicate over UCI
+  * A chess GUI that can communicate over UCI. We recommend [CuteChess](https://github.com/cutechess/cutechess/releases)
+
+  After you have Go and a GUI you can install and compile Weasel simply with
+  ```
+  go get github.com/WeaselChess/Weasel
+  ```
+  And from within the Go src folder simply run 
+  ```
+  go build ./
+  ```
 
 Contributing
 ------------
