@@ -54,10 +54,5 @@ func (pos *PositionStruct) IsRepition() bool {
 			reps++
 		}
 	}
-
-	if reps >= 2 {
-		return true
-	}
-
-	return false
+	return reps >= 2
 }
