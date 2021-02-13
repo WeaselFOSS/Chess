@@ -46,20 +46,11 @@ func initFileRanks() {
 	}
 }
 
-//min return the smaller of 2 values
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-
-//IsRepition Test if there has been repition
+//IsRepition tests for 3 fold repitition
 func (pos *PositionStruct) IsRepition() bool {
-	for i := pos.HisPly - pos.FiftyMove; i < pos.HisPly-1; i++ {
-		if pos.PosKey == pos.History[i].PosKey {
-			return true
-		}
+	if pos.HisPly >= 8 {
+		return (pos.PosKey == pos.History[pos.HisPly-4].PosKey && pos.PosKey == pos.History[pos.HisPly-8].PosKey)
 	}
+
 	return false
 }

@@ -25,8 +25,6 @@ type InfoStruct struct {
 	//Used to calculate the efficency of our move ordering
 	FailHigh      float32
 	FailHighFirst float32
-
-	moveFound bool
 }
 
 //pickNextMove Pick the next move base on inital score
@@ -75,7 +73,6 @@ func (info *InfoStruct) clearForSearch(pos *board.PositionStruct) {
 	pos.Ply = 0
 
 	info.Stopped = false
-	info.moveFound = false
 	info.Nodes = 0
 	info.FailHigh = 0
 	info.FailHighFirst = 0
@@ -92,8 +89,8 @@ func (info *InfoStruct) quiescence(alpha, beta int, pos *board.PositionStruct) (
 	}
 
 	info.Nodes++
-	//HOTFIX repition needs looking into
-	if (pos.IsRepition() || pos.FiftyMove >= 100) && info.moveFound {
+
+	if pos.IsRepition() || pos.FiftyMove >= 100 {
 		return 0, nil
 	}
 
@@ -187,8 +184,7 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 	info.Nodes++
 
 	//Check for repition and fifty move role
-	//HOTFIX repition needs looking into
-	if (pos.IsRepition() || pos.FiftyMove >= 100) && info.moveFound {
+	if pos.IsRepition() || pos.FiftyMove >= 100 {
 		return 0, nil
 	}
 
@@ -316,7 +312,6 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 					}
 
 					err = pos.StoreHashEntry(bestMove, beta, board.HFBETA, depth)
-					info.moveFound = true
 					return beta, err
 				}
 				alpha = score
@@ -344,13 +339,11 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 		if err != nil {
 			return 0, err
 		}
-		info.moveFound = true
 	} else {
 		err = pos.StoreHashEntry(bestMove, alpha, board.HFALPHA, depth)
 		if err != nil {
 			return 0, err
 		}
-		info.moveFound = true
 	}
 
 	//if we did not improve on alpha return alpha

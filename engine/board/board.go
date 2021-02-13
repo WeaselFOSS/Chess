@@ -276,6 +276,7 @@ func (pos *PositionStruct) Print() {
 	fmt.Printf("Position Hash: %X\n", pos.PosKey)
 	fmt.Printf("Is Repition: %v\n", pos.IsRepition())
 	fmt.Printf("Evaluation CP: %d\n", pos.Evaluate())
+	fmt.Printf("hispPly: %d\n", pos.HisPly)
 }
 
 //updateMaterialLists Update the material lists for the baord
