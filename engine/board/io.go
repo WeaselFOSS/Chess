@@ -98,7 +98,35 @@ func (pos *PositionStruct) ParseMove(move string) (int, error) {
 	return NoMove, nil
 }
 
-//Print print current board state to console
+//Print a representation of the current board state to the console
+func (pos *PositionStruct) Print() {
+	fmt.Print("\nBoard State:\n\n")
+	for rank := rank8; rank >= rank1; rank-- {
+		fmt.Printf("%d", rank+1)
+		for file := fileA; file <= fileH; file++ {
+			sq := fileRankToSquare(file, rank)
+			piece := pos.Pieces[sq]
+			fmt.Printf("%3c", pieceChar[piece])
+		}
+		fmt.Print("\n")
+	}
+
+	fmt.Print(" ")
+	for file := fileA; file <= fileH; file++ {
+		fmt.Printf("%3c", 'A'+file)
+	}
+	fmt.Print("\n")
+	fmt.Printf("Side: %c\n", sideChar[pos.Side])
+	fmt.Printf("EnPassant: %s\n", SquareToString(pos.EnPassant))
+	WK, WQ, BK, BQ := pos.castelPermToChar()
+	fmt.Printf("Castel Perms: %c%c%c%c\n", WK, WQ, BK, BQ)
+	fmt.Printf("Position Hash: %X\n", pos.PosKey)
+	fmt.Printf("Is Repition: %v\n", pos.IsRepition())
+	fmt.Printf("Evaluation CP: %d\n", pos.Evaluate())
+	fmt.Printf("hispPly: %d\n", pos.HisPly)
+}
+
+//Print prints the move list struct to console
 func (list *MoveListStruct) Print() {
 	fmt.Println("MoveList:")
 
