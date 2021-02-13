@@ -1,6 +1,10 @@
 package board
 
-import "errors"
+import (
+	"errors"
+	"strconv"
+	"strings"
+)
 
 //LoadFEN loads the engine with a new board position from a FEN string
 func (pos *PositionStruct) LoadFEN(fen string) error {
@@ -132,6 +136,12 @@ func (pos *PositionStruct) LoadFEN(fen string) error {
 		file = int(fen[0] - 'a')
 		rank = int(fen[1] - '1')
 
+		if len(fen) < 4 {
+			return errors.New("Bad FEN Length")
+		}
+
+		fen = fen[3:]
+
 		if file < fileA || file > fileH {
 			return errors.New("Bad FEN EnPas File")
 		}
@@ -141,10 +151,31 @@ func (pos *PositionStruct) LoadFEN(fen string) error {
 		}
 
 		pos.EnPassant = fileRankToSquare(file, rank)
+	} else {
+		if len(fen) < 3 {
+			return errors.New("Bad FEN Length")
+		}
+		fen = fen[2:]
 	}
-	//TODO: Add supprot for fifty move rule and current ply
-	pos.updateMaterialLists()
+
+	nums := strings.Split(fen, " ")
+
+	if len(nums) < 2 {
+		return errors.New("Bad FEN Length")
+	}
+
 	var err error
+	pos.FiftyMove, err = strconv.Atoi(nums[0])
+	if err != nil {
+		return err
+	}
+
+	pos.HisPly, err = strconv.Atoi(nums[1])
+	if err != nil {
+		return err
+	}
+
+	pos.updateMaterialLists()
 	pos.PosKey, err = pos.generatePosKey()
 	return err
 }
