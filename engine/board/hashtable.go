@@ -60,7 +60,10 @@ func (pos *PositionStruct) ProbeHashEntry(move *int, score *int, alpha, beta, de
 			return false, nil
 		}
 
-		rep := pos.IsRepition()
+		if pos.IsRepition() {
+			err = pos.TakeMove()
+			return false, err
+		}
 
 		err = pos.TakeMove()
 		if err != nil {
@@ -70,32 +73,29 @@ func (pos *PositionStruct) ProbeHashEntry(move *int, score *int, alpha, beta, de
 		*move = pos.HashTable.Entries[index].Move
 		if pos.HashTable.Entries[index].Depth >= depth {
 			pos.HashTable.Hit++
-			if rep {
-				*score = 0
-			} else {
-				*score = pos.HashTable.Entries[index].Score
-				if *score > IsMate {
-					*score -= pos.Ply
-				} else if *score < -IsMate {
-					*score += pos.Ply
-				}
 
-				switch pos.HashTable.Entries[index].Flags {
-				case HFALPHA:
-					if *score <= alpha {
-						*score = alpha
-						return true, nil
-					}
-					break
-				case HFBETA:
-					if *score >= beta {
-						*score = beta
-						return true, nil
-					}
-					break
-				case HFEXACT:
+			*score = pos.HashTable.Entries[index].Score
+			if *score > IsMate {
+				*score -= pos.Ply
+			} else if *score < -IsMate {
+				*score += pos.Ply
+			}
+
+			switch pos.HashTable.Entries[index].Flags {
+			case HFALPHA:
+				if *score <= alpha {
+					*score = alpha
 					return true, nil
 				}
+				break
+			case HFBETA:
+				if *score >= beta {
+					*score = beta
+					return true, nil
+				}
+				break
+			case HFEXACT:
+				return true, nil
 			}
 		}
 	}

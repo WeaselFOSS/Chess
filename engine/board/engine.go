@@ -49,7 +49,7 @@ func initFileRanks() {
 //IsRepition tests for 3 fold repitition
 func (pos *PositionStruct) IsRepition() bool {
 	reps := 0
-	for i := pos.HisPly - pos.FiftyMove; i < pos.HisPly-1; i++ {
+	for i := pos.HisPly - pos.FiftyMove; i < pos.HisPly; i++ {
 		if pos.PosKey == pos.History[i].PosKey {
 			reps++
 		}
