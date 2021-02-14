@@ -34,15 +34,17 @@ The easiest way to start using Weasel is to download it off the [releases](https
 If you're looking to compile from source, you'll need the following:
 
   * [Go](https://golang.org) installed and [configured](https://golang.org/doc/install)
+  * [GoVersionInfo](https://github.com/josephspurrier/goversioninfo/) used for Icon and version info on windows
   * A chess GUI that can communicate over UCI. We recommend [CuteChess](https://github.com/cutechess/cutechess/releases)
 
-  After you have Go and a GUI you can install and compile Weasel simply with
+  After you have Go and a GUI you can install Weasel simply with
   ```
   go get github.com/WeaselChess/Weasel
   ```
-  And from within the Go src folder simply run 
+  And from within the Go src folder simply run the following to compile
   ```
-  go build ./
+  go generate
+  go build
   ```
 
 Contributing
