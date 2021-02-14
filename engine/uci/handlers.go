@@ -2,6 +2,7 @@ package uci
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 	"time"
@@ -146,13 +147,17 @@ func goHandler(command []string) {
 	if timeV != -1 {
 		info.TimeSet = true
 
-		if timeV >= 200 {
-			timeV /= movesToGo
+		timeV /= movesToGo
+
+		//Min search time in order to find a legal move
+		if timeV <= 30 {
+			timeV = 30
 		}
+
+		//Dont use our entire increment
+		inc = int(math.Floor(float64(inc) * 0.7))
+
 		info.StopTime = info.StartTime + int64(timeV+inc)
-		if info.StopTime <= 50 {
-			info.StopTime = 500
-		}
 	}
 
 	if depth == -1 {

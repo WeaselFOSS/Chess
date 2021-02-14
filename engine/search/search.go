@@ -385,7 +385,7 @@ func (info *InfoStruct) SearchPosition(pos *board.PositionStruct) error {
 			fmt.Printf("info score mate %d depth %d nodes %d time %d ",
 				board.Infinite-bestScore, currentDepth, info.Nodes, currentTime-info.StartTime)
 		} else if bestScore <= -board.IsMate {
-			fmt.Printf("info score mate %d depth %d nodes %d time %d ",
+			fmt.Printf("info score mate -%d depth %d nodes %d time %d ",
 				board.Infinite+bestScore, currentDepth, info.Nodes, currentTime-info.StartTime)
 		} else {
 			fmt.Printf("info score cp %d depth %d nodes %d time %d ",
