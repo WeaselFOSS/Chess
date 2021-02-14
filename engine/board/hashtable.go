@@ -183,9 +183,6 @@ func (pos *PositionStruct) GetPvLine(depth int) (int, error) {
 			if err != nil {
 				return NoMove, err
 			}
-			if pos.IsRepition() {
-				break
-			}
 			pos.PvArray[count] = move
 			count++
 		} else {
