@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-//MakeMove Make a move if legal and return legality
+// MakeMove Make a move if legal and return legality
 func (pos *PositionStruct) MakeMove(move int) (bool, error) {
 
 	from := GetFrom(move)
@@ -30,7 +30,7 @@ func (pos *PositionStruct) MakeMove(move int) (bool, error) {
 
 	pos.History[pos.HisPly].PosKey = pos.PosKey
 
-	//EnPas moves
+	// EnPas moves
 	if move&MoveFlagEP != 0 {
 		var err error
 		if side == white {
@@ -41,21 +41,17 @@ func (pos *PositionStruct) MakeMove(move int) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-	} else if move&MoveFlagCA != 0 { //castel moves
+	} else if move&MoveFlagCA != 0 { // castel moves
 		var err error
 		switch to {
 		case c1:
 			err = pos.movePiece(a1, d1)
-			break
 		case c8:
 			err = pos.movePiece(a8, d8)
-			break
 		case g1:
 			err = pos.movePiece(h1, f1)
-			break
 		case g8:
 			err = pos.movePiece(h8, f8)
-			break
 		default:
 			return false, fmt.Errorf("Invalid castel move to %d", to)
 		}
@@ -73,7 +69,7 @@ func (pos *PositionStruct) MakeMove(move int) (bool, error) {
 	pos.History[pos.HisPly].EnPassant = pos.EnPassant
 	pos.History[pos.HisPly].CastelPerm = pos.CastelPerm
 
-	//update castel perms
+	// update castel perms
 	pos.CastelPerm &= castelPerm[from]
 	pos.CastelPerm &= castelPerm[to]
 	pos.hashCastel()
@@ -139,7 +135,7 @@ func (pos *PositionStruct) MakeMove(move int) (bool, error) {
 		pos.KingSquare[pos.Side] = to
 	}
 
-	//flip side to move
+	// flip side to move
 	pos.Side ^= 1
 	pos.hashSide()
 

@@ -10,6 +10,8 @@ import (
 	"github.com/WeaselChess/Weasel/engine/board"
 )
 
+// uciHander Handler for uci command
+
 func uciHander(engineInfo EngineInfo) {
 	fmt.Println("id name " + engineInfo.Name + " " + engineInfo.Version)
 	fmt.Println("id author " + engineInfo.Author)
@@ -19,6 +21,7 @@ func uciHander(engineInfo EngineInfo) {
 	fmt.Println("uciok")
 }
 
+// positionHandler Handler for position command
 func positionHandler(command []string) {
 	var boardSet bool
 	positionSet = false
@@ -76,6 +79,7 @@ func positionHandler(command []string) {
 
 }
 
+// goHandler Handler for go command
 func goHandler(command []string) {
 	var err error
 	depth := -1
@@ -149,12 +153,12 @@ func goHandler(command []string) {
 
 		timeV /= movesToGo
 
-		//Min search time in order to find a legal move
+		// Min search time in order to find a legal move
 		if timeV <= 30 {
 			timeV = 30
 		}
 
-		//Dont use our entire increment
+		// Dont use our entire increment
 		inc = int(math.Floor(float64(inc) * 0.7))
 
 		info.StopTime = info.StartTime + int64(timeV+inc)

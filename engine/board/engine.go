@@ -1,6 +1,6 @@
 package board
 
-//Initialize conversion arrays for engine operation
+// Initialize conversion arrays for engine operation
 func Initialize() {
 	initSq120To64()
 	initFileRanks()
@@ -9,7 +9,7 @@ func Initialize() {
 	InitMvvLva()
 }
 
-//initSq120To64 Initalize sq120tosq64 and sq64tosq120 arrays
+// initSq120To64 Initalize sq120tosq64 and sq64tosq120 arrays
 func initSq120To64() {
 	for i := 0; i < SquareNumber; i++ {
 		sq120ToSq64[i] = 65
@@ -30,7 +30,7 @@ func initSq120To64() {
 	}
 }
 
-//initFileRanks Initialize File and Rank arrays
+// initFileRanks Initialize File and Rank arrays
 func initFileRanks() {
 	for i := 0; i < SquareNumber; i++ {
 		filesBoard[i] = offBoard
@@ -46,7 +46,7 @@ func initFileRanks() {
 	}
 }
 
-//IsRepition tests for 3 fold repitition
+// IsRepition tests for 3 fold repitition
 func (pos *PositionStruct) IsRepition() bool {
 	reps := 0
 	for i := pos.HisPly - pos.FiftyMove; i < pos.HisPly; i++ {

@@ -1,30 +1,30 @@
 package board
 
-//pawnIsolated penalty for having an isolated pawn
+// pawnIsolated penalty for having an isolated pawn
 const pawnIsolated = -10
 
-//rookOpenFile Bonus for having a rook on a open file
+// rookOpenFile Bonus for having a rook on a open file
 const rookOpenFile = 10
 
-//rookSemiOpenFile Bonus for having a rook on a semi open file
+// rookSemiOpenFile Bonus for having a rook on a semi open file
 const rookSemiOpenFile = 5
 
-//queenOpenFile Bonus for having a queen on a open file
+// queenOpenFile Bonus for having a queen on a open file
 const queenOpenFile = 5
 
-//queenSemiOpenFile Bonus for having a queen on a semi open file
+// queenSemiOpenFile Bonus for having a queen on a semi open file
 const queenSemiOpenFile = 3
 
-//bishopPair bonus for having a bishop pair
+// bishopPair bonus for having a bishop pair
 const bishopPair = 30
 
-//endGameMaterial If there are no queens on the board or material is less than this, than we are in a end game
+// endGameMaterial If there are no queens on the board or material is less than this, than we are in a end game
 var endGameMaterial = GetPieceValue(wR) + 2*GetPieceValue(wN) + 2*GetPieceValue(wP) + GetPieceValue(wK)
 
-//Bonus for pushing passed pawns
+// Bonus for pushing passed pawns
 var pawnPassed = [8]int{0, 5, 10, 20, 35, 60, 100, 200}
 
-//These are piece square tables. A simple method to get a better evaluation
+// These are piece square tables. A simple method to get a better evaluation
 var pawnTable = [64]int{
 	0, 0, 0, 0, 0, 0, 0, 0,
 	10, 10, 0, -10, -10, 0, 10, 10,
@@ -91,7 +91,7 @@ var kingO = [64]int{
 	-70, -70, -70, -70, -70, -70, -70, -70,
 }
 
-//mirror64 Mirror the piece square tables for the other side
+// mirror64 Mirror the piece square tables for the other side
 var mirror64 = [64]int{
 	56, 57, 58, 59, 60, 61, 62, 63,
 	48, 49, 50, 51, 52, 53, 54, 55,
@@ -103,8 +103,8 @@ var mirror64 = [64]int{
 	0, 1, 2, 3, 4, 5, 6, 7,
 }
 
-//materialDraw Test if the position is a material draw
-//Credit sjeng 11.2
+// materialDraw Test if the position is a material draw
+// Credit sjeng 11.2
 func (pos *PositionStruct) materialDraw() bool {
 	if pos.PieceNum[wR] == 0 && pos.PieceNum[bR] == 0 && pos.PieceNum[wQ] == 0 && pos.PieceNum[bQ] == 0 {
 		if pos.PieceNum[bB] == 0 && pos.PieceNum[wB] == 0 {
@@ -138,7 +138,7 @@ func (pos *PositionStruct) materialDraw() bool {
 	return false
 }
 
-//Evaluate the currect position and return a score
+// Evaluate the currect position and return a score
 func (pos *PositionStruct) Evaluate() int {
 	score := pos.Material[white] - pos.Material[black]
 
@@ -146,7 +146,7 @@ func (pos *PositionStruct) Evaluate() int {
 		return 0
 	}
 
-	//Pawn square tables and isolated / passed check
+	// Pawn square tables and isolated / passed check
 	for i := 0; i < pos.PieceNum[wP]; i++ {
 		sq := pos.PieceList[wP][i]
 		score += pawnTable[sq120ToSq64[sq]]
@@ -173,7 +173,7 @@ func (pos *PositionStruct) Evaluate() int {
 		}
 	}
 
-	//Knight square tables
+	// Knight square tables
 	for i := 0; i < pos.PieceNum[wN]; i++ {
 		sq := pos.PieceList[wN][i]
 		score += knightTable[sq120ToSq64[sq]]
@@ -184,7 +184,7 @@ func (pos *PositionStruct) Evaluate() int {
 		score -= knightTable[mirror64[sq120ToSq64[sq]]]
 	}
 
-	//Bishop square tables
+	// Bishop square tables
 	for i := 0; i < pos.PieceNum[wB]; i++ {
 		sq := pos.PieceList[wB][i]
 		score += bishopTable[sq120ToSq64[sq]]
@@ -195,7 +195,7 @@ func (pos *PositionStruct) Evaluate() int {
 		score -= bishopTable[mirror64[sq120ToSq64[sq]]]
 	}
 
-	//Rook square tables and open files
+	// Rook square tables and open files
 	for i := 0; i < pos.PieceNum[wR]; i++ {
 		sq := pos.PieceList[wR][i]
 		score += rookTable[sq120ToSq64[sq]]
@@ -218,7 +218,7 @@ func (pos *PositionStruct) Evaluate() int {
 		}
 	}
 
-	//Queen open/semi open files
+	// Queen open/semi open files
 	for i := 0; i < pos.PieceNum[wQ]; i++ {
 		sq := pos.PieceList[wQ][i]
 		if pos.Pawns[both]&fileMasks[filesBoard[sq]] == 0 {
@@ -237,7 +237,7 @@ func (pos *PositionStruct) Evaluate() int {
 		}
 	}
 
-	//King piece squares
+	// King piece squares
 	sq := pos.PieceList[wK][0]
 	if pos.Material[black] <= endGameMaterial {
 		score += kingE[sq120ToSq64[sq]]
@@ -260,14 +260,14 @@ func (pos *PositionStruct) Evaluate() int {
 		score -= bishopPair
 	}
 
-	//Return a positive score no matter the side to move
+	// Return a positive score no matter the side to move
 	if pos.Side == white {
 		return score
 	}
 	return -score
 }
 
-//GetPieceValue returns the value of a piece
+// GetPieceValue returns the value of a piece
 func GetPieceValue(piece int) int {
 	switch piece {
 	case wP, bP:

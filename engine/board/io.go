@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-//SquareToString square to algebraic notation
+// SquareToString square to algebraic notation
 func SquareToString(sq int) string {
 	if sq == offBoard || sq == noSquare {
 		return "None"
@@ -14,7 +14,7 @@ func SquareToString(sq int) string {
 	return fmt.Sprintf("%c%c", ('a' + file), ('1' + rank))
 }
 
-//MoveToString move int to algebraic notation
+// MoveToString move int to algebraic notation
 func MoveToString(move int) string {
 	ff := filesBoard[GetFrom(move)]
 	rf := ranksBoard[GetFrom(move)]
@@ -36,7 +36,7 @@ func MoveToString(move int) string {
 	return fmt.Sprintf("%c%c%c%c", ('a' + ff), ('1' + rf), ('a' + ft), ('1' + rt))
 }
 
-//ParseMove algebraic notation to move int
+// ParseMove algebraic notation to move int
 func (pos *PositionStruct) ParseMove(move string) (int, error) {
 	if len(move) < 4 {
 		return NoMove, nil
@@ -73,8 +73,8 @@ func (pos *PositionStruct) ParseMove(move string) (int, error) {
 		return NoMove, err
 	}
 
-	var moveInt = 0
-	var promotionPiece = empty
+	var moveInt int
+	var promotionPiece int
 
 	for i := 0; i < list.Count; i++ {
 		moveInt = list.Moves[i].Move
@@ -98,7 +98,7 @@ func (pos *PositionStruct) ParseMove(move string) (int, error) {
 	return NoMove, nil
 }
 
-//Print a representation of the current board state to the console
+// Print a representation of the current board state to the console
 func (pos *PositionStruct) Print() {
 	fmt.Print("\nBoard State:\n\n")
 	for rank := rank8; rank >= rank1; rank-- {
@@ -127,7 +127,7 @@ func (pos *PositionStruct) Print() {
 	fmt.Printf("HisPly: %d\n", pos.HisPly)
 }
 
-//Print prints the move list struct to console
+// Print prints the move list struct to console
 func (list *MoveListStruct) Print() {
 	fmt.Println("MoveList:")
 

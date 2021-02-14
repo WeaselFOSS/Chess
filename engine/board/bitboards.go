@@ -83,7 +83,8 @@ func initBitMasks() {
 	}
 }
 
-//printBitBoard Will print a visual representation of a bitboard to screen
+// printBitBoard Will print a visual representation of a bitboard to screen
+//nolint
 func printBitBoard(bitboard uint64) {
 	fmt.Print("\n")
 

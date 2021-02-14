@@ -2,19 +2,19 @@ package board
 
 import "fmt"
 
-//MoveStruct used to store a move
+// MoveStruct used to store a move
 type MoveStruct struct {
 	Move  int
 	Score int
 }
 
-//MoveListStruct List of moves
+// MoveListStruct List of moves
 type MoveListStruct struct {
 	Moves [maxPositionMoves]MoveStruct
 	Count int
 }
 
-//castlePerm index of castel perm change per square
+// castlePerm index of castel perm change per square
 var castelPerm = [120]int{
 	15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
 	15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
@@ -40,47 +40,47 @@ var castelPerm = [120]int{
 0001 0000 0000 0000 0000 0000 0000 -> Castle 0x1000000
 */
 
-//MoveFlagEP EnPas flag
+// MoveFlagEP EnPas flag
 var MoveFlagEP = 0x40000
 
-//MoveFlagPS Pawn Start flag
+// MoveFlagPS Pawn Start flag
 var MoveFlagPS = 0x80000
 
-//MoveFlagCA Castel flag
+// MoveFlagCA Castel flag
 var MoveFlagCA = 0x1000000
 
-//MoveFlagCAP Capture flag
+// MoveFlagCAP Capture flag
 var MoveFlagCAP = 0x7C000
 
-//MoveFlagPROM Promotion flag
+// MoveFlagPROM Promotion flag
 var MoveFlagPROM = 0xF00000
 
-//GetFrom value from move int
+// GetFrom value from move int
 func GetFrom(move int) int {
 	return move & 0x7F
 }
 
-//GetTo get TO value from move int
+// GetTo get TO value from move int
 func GetTo(move int) int {
 	return (move >> 7) & 0x7F
 }
 
-//GetCapture get capture value from move int
+// GetCapture get capture value from move int
 func GetCapture(move int) int {
 	return (move >> 14) & 0xF
 }
 
-//GetPromoted Get promote value from move int
+// GetPromoted Get promote value from move int
 func GetPromoted(move int) int {
 	return (move >> 20) & 0xf
 }
 
-//ToMove Puts all move info into a single move int
+// ToMove Puts all move info into a single move int
 func ToMove(from, to, capture, promotion, flag int) int {
 	return (from | (to << 7) | (capture << 14) | (promotion << 20) | flag)
 }
 
-//clearPiece clear piece from current square
+// clearPiece clear piece from current square
 func (pos *PositionStruct) clearPiece(sq int) error {
 	if DEBUG {
 		if !squareOnBoard(sq) {
@@ -128,6 +128,7 @@ func (pos *PositionStruct) clearPiece(sq int) error {
 	return nil
 }
 
+// addPiece add a piece to a square
 func (pos *PositionStruct) addPiece(sq, piece int) error {
 	if DEBUG {
 		if !squareOnBoard(sq) {
@@ -162,7 +163,7 @@ func (pos *PositionStruct) addPiece(sq, piece int) error {
 	return nil
 }
 
-//movePiece Move a piece
+// movePiece Move a piece
 func (pos *PositionStruct) movePiece(from, to int) error {
 	if DEBUG {
 		if !squareOnBoard(from) {
@@ -175,7 +176,7 @@ func (pos *PositionStruct) movePiece(from, to int) error {
 
 	piece := pos.Pieces[from]
 	color := getPieceColor(piece)
-	//Value only used in debug mode
+	// Value only used in debug mode
 	pieceFound := false
 
 	pos.hashPiece(piece, from)

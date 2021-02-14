@@ -11,7 +11,7 @@ import (
 	"github.com/WeaselChess/Weasel/engine/search"
 )
 
-//EngineInfo holds the info for our engine
+// EngineInfo holds the info for our engine
 type EngineInfo struct {
 	Name    string
 	Version string
@@ -19,22 +19,23 @@ type EngineInfo struct {
 	Options EngineOptions
 }
 
-//Current board position
+// Current board position
 var pos board.PositionStruct
 
-//Search Info
+// Search Info
 var info search.InfoStruct
 
-//Set to true if a position is set
+// Set to true if a position is set
 var positionSet bool
 
-//UCI is our main loop for
+// UCI is our main loop for
 func UCI(engineInfo EngineInfo) {
 	var command []string
 	var ready bool
 	scanner := bufio.NewScanner(os.Stdin)
 
-	space := regexp.MustCompile(`\s+`) //Used to delete multiple spaces
+	// Used to delete multiple spaces
+	space := regexp.MustCompile(`\s+`)
 	uciHander(engineInfo)
 	for scanner.Scan() {
 		index := 0
@@ -56,11 +57,11 @@ func UCI(engineInfo EngineInfo) {
 			go func() {
 
 				board.Initialize()
-				//Init hash tables size with the size configured in options, defaults to 32 MBs
+
+				// Init hash tables size with the size configured in options, defaults to 32 MBs
 				pos.HashTable.Init(uint64(engineInfo.Options.HashSize))
 
 				ready = true
-
 				fmt.Println("readyok")
 			}()
 		case "setoption":

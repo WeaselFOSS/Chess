@@ -5,10 +5,12 @@ import (
 	"strconv"
 )
 
+// EngineOptions The struct for the engine options
 type EngineOptions struct {
 	HashSize int
 }
 
+// optionsHnadler Handler for options command
 func (info *EngineInfo) optionsHnadler(command []string) {
 	var err error
 	switch command[1] {
@@ -28,6 +30,7 @@ func (info *EngineInfo) optionsHnadler(command []string) {
 	}
 }
 
+// printOptions Print out the options that are available
 func printOptions() {
 	fmt.Println("option name Hash type spin default 32 min 1 max 1024")
 }

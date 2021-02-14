@@ -2,7 +2,7 @@ package board
 
 import "fmt"
 
-//TakeMove Take back the last move
+// TakeMove Take back the last move
 func (pos *PositionStruct) TakeMove() error {
 
 	pos.HisPly--
@@ -36,31 +36,33 @@ func (pos *PositionStruct) TakeMove() error {
 	}
 	pos.hashCastel()
 
-	//Flipping side to move
+	// Flipping side to move
 	pos.Side ^= 1
 	pos.hashSide()
 
 	if MoveFlagEP&move != 0 {
 		if pos.Side == white {
-			pos.addPiece(to-10, bP)
+			err := pos.addPiece(to-10, bP)
+			if err != nil {
+				return err
+			}
 		} else {
-			pos.addPiece(to+10, wP)
+			err := pos.addPiece(to+10, wP)
+			if err != nil {
+				return err
+			}
 		}
 	} else if MoveFlagCA&move != 0 {
 		var err error
 		switch to {
 		case c1:
 			err = pos.movePiece(d1, a1)
-			break
 		case c8:
 			err = pos.movePiece(d8, a8)
-			break
 		case g1:
 			err = pos.movePiece(f1, h1)
-			break
 		case g8:
 			err = pos.movePiece(f8, h8)
-			break
 		default:
 			return fmt.Errorf("Invalid castel move to %d", to)
 		}

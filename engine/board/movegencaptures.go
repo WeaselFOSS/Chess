@@ -2,7 +2,7 @@ package board
 
 import "fmt"
 
-//GenerateAllMoves Generate all moves
+// GenerateAllMoves Generate all moves
 func (pos *PositionStruct) GenerateAllCaptureMoves(list *MoveListStruct) error {
 	if DEBUG {
 		err := pos.CheckBoard()
@@ -13,7 +13,7 @@ func (pos *PositionStruct) GenerateAllCaptureMoves(list *MoveListStruct) error {
 	var err error
 
 	if pos.Side == white {
-		//White pawn moves
+		// White pawn moves
 		for pieceNum := 0; pieceNum < pos.PieceNum[wP]; pieceNum++ {
 			sq := pos.PieceList[wP][pieceNum]
 
@@ -21,7 +21,7 @@ func (pos *PositionStruct) GenerateAllCaptureMoves(list *MoveListStruct) error {
 				return fmt.Errorf("Square: %d not on board", sq)
 			}
 
-			//Pawn Captures
+			// Pawn Captures
 			if squareOnBoard(sq+9) && getPieceColor(pos.Pieces[sq+9]) == black {
 				err = list.addWhitePawnCaptureMove(sq, sq+9, pos.Pieces[sq+9], pos)
 				if err != nil {
@@ -37,7 +37,7 @@ func (pos *PositionStruct) GenerateAllCaptureMoves(list *MoveListStruct) error {
 			}
 
 			if pos.EnPassant != noSquare {
-				//Pawn EnPassant Capture
+				// Pawn EnPassant Capture
 				if sq+9 == pos.EnPassant {
 					list.addEnPasMove(ToMove(sq, sq+9, empty, empty, MoveFlagEP))
 				}
@@ -48,7 +48,7 @@ func (pos *PositionStruct) GenerateAllCaptureMoves(list *MoveListStruct) error {
 			}
 		}
 	} else {
-		//Black pawn moves
+		// Black pawn moves
 		for pieceNum := 0; pieceNum < pos.PieceNum[bP]; pieceNum++ {
 			sq := pos.PieceList[bP][pieceNum]
 
@@ -56,7 +56,7 @@ func (pos *PositionStruct) GenerateAllCaptureMoves(list *MoveListStruct) error {
 				return fmt.Errorf("Square: %d not on board", sq)
 			}
 
-			//Pawn Captures
+			// Pawn Captures
 			if squareOnBoard(sq-9) && getPieceColor(pos.Pieces[sq-9]) == white {
 				err = list.addBlackPawnCaptureMove(sq, sq-9, pos.Pieces[sq-9], pos)
 				if err != nil {
@@ -71,7 +71,7 @@ func (pos *PositionStruct) GenerateAllCaptureMoves(list *MoveListStruct) error {
 				}
 			}
 			if pos.EnPassant != noSquare {
-				//Pawn EnPassant Capture
+				// Pawn EnPassant Capture
 				if sq-9 == pos.EnPassant {
 					list.addEnPasMove(ToMove(sq, sq-9, empty, empty, MoveFlagEP))
 				}
@@ -82,7 +82,7 @@ func (pos *PositionStruct) GenerateAllCaptureMoves(list *MoveListStruct) error {
 			}
 		}
 	}
-	//Slider moves
+	// Slider moves
 	pieceIndex := loopSlideIndex[pos.Side]
 	piece := loopSlidePiece[pieceIndex]
 	pieceIndex++
@@ -116,7 +116,7 @@ func (pos *PositionStruct) GenerateAllCaptureMoves(list *MoveListStruct) error {
 		pieceIndex++
 	}
 
-	//NonSlider moves
+	// NonSlider moves
 	pieceIndex = loopNonSlideIndex[pos.Side]
 	piece = loopNonSlidePiece[pieceIndex]
 	pieceIndex++

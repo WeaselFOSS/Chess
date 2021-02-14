@@ -1,6 +1,6 @@
 package board
 
-//PositionStruct the boards struct
+// PositionStruct the boards struct
 type PositionStruct struct {
 	Pieces      [SquareNumber]int
 	Pawns       [3]uint64
@@ -30,7 +30,7 @@ type PositionStruct struct {
 	SearchKillers [2][MaxDepth]int
 }
 
-//UndoStruct the undo move struct
+// UndoStruct the undo move struct
 type UndoStruct struct {
 	Move       int
 	CastelPerm int
@@ -39,27 +39,27 @@ type UndoStruct struct {
 	PosKey     uint64
 }
 
-//sq120ToSq64 120 Square board to 64 square board index
+// sq120ToSq64 120 Square board to 64 square board index
 var sq120ToSq64 [SquareNumber]int
 
-//sq64ToSq120 64 Square board to 64 square board index
+// sq64ToSq120 64 Square board to 64 square board index
 var sq64ToSq120 [64]int
 
-//filesBoard Get a positions file
+// filesBoard Get a positions file
 var filesBoard [SquareNumber]int
 
-//ranksBoard Get a positions rank
+// ranksBoard Get a positions rank
 var ranksBoard [SquareNumber]int
 
 var pieceChar = [13]rune{'.', 'P', 'N', 'B', 'R', 'Q', 'K', 'p', 'n', 'b', 'r', 'q', 'k'}
 var sideChar = [3]rune{'w', 'b', '-'}
 
-//fileRankToSquare takes a file and rank and returns a square number
+// fileRankToSquare takes a file and rank and returns a square number
 func fileRankToSquare(file int, rank int) int {
 	return 21 + file + rank*10
 }
 
-//resetBoard Reset the board
+// resetBoard Reset the board
 func (pos *PositionStruct) resetBoard() {
 	for i := 0; i < SquareNumber; i++ {
 		pos.Pieces[i] = offBoard
@@ -99,7 +99,7 @@ func (pos *PositionStruct) resetBoard() {
 	pos.PosKey = uint64(0)
 }
 
-//updateMaterialLists Update the material lists for the baord
+// updateMaterialLists Update the material lists for the baord
 func (pos *PositionStruct) updateMaterialLists() {
 	for i := 0; i < SquareNumber; i++ {
 		piece := pos.Pieces[i]
@@ -133,7 +133,7 @@ func (pos *PositionStruct) updateMaterialLists() {
 	}
 }
 
-//mirrorBoard Mirror the position
+// mirrorBoard Mirror the position
 func (pos *PositionStruct) MirrorBoard() error {
 	var tempPieceArray [64]int
 	tempSide := pos.Side ^ 1

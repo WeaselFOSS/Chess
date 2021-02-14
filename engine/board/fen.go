@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-//LoadFEN loads the engine with a new board position from a FEN string
+// LoadFEN loads the engine with a new board position from a FEN string
 func (pos *PositionStruct) LoadFEN(fen string) error {
 	if fen == "" {
 		return errors.New("FEN String is empty")
@@ -25,46 +25,33 @@ func (pos *PositionStruct) LoadFEN(fen string) error {
 		switch fen[0] {
 		case 'p':
 			piece = bP
-			break
 		case 'n':
 			piece = bN
-			break
 		case 'b':
 			piece = bB
-			break
 		case 'r':
 			piece = bR
-			break
 		case 'q':
 			piece = bQ
-			break
 		case 'k':
 			piece = bK
-			break
 
 		case 'P':
 			piece = wP
-			break
 		case 'N':
 			piece = wN
-			break
 		case 'B':
 			piece = wB
-			break
 		case 'R':
 			piece = wR
-			break
 		case 'Q':
 			piece = wQ
-			break
 		case 'K':
 			piece = wK
-			break
 
 		case '1', '2', '3', '4', '5', '6', '7', '8':
 			piece = empty
 			count = int(fen[0] - '0')
-			break
 
 		case '/', ' ':
 			rank--
@@ -110,18 +97,12 @@ func (pos *PositionStruct) LoadFEN(fen string) error {
 		switch fen[0] {
 		case 'K':
 			pos.CastelPerm |= wkcastel
-			break
 		case 'Q':
 			pos.CastelPerm |= wqcastel
-			break
 		case 'k':
 			pos.CastelPerm |= bkcastel
-			break
 		case 'q':
 			pos.CastelPerm |= bqcastel
-			break
-		default:
-			break
 		}
 		fen = fen[1:]
 	}

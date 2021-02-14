@@ -17,7 +17,8 @@ import (
 func start(engineInfo uci.EngineInfo) {
 	var command []string
 	scanner := bufio.NewScanner(os.Stdin)
-	space := regexp.MustCompile(`\s+`) //Used to delete multiple spaces
+	// Used to delete multiple spaces
+	space := regexp.MustCompile(`\s+`)
 
 	fmt.Println("Welcome to the Weasel chess engine!")
 	fmt.Println("For console mode type 'weasel'")
@@ -42,6 +43,7 @@ func start(engineInfo uci.EngineInfo) {
 	}
 }
 
+// weaselConsol Weasel console mode
 func weaselConsol() {
 
 	fmt.Print("Welcome to weasel in console mode\n")
@@ -52,10 +54,14 @@ func weaselConsol() {
 
 	var pos board.PositionStruct
 	board.Initialize()
-	//Init hash tables size with 2 MB's
+	// Init hash tables size with 2 MB's
 	pos.HashTable.Init(16)
 
-	pos.LoadFEN(board.StartPosFEN)
+	err := pos.LoadFEN(board.StartPosFEN)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
 	pos.Print()
 
 	var searchInfo search.InfoStruct
@@ -79,15 +85,27 @@ func weaselConsol() {
 			fmt.Printf("The current Eveluation is %d\n", pos.Evaluate())
 		case "startpos":
 			pos.HashTable.Clear()
-			pos.LoadFEN(board.StartPosFEN)
+			err := pos.LoadFEN(board.StartPosFEN)
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+
 			pos.Print()
 		case "setboard":
 			pos.HashTable.Clear()
-			pos.LoadFEN(strings.Join(command[index+1:], " "))
+			err := pos.LoadFEN(strings.Join(command[index+1:], " "))
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+
 			if pos.PosKey != 0 {
 				pos.Print()
 			} else {
-				pos.LoadFEN(board.StartPosFEN)
+				err := pos.LoadFEN(board.StartPosFEN)
+				if err != nil {
+					fmt.Println(err.Error())
+				}
+
 				fmt.Printf("Unkown FEN string '%s'\n", strings.Join(command[index+1:], " "))
 			}
 		case "force":
@@ -121,7 +139,7 @@ func weaselConsol() {
 			if move != board.NoMove {
 				moveMade, err = pos.MakeMove(move)
 				if err != nil {
-					panic(err)
+					fmt.Println(err.Error())
 				}
 			}
 
@@ -139,12 +157,13 @@ func weaselConsol() {
 			searchInfo.TimeSet = true
 			err := searchInfo.SearchPosition(&pos)
 			if err != nil {
-				panic(err)
+				fmt.Println(err.Error())
 			}
 			_, err = pos.MakeMove(pos.PvArray[0])
 			if err != nil {
-				panic(err)
+				fmt.Println(err.Error())
 			}
+
 			pos.Print()
 			fmt.Printf("Weasel plays move: %s\n", board.MoveToString(pos.PvArray[0]))
 		}

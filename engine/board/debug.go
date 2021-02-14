@@ -5,10 +5,10 @@ import (
 	"fmt"
 )
 
-//DEBUG tells us if we should output debug messages
+// DEBUG tells us if we should output debug messages
 var DEBUG bool = false //Default set to true while debugging, should be false normally
 
-//CheckBoard VERY expensive only use for debugging
+// CheckBoard VERY expensive only use for debugging
 func (pos *PositionStruct) CheckBoard() error {
 
 	var tPawns [3]uint64
@@ -17,7 +17,7 @@ func (pos *PositionStruct) CheckBoard() error {
 	tPawns[black] = pos.Pawns[black]
 	tPawns[both] = pos.Pawns[both]
 
-	//Check all piece types and positions are correct
+	// Check all piece types and positions are correct
 	for tPiece := wP; tPiece <= bK; tPiece++ {
 		for tPieceNum := 0; tPieceNum < pos.PieceNum[tPiece]; tPieceNum++ {
 			sq120 := pos.PieceList[tPiece][tPieceNum]
@@ -27,7 +27,7 @@ func (pos *PositionStruct) CheckBoard() error {
 		}
 	}
 
-	//Check piece count and other counters
+	// Check piece count and other counters
 	var tPieceNum [13]int
 	var tBigPiece [2]int
 	var tMajPiece [2]int
@@ -151,6 +151,7 @@ func sideValid(side int) bool {
 	return (side == white || side == black)
 }
 
+//nolint
 func fileRankValid(fr int) bool {
 	return (fr >= 0 && fr <= 7)
 }

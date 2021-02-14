@@ -5,7 +5,7 @@ import (
 	"unsafe"
 )
 
-//PVEnteryStruct The struct for each entry in the PV table
+// PVEnteryStruct The struct for each entry in the PV table
 type HashEnteryStruct struct {
 	PosKey uint64
 	Move   int
@@ -14,11 +14,7 @@ type HashEnteryStruct struct {
 	Flags  int
 }
 
-//enterytBytes calculated using  unsafe.Sizeof(pos.PVTable.Entry[0])
-//
-//if more values are added to the struct (PVEnteryStruct) it will need to be recalculated
-
-//PVTableStruct Struct to hole the PVTable
+// PVTableStruct Struct to hole the PVTable
 type HashTableStruct struct {
 	Entries     []HashEnteryStruct
 	EntrieCount uint64
@@ -28,7 +24,7 @@ type HashTableStruct struct {
 	Cut         int
 }
 
-//initPVTables Initilize our PV Table slice with a exact amount of memory based on hashSizeMB
+// initPVTables Initilize our PV Table slice with a exact amount of memory based on hashSizeMB
 func (table *HashTableStruct) Init(hashSizeMB uint64) {
 	const enterytBytes = uint64(unsafe.Sizeof(HashEnteryStruct{}))
 	hashBytes := hashSizeMB * 1000000
@@ -37,7 +33,7 @@ func (table *HashTableStruct) Init(hashSizeMB uint64) {
 	table.EntrieCount -= 2 //Saftey net for indexing
 }
 
-//Clear Clear the PV table
+// Clear Clear the PV table
 func (table *HashTableStruct) Clear() {
 	table.Entries = make([]HashEnteryStruct, table.EntrieCount)
 	table.NewWrite = 0
@@ -87,13 +83,11 @@ func (pos *PositionStruct) ProbeHashEntry(move *int, score *int, alpha, beta, de
 					*score = alpha
 					return true, nil
 				}
-				break
 			case HFBETA:
 				if *score >= beta {
 					*score = beta
 					return true, nil
 				}
-				break
 			case HFEXACT:
 				return true, nil
 			}
@@ -102,9 +96,9 @@ func (pos *PositionStruct) ProbeHashEntry(move *int, score *int, alpha, beta, de
 	return false, nil
 }
 
-//StorePVMove a move in the PV table
+// StorePVMove a move in the PV table
 func (pos *PositionStruct) StoreHashEntry(move, score, flags, depth int) error {
-	//Indexing based off of position hash
+	// Indexing based off of position hash
 	index := pos.PosKey % pos.HashTable.EntrieCount
 
 	if DEBUG && (index <= 0 || index >= pos.HashTable.EntrieCount-1) {
@@ -132,7 +126,7 @@ func (pos *PositionStruct) StoreHashEntry(move, score, flags, depth int) error {
 	return nil
 }
 
-//ProbePVTable probe the table for a move on the current position
+// ProbePVTable probe the table for a move on the current position
 func (pos *PositionStruct) ProbePVMove() (int, error) {
 	index := pos.PosKey % pos.HashTable.EntrieCount
 
@@ -148,7 +142,7 @@ func (pos *PositionStruct) ProbePVMove() (int, error) {
 	return NoMove, nil
 }
 
-//ClearMoveFromHash Clear the move made at the current position from the hash table
+// ClearMoveFromHash Clear the move made at the current position from the hash table
 func (pos *PositionStruct) ClearMoveFromHash() error {
 	index := pos.PosKey % pos.HashTable.EntrieCount
 
@@ -163,7 +157,7 @@ func (pos *PositionStruct) ClearMoveFromHash() error {
 	return nil
 }
 
-//GetPvLine return the PVLine if found for the curren position
+// GetPvLine return the PVLine if found for the curren position
 func (pos *PositionStruct) GetPvLine(depth int) (int, error) {
 	if DEBUG && depth >= MaxDepth {
 		return NoMove, fmt.Errorf("Depth of %d greater than or equal to MaxDepth of %d", depth, MaxDepth)
@@ -178,16 +172,22 @@ func (pos *PositionStruct) GetPvLine(depth int) (int, error) {
 	for move != NoMove && count < depth {
 		var moveExists bool
 		moveExists, err = pos.MoveExists(move)
+		if err != nil {
+			return NoMove, err
+		}
+
 		if moveExists {
 			_, err = pos.MakeMove(move)
 			if err != nil {
 				return NoMove, err
 			}
+
 			pos.PvArray[count] = move
 			count++
 		} else {
 			break
 		}
+
 		move, err = pos.ProbePVMove()
 		if err != nil {
 			return NoMove, err

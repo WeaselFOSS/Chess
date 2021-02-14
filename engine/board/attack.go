@@ -2,19 +2,19 @@ package board
 
 import "fmt"
 
-//knightDir knight directions
+// knightDir knight directions
 var knightDir = [8]int{-8, -19, -21, -12, 8, 19, 21, 12}
 
-//rookDir Rook directions
+// rookDir Rook directions
 var rookDir = [4]int{-1, -10, 1, 10}
 
-//bishopDir Bishop directions
+// bishopDir Bishop directions
 var bishopDir = [4]int{-9, -11, 11, 9}
 
-//kingDir King directions
+// kingDir King directions
 var kingDir = [8]int{-1, -10, 1, 10, -9, -11, 11, 9}
 
-//IsAttacked Returns if square is attacked
+// IsAttacked Returns if square is attacked
 func (pos *PositionStruct) IsAttacked(sq, side int) (bool, error) {
 
 	if DEBUG && !squareOnBoard(sq) {
@@ -32,7 +32,7 @@ func (pos *PositionStruct) IsAttacked(sq, side int) (bool, error) {
 		}
 	}
 
-	//pawns
+	// pawns
 	if side == white {
 		if pos.Pieces[sq-11] == wP || pos.Pieces[sq-9] == wP {
 			return true, nil
@@ -43,7 +43,7 @@ func (pos *PositionStruct) IsAttacked(sq, side int) (bool, error) {
 		}
 	}
 
-	//knights
+	// knights
 	for i := 0; i < 8; i++ {
 		piece := pos.Pieces[sq+knightDir[i]]
 		if (piece == wN && side == white) || (piece == bN && side == black) {
@@ -51,7 +51,7 @@ func (pos *PositionStruct) IsAttacked(sq, side int) (bool, error) {
 		}
 	}
 
-	//rooks and queens
+	// rooks and queens
 	for i := 0; i < 4; i++ {
 		dir := rookDir[i]
 		tSq := sq + dir
@@ -69,7 +69,7 @@ func (pos *PositionStruct) IsAttacked(sq, side int) (bool, error) {
 		}
 	}
 
-	//bishops and queens
+	// bishops and queens
 	for i := 0; i < 4; i++ {
 		dir := bishopDir[i]
 		tSq := sq + dir
@@ -88,7 +88,7 @@ func (pos *PositionStruct) IsAttacked(sq, side int) (bool, error) {
 
 	}
 
-	//kings
+	// kings
 	for i := 0; i < 8; i++ {
 		piece := pos.Pieces[sq+kingDir[i]]
 		if (piece == wK && side == white) || (piece == bK && side == black) {

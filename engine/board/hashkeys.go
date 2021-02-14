@@ -10,7 +10,7 @@ var pieceKeys [13][120]uint64
 var sideKey uint64
 var castelKeys [16]uint64
 
-//initHashKeys Initialize the hash keys
+// initHashKeys Initialize the hash keys
 func initHashKeys() {
 	rand.Seed(time.Now().UTC().UnixNano())
 
@@ -25,12 +25,12 @@ func initHashKeys() {
 	}
 }
 
-//generatePosKey generates a unique key for the current position
+// generatePosKey generates a unique key for the current position
 func (pos *PositionStruct) generatePosKey() (uint64, error) {
-	var finalKey uint64 = 0
-	var piece int = empty
+	var finalKey uint64
+	var piece int
 
-	//Pieces
+	// Pieces
 	for sq := 0; sq < SquareNumber; sq++ {
 		piece = pos.Pieces[sq]
 		if piece != noSquare && piece != empty && piece != offBoard {
@@ -41,12 +41,12 @@ func (pos *PositionStruct) generatePosKey() (uint64, error) {
 		}
 	}
 
-	//Side
+	// Side
 	if pos.Side == white {
 		finalKey ^= sideKey
 	}
 
-	//EnPassant
+	// EnPassant
 	if pos.EnPassant != noSquare {
 		if !(pos.EnPassant >= 0 && pos.EnPassant < SquareNumber) {
 			return 0, errors.New("EnPassant value out of bounds")
@@ -54,7 +54,7 @@ func (pos *PositionStruct) generatePosKey() (uint64, error) {
 		finalKey ^= pieceKeys[empty][pos.EnPassant]
 	}
 
-	//CastelPerm
+	// CastelPerm
 	if !(pos.CastelPerm >= 0 && pos.CastelPerm <= 15) {
 		return 0, errors.New("CastelPerm value out of bounds")
 	}
@@ -63,22 +63,22 @@ func (pos *PositionStruct) generatePosKey() (uint64, error) {
 	return finalKey, nil
 }
 
-//hashPiece update hash with pieces new square
+// hashPiece update hash with pieces new square
 func (pos *PositionStruct) hashPiece(piece, sq int) {
 	pos.PosKey ^= (pieceKeys[piece][sq])
 }
 
-//hashCastel update hash with castel perms
+// hashCastel update hash with castel perms
 func (pos *PositionStruct) hashCastel() {
 	pos.PosKey ^= (castelKeys[pos.CastelPerm])
 }
 
-//hashSide update hash with new side
+// hashSide update hash with new side
 func (pos *PositionStruct) hashSide() {
 	pos.PosKey ^= (sideKey)
 }
 
-//hashEnPas update hash for EnPas square
+// hashEnPas update hash for EnPas square
 func (pos *PositionStruct) hashEnPas() {
 	pos.PosKey ^= (pieceKeys[empty][pos.EnPassant])
 }

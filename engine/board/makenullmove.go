@@ -2,9 +2,9 @@ package board
 
 import "errors"
 
-//MakeNullMove Make a null move
+// MakeNullMove Make a null move
 //
-//For more info go to https://www.chessprogramming.org/Null_Move_Pruning
+// For more info go to https://www.chessprogramming.org/Null_Move_Pruning
 func (pos *PositionStruct) MakeNullMove() error {
 	if DEBUG {
 		err := pos.CheckBoard()
@@ -35,7 +35,7 @@ func (pos *PositionStruct) MakeNullMove() error {
 	pos.History[pos.HisPly].CastelPerm = pos.CastelPerm
 	pos.EnPassant = noSquare
 
-	//WHITE ^ 1 == BLACK & BLACK ^1 == WHITE
+	// WHITE ^ 1 == BLACK & BLACK ^1 == WHITE
 	pos.Side ^= 1
 	pos.HisPly++
 	pos.hashSide()
@@ -49,7 +49,7 @@ func (pos *PositionStruct) MakeNullMove() error {
 	return nil
 }
 
-//TakeNullMove Take back the last null move
+// TakeNullMove Take back the last null move
 func (pos *PositionStruct) TakeNullMove() error {
 	if DEBUG {
 		err := pos.CheckBoard()
@@ -72,7 +72,7 @@ func (pos *PositionStruct) TakeNullMove() error {
 		pos.hashEnPas()
 	}
 
-	//WHITE ^ 1 == BLACK & BLACK ^1 == WHITE
+	// WHITE ^ 1 == BLACK & BLACK ^1 == WHITE
 	pos.Side ^= 1
 	pos.hashSide()
 
