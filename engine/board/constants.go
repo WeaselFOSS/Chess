@@ -7,7 +7,7 @@ const SquareNumber = 120
 const maxPositionMoves = 256
 
 //StartPosFEN The fen string for a starting position
-const StartPosFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+const StartPosFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 0"
 
 //MaxDepth The max depth the engine will try to search to
 const MaxDepth = 64

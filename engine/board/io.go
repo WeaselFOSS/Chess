@@ -124,7 +124,7 @@ func (pos *PositionStruct) Print() {
 	fmt.Printf("Is Repition: %v\n", pos.IsRepition())
 	fmt.Printf("Evaluation CP: %d\n", pos.Evaluate())
 	fmt.Printf("Fifty Move Count: %d\n", pos.FiftyMove)
-	fmt.Printf("HispPly: %d\n", pos.HisPly)
+	fmt.Printf("HisPly: %d\n", pos.HisPly)
 }
 
 //Print prints the move list struct to console

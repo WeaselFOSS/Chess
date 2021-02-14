@@ -20,7 +20,6 @@ var EngineInfo = uci.EngineInfo{
 }
 
 func main() {
-	go start(EngineInfo)
 
 	fmt.Println("                                                  ")
 	fmt.Println("██╗    ██╗███████╗ █████╗ ███████╗███████╗██╗     ")
@@ -31,5 +30,5 @@ func main() {
 	fmt.Println(" ╚══╝╚══╝ ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝")
 	fmt.Println("                                                  ")
 
-	<-make(chan struct{})
+	start(EngineInfo)
 }

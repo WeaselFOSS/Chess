@@ -64,6 +64,8 @@ func weaselConsol() {
 
 	var forceMode = false
 
+	fmt.Print("\nEnter Move > ")
+
 	for scanner.Scan() {
 		var moveMade = false
 		index := 0
@@ -73,15 +75,24 @@ func weaselConsol() {
 		case "print":
 			pos.Print()
 		case "eval":
+			fmt.Println("Evaluation in the side to move's POV in 100ths of a pawn")
 			fmt.Printf("The current Eveluation is %d\n", pos.Evaluate())
 		case "startpos":
 			pos.HashTable.Clear()
 			pos.LoadFEN(board.StartPosFEN)
+			pos.Print()
 		case "setboard":
 			pos.HashTable.Clear()
 			pos.LoadFEN(strings.Join(command[index+1:], " "))
+			if pos.PosKey != 0 {
+				pos.Print()
+			} else {
+				pos.LoadFEN(board.StartPosFEN)
+				fmt.Printf("Unkown FEN string '%s'\n", strings.Join(command[index+1:], " "))
+			}
 		case "force":
 			forceMode = true
+			fmt.Println("Weasel will no longr make moves until you type 'go'")
 		case "go":
 			forceMode = false
 			moveMade = true
@@ -99,19 +110,19 @@ func weaselConsol() {
 			fmt.Println("eval - give the current evaluation score")
 			fmt.Println("startpos - set the boards position to the starting position")
 			fmt.Println("setboard x - set the board position to the FEN x")
-			fmt.Println("force - make the engine not make moves")
-			fmt.Println("go - let the engine make moves")
+			fmt.Println("force - weasel will not make moves")
+			fmt.Println("go - let weasel make moves for current side to move")
 			fmt.Println("divide x - runs a perft divide to the depth of x")
-			fmt.Println("quit - exit the program")
+			fmt.Println("quit - exit weasel")
 		default:
-			move, err := pos.ParseMove(command[index])
-			if err != nil {
-				panic(err)
-			}
+			move, _ := pos.ParseMove(command[index])
 
-			moveMade, err = pos.MakeMove(move)
-			if err != nil {
-				panic(err)
+			var err error
+			if move != board.NoMove {
+				moveMade, err = pos.MakeMove(move)
+				if err != nil {
+					panic(err)
+				}
 			}
 
 			if !moveMade {
@@ -119,6 +130,7 @@ func weaselConsol() {
 			} else {
 				pos.Print()
 			}
+
 		}
 
 		if moveMade && !forceMode {
@@ -134,7 +146,10 @@ func weaselConsol() {
 				panic(err)
 			}
 			pos.Print()
+			fmt.Printf("Weasel plays move: %s\n", board.MoveToString(pos.PvArray[0]))
 		}
+
+		fmt.Print("\nEnter Move > ")
 
 	}
 
