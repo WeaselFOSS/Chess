@@ -22,10 +22,10 @@
         "Comments": "",
         "CompanyName": "WeaselChess Club",
         "FileDescription": "Weasel is a chess engine written in Golang",
-        "FileVersion": "v1.0.0.1-beta",
+        "FileVersion": "v1.0.1-beta",
         "OriginalFilename": "Weasel.exe",
         "ProductName": "Weasel Chess Engine",
-        "ProductVersion": "v1.0.0.1-beta"
+        "ProductVersion": "v1.0.1-beta"
     },
     "VarFileInfo": {
         "Translation": {
