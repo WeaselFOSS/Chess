@@ -30,7 +30,7 @@ func (info *EngineInfo) optionsHnadler(command []string) {
 					}
 				}
 			default:
-				fmt.Printf("Unkown option %s", command[1])
+				fmt.Printf("Unkown option %s\n", command[1])
 			}
 		}
 	}
