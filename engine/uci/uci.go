@@ -19,6 +19,9 @@ type EngineInfo struct {
 	Options EngineOptions
 }
 
+// timeMargine is the maring of time to subtract from the total time to ensure we do not go over our total time
+const timeMargin = 10
+
 // Current board position
 var pos board.PositionStruct
 
