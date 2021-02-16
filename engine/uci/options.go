@@ -13,20 +13,24 @@ type EngineOptions struct {
 // optionsHnadler Handler for options command
 func (info *EngineInfo) optionsHnadler(command []string) {
 	var err error
-	switch command[1] {
-	case "Hash":
-		info.Options.HashSize, err = strconv.Atoi(command[2])
-		if err != nil {
-			fmt.Println("Failed to parse hash size " + err.Error())
-		}
+	if command[1] == "name" {
+		switch command[2] {
+		case "Hash":
+			if command[3] == "value" {
+				info.Options.HashSize, err = strconv.Atoi(command[4])
+				if err != nil {
+					fmt.Println("Failed to parse hash size " + err.Error())
+				}
 
-		if info.Options.HashSize > 1024 {
-			info.Options.HashSize = 1024
-		} else if info.Options.HashSize < 1 {
-			info.Options.HashSize = 1
+				if info.Options.HashSize > 1024 {
+					info.Options.HashSize = 1024
+				} else if info.Options.HashSize < 1 {
+					info.Options.HashSize = 1
+				}
+			}
+		default:
+			fmt.Printf("Unkown option %s", command[1])
 		}
-	default:
-		fmt.Printf("Unkown option %s", command[1])
 	}
 }
 

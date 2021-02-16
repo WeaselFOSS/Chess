@@ -48,10 +48,12 @@ func UCI(engineInfo EngineInfo) {
 		case "uci":
 			uciHander(engineInfo)
 		case "debug":
-			if command[index+1] == "on" {
-				board.DEBUG = true
-			} else {
-				board.DEBUG = false
+			if len(command) > 1 {
+				if command[index+1] == "on" {
+					board.DEBUG = true
+				} else {
+					board.DEBUG = false
+				}
 			}
 		case "isready":
 			go func() {
