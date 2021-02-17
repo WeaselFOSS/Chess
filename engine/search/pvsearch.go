@@ -1,9 +1,11 @@
 package search
 
-import "github.com/WeaselChess/Weasel/engine/board"
+import (
+	"github.com/WeaselChess/Weasel/engine/board"
+)
 
 // alphaBeta Normal alphabeta searching
-func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *board.PositionStruct) (int, error) {
+func (info *InfoStruct) pvSearch(alpha, beta, depth int, doNull bool, pos *board.PositionStruct) (int, error) {
 
 	if board.DEBUG {
 		err := pos.CheckBoard()
@@ -64,7 +66,7 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 			return 0, err
 		}
 
-		score, err = info.alphaBeta(-beta, -beta+1, depth-4, false, pos)
+		score, err = info.pvSearch(-beta, -beta+1, depth-4, false, pos)
 		if err != nil {
 			return 0, err
 		}
@@ -107,6 +109,8 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 		}
 	}
 
+	foundPV := false
+
 	// Move loop
 	for i := 0; i < list.Count; i++ {
 		pickNextMove(i, &list)
@@ -122,13 +126,29 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 		}
 
 		legal++
-		score, err = info.alphaBeta(-beta, -alpha, depth-1, true, pos)
-		if err != nil {
-			return 0, err
+
+		if foundPV {
+			score, err = info.pvSearch(-alpha-1, -alpha, depth-1, true, pos)
+			if err != nil {
+				return 0, err
+			}
+			score *= -1
+
+			if score > alpha && score < beta {
+				score, err = info.pvSearch(-beta, -alpha, depth-1, true, pos)
+				if err != nil {
+					return 0, err
+				}
+				score *= -1
+			}
+		} else {
+			score, err = info.pvSearch(-beta, -alpha, depth-1, true, pos)
+			if err != nil {
+				return 0, err
+			}
+			score *= -1
 		}
 
-		// Flipping score for the other sides POV
-		score *= -1
 		err = pos.TakeMove()
 		if err != nil {
 			return 0, err
@@ -158,6 +178,7 @@ func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *boar
 					err = pos.StoreHashEntry(bestMove, beta, board.HFBETA, depth)
 					return beta, err
 				}
+				foundPV = true
 				alpha = score
 				bestMove = list.Moves[i].Move
 

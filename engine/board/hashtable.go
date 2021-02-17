@@ -47,23 +47,13 @@ func (pos *PositionStruct) ProbeHashEntry(move *int, score *int, alpha, beta, de
 	}
 
 	if pos.HashTable.Entries[index].PosKey == pos.PosKey {
-		moveExists, err := pos.MakeMove(pos.HashTable.Entries[index].Move)
+		moveExists, err := pos.MoveExists(pos.HashTable.Entries[index].Move)
 		if err != nil {
 			return false, err
 		}
 
 		if !moveExists {
 			return false, nil
-		}
-
-		if pos.IsRepition() {
-			err = pos.TakeMove()
-			return false, err
-		}
-
-		err = pos.TakeMove()
-		if err != nil {
-			return false, err
 		}
 
 		*move = pos.HashTable.Entries[index].Move

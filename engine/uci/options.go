@@ -28,6 +28,7 @@ func (info *EngineInfo) optionsHnadler(command []string) {
 					} else if info.Options.HashSize < 1 {
 						info.Options.HashSize = 1
 					}
+					pos.HashTable.Init(uint64(info.Options.HashSize))
 				}
 			default:
 				fmt.Printf("Unkown option %s\n", command[1])

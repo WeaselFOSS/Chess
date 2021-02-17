@@ -108,6 +108,7 @@ func (pos *PositionStruct) MakeMove(move int) (bool, error) {
 				}
 			}
 			pos.hashEnPas()
+
 		}
 	}
 

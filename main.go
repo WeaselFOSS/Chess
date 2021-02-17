@@ -15,7 +15,7 @@ var EngineOptions = uci.EngineOptions{
 // EngineInfo is the info for our engine
 var EngineInfo = uci.EngineInfo{
 	Name:    "Weasel",
-	Version: "v1.0.2-beta",
+	Version: "v1.1.0-beta",
 	Author:  "WeaselChess Club",
 	Options: EngineOptions,
 }

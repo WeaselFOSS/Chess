@@ -137,7 +137,7 @@ func (pos *PositionStruct) CheckBoard() error {
 	}
 
 	if pos.PosKey != poskey {
-		return fmt.Errorf("Position Hash mis match expected %d, got %d", poskey, pos.PosKey)
+		return fmt.Errorf("Position Hash mis match expected %d, got %d, got XOR to enpas %d", poskey, pos.PosKey, pos.PosKey^pieceKeys[empty][pos.EnPassant])
 	}
 
 	return nil

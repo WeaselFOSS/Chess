@@ -40,6 +40,12 @@ func UCI(engineInfo EngineInfo) {
 	// Used to delete multiple spaces
 	space := regexp.MustCompile(`\s+`)
 	uciHander(engineInfo)
+
+	board.Initialize()
+
+	// Init hash tables size with the size configured in options, defaults to 32 MBs
+	pos.HashTable.Init(uint64(engineInfo.Options.HashSize))
+
 	for scanner.Scan() {
 		index := 0
 
@@ -60,12 +66,6 @@ func UCI(engineInfo EngineInfo) {
 			}
 		case "isready":
 			go func() {
-
-				board.Initialize()
-
-				// Init hash tables size with the size configured in options, defaults to 32 MBs
-				pos.HashTable.Init(uint64(engineInfo.Options.HashSize))
-
 				ready = true
 				fmt.Println("readyok")
 			}()

@@ -17,6 +17,7 @@ type InfoStruct struct {
 	MovesToGo bool
 	Infinite  bool
 	Nodes     int64
+	LeafNodes int
 	Quit      bool
 	Stopped   bool
 
@@ -26,6 +27,9 @@ type InfoStruct struct {
 	FailHigh      float32
 	FailHighFirst float32
 }
+
+// avargeBranchingFactor calculated with the average(over multiple positions) of Sqrt(Nodes(currentDepth) / nodes(depth - 2))
+const avargeBranchingFactor = 3.73
 
 // pickNextMove Pick the next move base on inital score
 func pickNextMove(moveNum int, list *board.MoveListStruct) {
@@ -91,7 +95,7 @@ func (info *InfoStruct) SearchPosition(pos *board.PositionStruct) error {
 
 	// Iterative deepening loop
 	for currentDepth := 1; currentDepth <= info.Depth; currentDepth++ {
-		bestScore, err = info.alphaBeta(-board.Infinite, board.Infinite, currentDepth, true, pos)
+		bestScore, err = info.pvSearch(-board.Infinite, board.Infinite, currentDepth, true, pos)
 		if err != nil {
 			return err
 		}
@@ -104,11 +108,14 @@ func (info *InfoStruct) SearchPosition(pos *board.PositionStruct) error {
 		if err != nil {
 			return err
 		}
+
 		bestMove = pos.PvArray[0]
 
-		// Sending infor to GUI
 		currentTime := time.Now().UnixNano() / int64(time.Millisecond)
 
+		//timeEstimate := int(avargeBranchingFactor * float64(currentTime-startTime))
+
+		// Sending infor to GUI
 		if bestScore >= board.IsMate {
 			fmt.Printf("info score mate %d depth %d nodes %d time %d ",
 				board.Infinite-bestScore, currentDepth, info.Nodes, currentTime-info.StartTime)
