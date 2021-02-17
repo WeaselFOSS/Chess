@@ -97,18 +97,19 @@ func (pos *PositionStruct) MakeMove(move int) (bool, error) {
 		pos.FiftyMove = 0
 		if move&MoveFlagPS != 0 {
 			if side == white {
-				pos.EnPassant = from + 10
-				if ranksBoard[pos.EnPassant] != rank3 {
-					return false, fmt.Errorf("Invalid enPas rank of %d", ranksBoard[pos.EnPassant])
+				sq := from + 10
+				if (pos.Pieces[sq+9] == bP || pos.Pieces[sq+11] == bP) && ranksBoard[sq] == rank3 {
+					pos.EnPassant = sq
+					pos.hashEnPas()
 				}
 			} else {
-				pos.EnPassant = from - 10
-				if ranksBoard[pos.EnPassant] != rank6 {
-					return false, fmt.Errorf("Invalid enPas rank of %d", ranksBoard[pos.EnPassant])
+				sq := from - 10
+				if (pos.Pieces[sq-9] == wP || pos.Pieces[sq-11] == wP) && ranksBoard[sq] == rank6 {
+					pos.EnPassant = sq
+					pos.hashEnPas()
 				}
-			}
-			pos.hashEnPas()
 
+			}
 		}
 	}
 

@@ -2,7 +2,6 @@ package board
 
 import (
 	"errors"
-	"fmt"
 	"math/rand"
 	"time"
 )
@@ -52,17 +51,7 @@ func (pos *PositionStruct) generatePosKey() (uint64, error) {
 		if !(pos.EnPassant >= 0 && pos.EnPassant < SquareNumber) {
 			return 0, errors.New("EnPassant value out of bounds")
 		}
-		// For 3 fold repition we only care about the EnPas square if there is a pawn attacker
-		if ((pos.Pieces[pos.EnPassant-9] == wP || pos.Pieces[pos.EnPassant-11] == wP) && ranksBoard[pos.EnPassant] == rank6) ||
-			((pos.Pieces[pos.EnPassant+9] == bP || pos.Pieces[pos.EnPassant+11] == bP) && ranksBoard[pos.EnPassant] == rank3) ||
-			(pos.Pieces[pos.EnPassant] == bP && ranksBoard[pos.EnPassant] == rank3) || (pos.Pieces[pos.EnPassant] == wP && ranksBoard[pos.EnPassant] == rank6) {
-			fmt.Printf("EnPas: %s\n", SquareToString(pos.EnPassant))
-			if SquareToString(pos.EnPassant) == "b3" {
-				fmt.Println("test2")
-				pos.Print()
-			}
-			finalKey ^= pieceKeys[empty][pos.EnPassant]
-		}
+		finalKey ^= pieceKeys[empty][pos.EnPassant]
 	}
 
 	// CastelPerm
@@ -92,15 +81,7 @@ func (pos *PositionStruct) hashSide() {
 // hashEnPas update hash for EnPas square
 func (pos *PositionStruct) hashEnPas() {
 	// For 3 fold repition we only care about the EnPas square if there is a pawn attacker
-	if ((pos.Pieces[pos.EnPassant-9] == wP || pos.Pieces[pos.EnPassant-11] == wP) && ranksBoard[pos.EnPassant] == rank6) ||
-		((pos.Pieces[pos.EnPassant+9] == bP || pos.Pieces[pos.EnPassant+11] == bP) && ranksBoard[pos.EnPassant] == rank3) ||
-		(pos.Pieces[pos.EnPassant] == bP && ranksBoard[pos.EnPassant] == rank3) || (pos.Pieces[pos.EnPassant] == wP && ranksBoard[pos.EnPassant] == rank6) {
-		fmt.Printf("EnPas: %s\n", SquareToString(pos.EnPassant))
-		if SquareToString(pos.EnPassant) == "b3" {
-			fmt.Println("test1")
-			pos.Print()
-		}
-		pos.PosKey ^= (pieceKeys[empty][pos.EnPassant])
-	}
+
+	pos.PosKey ^= (pieceKeys[empty][pos.EnPassant])
 
 }
