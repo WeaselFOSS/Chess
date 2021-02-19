@@ -21,7 +21,7 @@ func start(engineInfo uci.EngineInfo) {
 	space := regexp.MustCompile(`\s+`)
 
 	fmt.Println("Welcome to the Weasel chess engine!")
-	fmt.Println("For console mode type 'weasel'")
+	fmt.Println("For console mode type 'console'")
 
 	for scanner.Scan() {
 		index := 0
@@ -30,7 +30,7 @@ func start(engineInfo uci.EngineInfo) {
 		switch command[index] {
 		case "uci":
 			uci.UCI(EngineInfo)
-		case "weasel":
+		case "console":
 			weaselConsol()
 		default:
 			if len(command) == index+1 {
