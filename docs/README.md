@@ -7,7 +7,7 @@ Art graciously provided by [Alex](https://www.deviantart.com/redhead-alex)
 Table of Contents:
 
   * [About](#about)
-  * [Installing and Compiling from Source](#installing-and-compiling-from-source)
+  * [Downloading, or Compiling from Source](#downloading-or-Compiling-from-source)
   * [Contributing](#contributing)
   * [License](#license)
 
@@ -16,14 +16,10 @@ About
 
 Weasel is an 0x88 and bitboard based chess engine written entirely in Go. It utilizes alpha-beta pruining with null searhes to find the best possible moves in the shortest amount of time while utilizing the UCI (Universal Chess Interface) protocol. Weasel is programmed with all possible chess moves such as castling and En passant, as well as full knowlege on topics such as the 50 move rule and stalemates. Upon testing against other engines, we believe that Weasel is the strongest chess engine written in Go.
 
-You can play Weasel [here](http://weaselchess.club/). But if you want the full strength of weasel we recommend downloading it.
-
 Downloading, or Compiling from Source
 ------------------------------------
 
 You can find the most recent stable release [here](https://github.com/WeaselChess/Weasel/releases).
-
-
 
 To compile from source, please do the following:
 
