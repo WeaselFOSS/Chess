@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/WeaselFoss/Chess/engine/board"
+	"github.com/WeaselFOSS/Chess/engine/board"
 )
 
 // uciHander Handler for uci command
@@ -139,7 +139,6 @@ func goHandler(command []string) {
 			}
 		}
 	}
-	depth = 2 // We are going to hard cap the depth to 3
 
 	if moveTime != -1 {
 		timeV = moveTime

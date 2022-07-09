@@ -7,8 +7,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/WeaselFoss/Chess/engine/board"
-	"github.com/WeaselFoss/Chess/engine/search"
+	"github.com/WeaselFOSS/Chess/engine/board"
+	"github.com/WeaselFOSS/Chess/engine/search"
 )
 
 // EngineInfo holds the info for our engine

@@ -1,5 +1,3 @@
-module github.com/WeaselFoss/Chess
+module github.com/WeaselFOSS/Chess
 
-go 1.15
-
-
+go 1.18
