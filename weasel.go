@@ -9,9 +9,9 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/WeaselChess/Weasel/engine/board"
-	"github.com/WeaselChess/Weasel/engine/search"
-	"github.com/WeaselChess/Weasel/engine/uci"
+	"github.com/WeaselFOSS/Chess/engine/board"
+	"github.com/WeaselFOSS/Chess/engine/search"
+	"github.com/WeaselFOSS/Chess/engine/uci"
 )
 
 func start(engineInfo uci.EngineInfo) {

@@ -5,7 +5,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/WeaselChess/Weasel/engine/uci"
+	"github.com/WeaselFOSS/Chess/engine/uci"
 )
 
 var EngineOptions = uci.EngineOptions{

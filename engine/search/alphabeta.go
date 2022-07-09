@@ -1,6 +1,6 @@
 package search
 
-import "github.com/WeaselChess/Weasel/engine/board"
+import "github.com/WeaselFOSS/Chess/engine/board"
 
 // alphaBeta Normal alphabeta searching
 func (info *InfoStruct) alphaBeta(alpha, beta, depth int, doNull bool, pos *board.PositionStruct) (int, error) {

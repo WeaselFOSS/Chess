@@ -1,6 +1,6 @@
 package search
 
-import "github.com/WeaselChess/Weasel/engine/board"
+import "github.com/WeaselFOSS/Chess/engine/board"
 
 // quiescence Search capture moves until a "quite" position is found or the trade has been resolved
 //

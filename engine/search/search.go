@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/WeaselChess/Weasel/engine/board"
+	"github.com/WeaselFOSS/Chess/engine/board"
 )
 
 // InfoStruct The search info struct
